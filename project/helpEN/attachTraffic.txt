@@ -1,0 +1,52 @@
+#USING LAPTOPS TO EXTEND ACCESS POINTS FUNCTIONALITY:
+############################################
+
+Remember in the attached devices (laptops or other networks devices):
+
+Redirect all traffic throught the access points:
+
+One computer with IP 192.168.1.50 (called "50") and another with IP 192.168.1.51 (called "51"). Ten access Points has the IP range 192.168.1.1 - 192.168.1.10 (called "1" to "10").
+
+Computer 50 is connected to the access point 1 and computer 51 with the access point 10.
+
+	In Computer 50 must to be ONLY these routing table: (route -n)
+	Destination	Gateway		Genmask 		...
+	192.168.1.51	192.168.1.1	0.0.0.0		
+	192.168.1.0	0.0.0.0		255.255.255.0
+	0.0.0.0		192.168.1.1	0.0.0.0
+	
+		
+	In Computer 51 must to be ONLY these routing table: (route -n)
+	Destination	Gateway		Genmask 		...
+	192.168.1.50	192.168.1.1	0.0.0.0		
+	192.168.1.0	0.0.0.0		255.255.255.0
+	0.0.0.0		192.168.1.1	0.0.0.0
+		
+	In Access Points 1 to 10:
+	Nothing, Castadiva will do it for you!
+	
+With this, you can connect any webcam or other device and use in Castadiva.
+
+
+
+# USING LAPTOPS LIKE ACCESS POINTS:
+#############################
+
+Add two laptops with webcams.
+
+Review the Ethernet and Wifi network cards:
+	- Right IPs.
+	- Connect the WiFi Card to Castadiva.
+	
+Connect both laptops to the Castadiva NFS folder.
+
+Start Ekiga in both machines.
+	- Review that Ekiga listen to the wifi card.
+
+Start the OLSR 4.10 routing protocol. (4.10 is the same version that is used in OpenWRT).
+
+Define in Castadiva the laptops like another access point.
+
+You don not need to define External Traffic with this configuration. Only start Ekiga. 
+	
+Warning!: Some PCMCIA WiFi cards goes out of the wifi network if there is a lot of traffic and clients. If you are experimenting problems with the traffic review the cell/BSSID of the network on each laptop.

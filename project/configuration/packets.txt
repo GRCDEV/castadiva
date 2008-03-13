@@ -1,0 +1,5 @@
+kmod-nfs
+iptables-extra
+tcpdump
+libgcc
+olsrd

@@ -1,0 +1,9 @@
+Before starting an experiment the user needs to define the number of participating nodes, along with their configuration. Such information allows Castadiva to access nodes and manipulate them to generate a scenario shows an example of the definition of a node in the system.
+
+All the information is defined automatically when the user wishes to add a new one, though it can be changed by the user or can be read from a file. An internal identifier is required to distinguish a node from others in CASTADIVA's framework. Such identifier is then referenced when defining the network topology and data connections. The remaining parameters will be used by Castadiva's main application to connect nodes among themselves and with the main server. The MAC address is required for Castadiva to enforce topology changes. 
+
+All the executable files and the scripts are stored in an NFS directory that is accessible by all nodes. This way Castadiva makes storage capacity independent of wireless nodes' memory. 
+
+Castadiva relies on its own tools to generate traffic between nodes. Such tools are run on each node, and must be compiled for all types of CPU used. Currently, tools are compiled for MIPS and Intel processors, though the list can be easily augmented. 
+
+The SSH user and password fields are used by the main application to connect to each individual router and submit commands. Also, a Ping button was included to allow testing the connectivity between the server and routers. 

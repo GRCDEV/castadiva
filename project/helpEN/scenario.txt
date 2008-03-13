@@ -1,0 +1,7 @@
+Once all the nodes are defined, they can be distributed to conform a scenario. Castadiva supports both manual and random topology generation, and the scenario is set through Castadiva's blackboard. The blackboard is a representation of a virtual environment where nodes are located. Nodes are differentiated through different colors and labels. If the appropiate option is selectioned, the radio communication range is also shown through a circle of the same colour.
+
+At the right hand we may edit node properties, such as position and signal range. Castadiva also can activate or deactivate the RTS/CTS 802.11 option of each node. The group of buttons appearing below allow starting a new test, stopping it and rebooting nodes to reset all values.
+
+At the left hand, Castadiva offers scenario option editing. We can define the scenario bounds, the test time, node mobility and the routing protocol used. The Declare traffic button allows setting traffic, as shown below, and the stop button halts it. 
+
+A status bar provides general information to inform the user about what is being done, and the horizontal scrolls allows zooming in and out. Finally, the user may alternate between two different views: radio ranges or a graph. Every edge of the graph represents an IEEE 802.11 link connection, which is a more intuitive view. 
