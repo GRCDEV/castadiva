@@ -566,7 +566,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .add(BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel20)
                     .add(jLabel19))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         BoundPanelLayout.setVerticalGroup(
             BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -624,7 +624,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .add(TimePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jLabel36)
                             .add(jLabel24))))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         TimePanelLayout.setVerticalGroup(
             TimePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -688,7 +688,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                             .add(jLabel28)
                             .add(jLabel25)))
                     .add(jLabel26))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         SpeedPanelLayout.setVerticalGroup(
             SpeedPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -727,7 +727,7 @@ public class SimulationGUI extends javax.swing.JFrame {
             .add(TrafficPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(TrafficPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(TrafficButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .add(TrafficButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                     .add(jLabel29))
                 .addContainerGap())
         );
@@ -840,7 +840,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(ShowPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(ShowPanelLayout.createSequentialGroup()
-                        .add(ReplayCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                        .add(ReplayCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(ReplayTimeTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 37, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -867,11 +867,11 @@ public class SimulationGUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 212, Short.MAX_VALUE)
+            .add(0, 219, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 58, Short.MAX_VALUE)
+            .add(0, 53, Short.MAX_VALUE)
         );
 
         org.jdesktop.layout.GroupLayout SimPanelLayout = new org.jdesktop.layout.GroupLayout(SimPanel);
@@ -882,7 +882,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(SimPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, SimPanelLayout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 37, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 44, Short.MAX_VALUE)
                         .add(SimLabel)
                         .add(59, 59, 59))
                     .add(SimPanelLayout.createSequentialGroup()
@@ -1026,7 +1026,7 @@ public class SimulationGUI extends javax.swing.JFrame {
             CenterPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, CenterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 589, Short.MAX_VALUE)
+                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(ControlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1082,7 +1082,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                             .add(jLabel8)
                             .add(jLabel13)))
                     .add(jLabel6))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         PositionPanelLayout.setVerticalGroup(
             PositionPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1142,7 +1142,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .add(jLabel9))
                     .add(jLabel30)
                     .add(RtsCheckBox))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         SignalPanelLayout.setVerticalGroup(
             SignalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1170,7 +1170,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .add(APLabel))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, APPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .add(APComboBox, 0, 207, Short.MAX_VALUE))
+                        .add(APComboBox, 0, 211, Short.MAX_VALUE))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, APPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .add(APPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1215,13 +1215,13 @@ public class SimulationGUI extends javax.swing.JFrame {
             .add(ButtonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(ButtonPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(CloseButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .add(ResetButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .add(RandomSceneryButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .add(StopSimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .add(ReplaySimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .add(SimulateButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                    .add(HelpButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
+                    .add(CloseButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .add(ResetButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .add(RandomSceneryButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .add(StopSimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .add(ReplaySimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .add(SimulateButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .add(HelpButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
                 .addContainerGap())
         );
         ButtonPanelLayout.setVerticalGroup(
@@ -1363,7 +1363,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .add(APPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(GraphPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(ButtonPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
