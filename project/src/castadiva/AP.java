@@ -16,6 +16,7 @@ public class AP implements Serializable {
 
     private InetAddress ip;
     private InetAddress wifiIP;
+    private InetAddress gateway;
     private String wifiMac;
     private String user;
     private String id;
@@ -31,7 +32,7 @@ public class AP implements Serializable {
     float range;
     float inputTraffic;
     float outputTraffic;
-    boolean showRange = true;
+    boolean showRange = true;  //Shows the range circle in the simulation window. Used to see only the range of some nodes.
 
     /**
      * The constructor. Generate a new AP ready to be used in the simulation.
