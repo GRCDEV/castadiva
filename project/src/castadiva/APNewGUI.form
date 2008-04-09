@@ -142,7 +142,7 @@
                               <Component id="ModeComboBox" alignment="0" pref="132" max="32767" attributes="0"/>
                               <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jTextField1" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="GWTextField" alignment="0" max="32767" attributes="1"/>
                                   <Component id="WifiMacTextField" alignment="0" pref="131" max="32767" attributes="1"/>
                               </Group>
                           </Group>
@@ -244,7 +244,7 @@
                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="GWTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jCheckBox1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -360,14 +360,14 @@
             <Property name="text" type="java.lang.String" value="Gateway:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField1">
+        <Component class="javax.swing.JTextField" name="GWTextField">
           <Properties>
             <Property name="text" type="java.lang.String" value="192.168.1.15"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="jCheckBox1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Gateway"/>
+            <Property name="text" type="java.lang.String" value="Forward"/>
           </Properties>
         </Component>
       </SubComponents>

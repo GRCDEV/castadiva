@@ -1458,7 +1458,8 @@ public class SimulationGUI extends javax.swing.JFrame {
                     APComboBox.getSelectedItem().toString(), xm, ym, 0,
                     m_model.selectionedAP1.range, m_model.selectionedAP1.WhatWorkingDirectory(),
                     m_model.selectionedAP1.WhatProcessor(), m_model.selectionedAP1.WhatChannel(),
-                    m_model.selectionedAP1.WhatMode(), m_model.selectionedAP1.WhatWifiDevice());
+                    m_model.selectionedAP1.WhatMode(), m_model.selectionedAP1.WhatWifiDevice(),
+                    m_model.selectionedAP1.WhatGW());
             m_model.selectionedAP1 = m_model.GetAP(APComboBox.getSelectedIndex());
 
             //Actualizamos el texto del simulador.

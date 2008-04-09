@@ -790,7 +790,8 @@ public class CastadivaController {
                     m_newAP.GiveMeTheSshPwd(), m_newAP.GiveMeTheId(),
                     200, 200, 0, m_newAP.GiveMeTheWorkingDirectory(),
                     m_newAP.GiveMeTheProcessor(), m_newAP.GiveMeTheChannel(),
-                    m_newAP.GiveMeTheMode(), m_newAP.GiveMeWifiDevice());
+                    m_newAP.GiveMeTheMode(), m_newAP.GiveMeWifiDevice(), 
+                    m_newAP.GiveMeGW());
             m_newAP.dispose();
         }
     }
@@ -846,7 +847,7 @@ public class CastadivaController {
                         m_model.selectionedAP1.y, m_model.selectionedAP1.z,
                         m_model.selectionedAP1.range, m_modifyAP.GiveMeTheWorkingDirectory(),
                         m_modifyAP.GiveMeTheProcessor(), m_modifyAP.GiveMeTheChannel(),
-                        m_modifyAP.GiveMeTheMode(), m_modifyAP.GiveMeWifiDevice());
+                        m_modifyAP.GiveMeTheMode(), m_modifyAP.GiveMeWifiDevice(), m_modifyAP.GiveMeGW());
                 m_modifyAP.ShowOkDialog();
             }
         }

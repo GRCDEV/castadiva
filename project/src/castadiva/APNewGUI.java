@@ -60,7 +60,8 @@ public class APNewGUI extends javax.swing.JFrame {
         UsuarioText.setText(apData[6]);
         PasswordField.setText(apData[7]);
         ProcessorComboBox.setSelectedItem(apData[8]);
-        WorkingDirectoryTextField.setText(apData[9]);
+        GWTextField.setText(apData[9]);
+        WorkingDirectoryTextField.setText(apData[10]);
     }
     
     String GiveMeTheIp(){
@@ -105,6 +106,10 @@ public class APNewGUI extends javax.swing.JFrame {
     
     String GiveMeWifiDevice(){
         return WifiDeviceTextField.getText();
+    }
+    
+    String GiveMeGW() {
+        return GWTextField.getText();
     }
     
     void ChannelInRange(){
@@ -170,7 +175,7 @@ public class APNewGUI extends javax.swing.JFrame {
         WifiDeviceTextField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        GWTextField = new javax.swing.JTextField();
         jCheckBox1 = new javax.swing.JCheckBox();
         ButtonPanel = new javax.swing.JPanel();
         Add = new javax.swing.JButton();
@@ -263,9 +268,9 @@ public class APNewGUI extends javax.swing.JFrame {
 
         jLabel12.setText("Gateway:");
 
-        jTextField1.setText("192.168.1.15");
+        GWTextField.setText("192.168.1.15");
 
-        jCheckBox1.setText("Gateway");
+        jCheckBox1.setText("Forward");
 
         org.jdesktop.layout.GroupLayout NetPanelLayout = new org.jdesktop.layout.GroupLayout(NetPanel);
         NetPanel.setLayout(NetPanelLayout);
@@ -284,7 +289,7 @@ public class APNewGUI extends javax.swing.JFrame {
                             .add(ModeComboBox, 0, 132, Short.MAX_VALUE)
                             .add(jLabel7)
                             .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                                .add(org.jdesktop.layout.GroupLayout.LEADING, jTextField1)
+                                .add(org.jdesktop.layout.GroupLayout.LEADING, GWTextField)
                                 .add(org.jdesktop.layout.GroupLayout.LEADING, WifiMacTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)))
                         .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -361,7 +366,7 @@ public class APNewGUI extends javax.swing.JFrame {
                 .add(jLabel12)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(GWTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jCheckBox1))
                 .addContainerGap())
         );
@@ -486,6 +491,7 @@ public class APNewGUI extends javax.swing.JFrame {
     private javax.swing.JPanel ButtonPanel;
     private javax.swing.JButton ButtonPing;
     private javax.swing.JSpinner ChannelSpinner;
+    private javax.swing.JTextField GWTextField;
     private javax.swing.JButton HelpButton;
     private javax.swing.JPanel IDPanel;
     private javax.swing.JTextField IPtext;
@@ -514,7 +520,6 @@ public class APNewGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
     
 }

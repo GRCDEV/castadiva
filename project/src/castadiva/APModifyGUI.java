@@ -3,7 +3,6 @@
  *
  * Created on 15 de mayo de 2006, 9:37
  */
-
 package castadiva;
 
 import java.awt.Toolkit;
@@ -16,138 +15,153 @@ import java.util.*;
  * @author  jorge
  */
 public class APModifyGUI extends javax.swing.JFrame {
+
     CastadivaModel m_model;
-    
+
     /**
      * Creates new form New_AP
      */
     public APModifyGUI(CastadivaModel model) {
         m_model = model;
         initComponents();
-        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
+        setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - (int) (this.getWidth() / 2), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (this.getHeight() / 2));
         GUIReady();
     }
-    
-    
-    void GUIReady(){
+
+    void GUIReady() {
         boolean value;
         value = FillAPComboBox();
         GetReadyTheButtons(value);
     }
-    
-    void FillProcessorComboBox(){
+
+    void FillProcessorComboBox() {
         List<String> processor;
-        
+
         ProcessorComboBox.removeAllItems();
-        File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator + 
+        File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator +
                 m_model.DEFAULT_PROCESSOR_FILE);
         processor = m_model.ReadTextFileInLines(file);
-        if(processor.size() == 0) processor.add("none");
-        for (int i=0; i<processor.size();i++){
+        if (processor.size() == 0) {
+            processor.add("none");
+        }
+        for (int i = 0; i < processor.size(); i++) {
             ProcessorComboBox.addItem(processor.get(i));
         }
-        
+
         //Get the selected processor.
-        if (m_model.HowManyAP() > 0)
+        if (m_model.HowManyAP() > 0) {
             ProcessorComboBox.setSelectedIndex(processor.indexOf(m_model.GetAP(APComboBox.getSelectedIndex()).WhatProcessor()));
+        }
     }
-    
-    boolean FillAPComboBox(){
+
+    boolean FillAPComboBox() {
         APComboBox.removeAllItems();
-        if (m_model.HowManyAP() == 0) return false;
+        if (m_model.HowManyAP() == 0) {
+            return false;
+        }
         //Preparamos los elementos relativos a los Puntos de acceso.
-        for(int i=0;i<m_model.HowManyAP();i++){
+        for (int i = 0; i < m_model.HowManyAP(); i++) {
             APComboBox.addItem(m_model.GetAP(i).WhatAP());
         }
         APComboBox.setSelectedIndex(0);
         return true;
     }
-    
-    void addPingButtonListener(ActionListener al){
+
+    void addPingButtonListener(ActionListener al) {
         PingButton.addActionListener(al);
     }
-    
-    void addOkButtonListener(ActionListener al){
+
+    void addOkButtonListener(ActionListener al) {
         ModifyButton.addActionListener(al);
     }
-    
-    void addDeleteButtonListener(ActionListener al){
+
+    void addDeleteButtonListener(ActionListener al) {
         DeleteButton.addActionListener(al);
     }
-    
-    String GiveMeTheIp(){
+
+    String GiveMeTheIp() {
         return IPtext.getText();
     }
-    
-    String GiveMeTheWifiIp(){
+
+    String GiveMeTheWifiIp() {
         return WifiIPtext.getText();
     }
-    
-    String GiveMeTheId(){
+
+    String GiveMeTheId() {
         return APComboBox.getSelectedItem().toString();
     }
-    
-    String GiveMeTheWifiMac(){
+
+    String GiveMeTheWifiMac() {
         return WifiMacTextField.getText();
     }
-    
-    String GiveMeTheSshUser(){
+
+    String GiveMeTheSshUser() {
         return UsuarioText.getText();
     }
-    
-    String GiveMeTheSshPwd(){
+
+    String GiveMeTheSshPwd() {
         return String.valueOf(PasswordField.getPassword());
     }
-    
-    String GiveMeTheWorkingDirectory(){
+
+    String GiveMeTheWorkingDirectory() {
         return WorkingDirectoryTextField.getText();
     }
-    
-    String GiveMeTheProcessor(){
+
+    String GiveMeTheProcessor() {
         return ProcessorComboBox.getSelectedItem().toString();
     }
-    
-    Integer GiveMeTheSelectedIndex(){
+
+    Integer GiveMeTheSelectedIndex() {
         return APComboBox.getSelectedIndex();
     }
-    
-    Integer GiveMeTheChannel(){
-        return (Integer)ChannelSpinner.getValue();
+
+    Integer GiveMeTheChannel() {
+        return (Integer) ChannelSpinner.getValue();
     }
-    
-    String GiveMeTheMode(){
+
+    String GiveMeTheMode() {
         return ModeComboBox.getSelectedItem().toString();
     }
-    
-    String GiveMeWifiDevice(){
+
+    String GiveMeWifiDevice() {
         return WifiDeviceTextField.getText();
     }
-    
-    void ChannelInRange(){
-        if((Integer)ChannelSpinner.getValue() < 1) ChannelSpinner.setValue(1);
-        if((Integer)ChannelSpinner.getValue() > 14) ChannelSpinner.setValue(14);
+
+    String GiveMeGW() {
+        return GWTextField.getText();
     }
-    
-    boolean IsWindowEditable(){
+
+    void ChannelInRange() {
+        if ((Integer) ChannelSpinner.getValue() < 1) {
+            ChannelSpinner.setValue(1);
+        }
+        if ((Integer) ChannelSpinner.getValue() > 14) {
+            ChannelSpinner.setValue(14);
+        }
+    }
+
+    boolean IsWindowEditable() {
         return (APComboBox.getItemCount() > 0);
     }
-    
-    void ShowOkDialog(){
-        OKDialog.setBounds(0,0,300,180);
+
+    void ShowOkDialog() {
+        OKDialog.setBounds(0, 0, 300, 180);
         OKDialog.setVisible(true);
-        OKDialog.setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(OKDialog.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(OKDialog.getHeight()/2));
+        OKDialog.setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - (int) (OKDialog.getWidth() / 2), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (OKDialog.getHeight() / 2));
     }
-    
-    void SelectAdecuatedMode(){
+
+    void SelectAdecuatedMode() {
         List<String> objects = new ArrayList<String>();
-        for(int i=0; i < ModeComboBox.getItemCount(); i++){
-                objects.add(ModeComboBox.getItemAt(i).toString());
+        for (int i = 0; i < ModeComboBox.getItemCount(); i++) {
+            objects.add(ModeComboBox.getItemAt(i).toString());
         }
-        ModeComboBox.setSelectedIndex(objects.indexOf(m_model.selectionedAP1.WhatMode())); 
+        ModeComboBox.setSelectedIndex(objects.indexOf(m_model.selectionedAP1.WhatMode()));
     }
-    
-    private void GetReadyTheButtons(boolean value){
-        if (APComboBox.getItemCount() == 0) value = !value;
+
+    private void GetReadyTheButtons(boolean value) {
+        if (APComboBox.getItemCount() == 0) {
+            value = !value;
+        }
         ModifyButton.setEnabled(value);
         IPtext.setEnabled(value);
         PingButton.setEnabled(value);
@@ -158,16 +172,15 @@ public class APModifyGUI extends javax.swing.JFrame {
         DeleteButton.setEnabled(value);
         WorkingDirectoryTextField.setEnabled(value);
     }
-    
-    
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         OKDialog = new javax.swing.JDialog();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -198,13 +211,17 @@ public class APModifyGUI extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         WifiDeviceTextField = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
+        GWTextField = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
         IDPanel = new javax.swing.JPanel();
         APComboBox = new javax.swing.JComboBox();
         DeleteButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        OKDialog.setTitle("\u00a1Modificado!");
-        jLabel3.setText("\u00a1La conexi\u00f3n con el punto de acceso");
+        OKDialog.setTitle("¡Modificado!");
+
+        jLabel3.setText("¡La conexión con el punto de acceso");
 
         jLabel5.setText("ha sido modificada!");
 
@@ -248,7 +265,9 @@ public class APModifyGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Change AP");
         setResizable(false);
+
         SSHPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         jLabel2.setText("User:");
 
         jLabel6.setText("Password:");
@@ -264,7 +283,7 @@ public class APModifyGUI extends javax.swing.JFrame {
                     .add(UsuarioText, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 121, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(15, 15, 15)
                 .add(SSHPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(PasswordField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                    .add(PasswordField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                     .add(jLabel6))
                 .addContainerGap())
         );
@@ -284,6 +303,7 @@ public class APModifyGUI extends javax.swing.JFrame {
         );
 
         ButtonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         ModifyButton.setText("Change");
 
         CloseButton.setText("Close");
@@ -300,7 +320,7 @@ public class APModifyGUI extends javax.swing.JFrame {
             .add(ButtonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(ModifyButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 104, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 57, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 59, Short.MAX_VALUE)
                 .add(CloseButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 104, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -315,6 +335,7 @@ public class APModifyGUI extends javax.swing.JFrame {
         );
 
         NetPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         jLabel4.setText("Control IP Adress:");
 
         jLabel7.setText("Wifi IP Address:");
@@ -341,6 +362,12 @@ public class APModifyGUI extends javax.swing.JFrame {
 
         jLabel13.setText("Device:");
 
+        GWTextField.setText("192.168.1.15");
+
+        jLabel14.setText("Gateway:");
+
+        jCheckBox1.setText("Gateway");
+
         org.jdesktop.layout.GroupLayout NetPanelLayout = new org.jdesktop.layout.GroupLayout(NetPanel);
         NetPanel.setLayout(NetPanelLayout);
         NetPanelLayout.setHorizontalGroup(
@@ -348,39 +375,56 @@ public class APModifyGUI extends javax.swing.JFrame {
             .add(NetPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel4)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, NetPanelLayout.createSequentialGroup()
+                    .add(NetPanelLayout.createSequentialGroup()
                         .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(NetPanelLayout.createSequentialGroup()
+                            .add(jLabel4)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, NetPanelLayout.createSequentialGroup()
                                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                                     .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel7)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, IPtext, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, WifiIPtext, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, WifiMacTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                                    .add(org.jdesktop.layout.GroupLayout.LEADING, ModeComboBox, 0, 128, Short.MAX_VALUE))
-                                .add(17, 17, 17))
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, IPtext, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, WifiIPtext, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
+                                .add(17, 17, 17)
+                                .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(PingButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, WorkingDirectoryTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)))
                             .add(NetPanelLayout.createSequentialGroup()
-                                .add(jLabel9)
-                                .add(37, 37, 37))
-                            .add(NetPanelLayout.createSequentialGroup()
-                                .add(jLabel12)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel10)
-                            .add(PingButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, WorkingDirectoryTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, ProcessorComboBox, 0, 120, Short.MAX_VALUE)
-                            .add(NetPanelLayout.createSequentialGroup()
+                                .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(NetPanelLayout.createSequentialGroup()
+                                        .add(ModeComboBox, 0, 129, Short.MAX_VALUE)
+                                        .add(17, 17, 17))
+                                    .add(NetPanelLayout.createSequentialGroup()
+                                        .add(jLabel12)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(WifiDeviceTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 54, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                     .add(jLabel13))
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                                     .add(org.jdesktop.layout.GroupLayout.TRAILING, ChannelSpinner)
-                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addContainerGap())
+                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabel11)))
+                            .add(NetPanelLayout.createSequentialGroup()
+                                .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(NetPanelLayout.createSequentialGroup()
+                                        .add(WifiMacTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                                        .add(17, 17, 17))
+                                    .add(NetPanelLayout.createSequentialGroup()
+                                        .add(jLabel9)
+                                        .add(37, 37, 37)))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel10)
+                                    .add(org.jdesktop.layout.GroupLayout.LEADING, ProcessorComboBox, 0, 121, Short.MAX_VALUE))))
+                        .addContainerGap())
+                    .add(NetPanelLayout.createSequentialGroup()
+                        .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(NetPanelLayout.createSequentialGroup()
+                                .add(GWTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                .add(jCheckBox1))
+                            .add(jLabel14))
+                        .add(52, 52, 52))))
         );
         NetPanelLayout.setVerticalGroup(
             NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -399,7 +443,7 @@ public class APModifyGUI extends javax.swing.JFrame {
                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(WorkingDirectoryTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(WifiIPtext, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel12)
                     .add(jLabel11)
@@ -417,10 +461,17 @@ public class APModifyGUI extends javax.swing.JFrame {
                 .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(WifiMacTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(ProcessorComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(9, 9, 9)
+                .add(jLabel14)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(NetPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(GWTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jCheckBox1))
                 .addContainerGap())
         );
 
         IDPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         APComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 APComboBoxActionPerformed(evt);
@@ -439,7 +490,7 @@ public class APModifyGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(IDPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, IDPanelLayout.createSequentialGroup()
-                        .add(APComboBox, 0, 137, Short.MAX_VALUE)
+                        .add(APComboBox, 0, 139, Short.MAX_VALUE)
                         .add(14, 14, 14)
                         .add(DeleteButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 114, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(jLabel1))
@@ -483,20 +534,18 @@ public class APModifyGUI extends javax.swing.JFrame {
                 .add(ButtonPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
     private void ChannelSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ChannelSpinnerStateChanged
         ChannelInRange();
     }//GEN-LAST:event_ChannelSpinnerStateChanged
-    
-   
+
     private void AceptarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarButtonActionPerformed
         OKDialog.dispose();
         GUIReady();
     }//GEN-LAST:event_AceptarButtonActionPerformed
-    
-    
+
     private void APComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_APComboBoxActionPerformed
 // TODO add your handling code here:
         if (APComboBox.getItemCount() > 0) {
@@ -509,20 +558,16 @@ public class APModifyGUI extends javax.swing.JFrame {
             WorkingDirectoryTextField.setText(m_model.selectionedAP1.WhatWorkingDirectory());
             ChannelSpinner.setValue(m_model.selectionedAP1.WhatChannel());
             WifiDeviceTextField.setText(m_model.selectionedAP1.WhatWifiDevice());
-            SelectAdecuatedMode();          
+            SelectAdecuatedMode();
             FillProcessorComboBox();
         }
         GetReadyTheButtons(true);
     }//GEN-LAST:event_APComboBoxActionPerformed
-    
-    
+
     private void CloseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloseButtonActionPerformed
 // TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_CloseButtonActionPerformed
-    
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox APComboBox;
     private javax.swing.JButton AceptarButton;
@@ -530,6 +575,7 @@ public class APModifyGUI extends javax.swing.JFrame {
     private javax.swing.JSpinner ChannelSpinner;
     private javax.swing.JButton CloseButton;
     private javax.swing.JButton DeleteButton;
+    private javax.swing.JTextField GWTextField;
     private javax.swing.JPanel IDPanel;
     private javax.swing.JTextField IPtext;
     private javax.swing.JComboBox ModeComboBox;
@@ -545,11 +591,13 @@ public class APModifyGUI extends javax.swing.JFrame {
     private javax.swing.JTextField WifiIPtext;
     private javax.swing.JTextField WifiMacTextField;
     private javax.swing.JTextField WorkingDirectoryTextField;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -559,5 +607,4 @@ public class APModifyGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-    
 }

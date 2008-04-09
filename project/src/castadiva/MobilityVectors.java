@@ -174,7 +174,7 @@ public class MobilityVectors implements Serializable{
             AP nodeAux = new AP(node.WhatEthIP(), node.WhatWifiIP(), node.WhatWifiMac(),
                     node.WhatUser(), node.WhatPwd(), node.WhatAP(), node.x, node.y,
                     node.z, node.range, node.WhatWorkingDirectory(), node.WhatProcessor(),
-                    node.WhatChannel(), node.WhatMode(), node.WhatWifiDevice());
+                    node.WhatChannel(), node.WhatMode(), node.WhatWifiDevice(), node.WhatGW());
             stimatedAps.Add(nodeAux);
         }
         CalculateNodePositionMatrix(stimatedAps);

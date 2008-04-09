@@ -52,7 +52,7 @@ public class AP implements Serializable {
      */
     public AP(String address, String wifiAddress, String wifiMac, String user, String pwd, String id,
             float x, float y, float z, float range, String directory, String processor, Integer channel,
-            String mode, String wfDevice) {
+            String mode, String wfDevice, String tmp_gw) {
         this.user = user;
         this.id = id;
         password = pwd;
@@ -72,6 +72,7 @@ public class AP implements Serializable {
         try {
             ip = InetAddress.getByName(address);
             wifiIP = InetAddress.getByName(wifiAddress);
+            gateway = InetAddress.getByName(tmp_gw);
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
         }
@@ -110,6 +111,13 @@ public class AP implements Serializable {
      */
     public String WhatWifiIP() {
         return wifiIP.getHostAddress();
+    }
+    
+     /**
+     * Return the IP of the GW to reach other networks.
+     */
+    public String WhatGW() {
+        return gateway.getHostAddress();
     }
 
     /**

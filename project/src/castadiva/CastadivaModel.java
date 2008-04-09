@@ -83,6 +83,7 @@ public class CastadivaModel {
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
     private final String WIFI_SSID = "CASTADIVA";
+    private final String DEFAULT_GW ="192.168.1.15";
     private boolean statisticsShowed = true;
     private int stopwatch;
     private Timer timer;
@@ -448,9 +449,9 @@ public class CastadivaModel {
     public void SetAP(Integer number, String address, String wifiAddress,
             String wifiMac, String user, String pwd, String id, float x,
             float y, float z, float range, String directory, String processor,
-            Integer channel, String mode, String wfDevice) {
+            Integer channel, String mode, String wfDevice, String gw) {
         AP tmp_AP = new AP(address, wifiAddress, wifiMac, user, pwd, id, x,
-                y, z, range, directory, processor, channel, mode, wfDevice);
+                y, z, range, directory, processor, channel, mode, wfDevice, gw);
         accessPoints.Set(number, tmp_AP);
     }
 
@@ -474,9 +475,9 @@ public class CastadivaModel {
      */
     public void AddAP(String address, String wifiAddress, String wifiMac, String user,
             String pwd, String id, float x, float y, float z, String directory,
-            String processor, Integer channel, String mode, String wfDevice) {
+            String processor, Integer channel, String mode, String wfDevice, String gw) {
         AP tmp_AP = new AP(address, wifiAddress, wifiMac, user, pwd, id, x,
-                y, z, DEFAULT_RANGE, directory, processor, channel, mode, wfDevice);
+                y, z, DEFAULT_RANGE, directory, processor, channel, mode, wfDevice, gw);
         accessPoints.Add(tmp_AP);
     }
 
@@ -2081,7 +2082,8 @@ public class CastadivaModel {
                 "done\n\n" +
                 "#Add default entries.\n" +
                 "route add -net " + ObtainNetTypeC(accessPoints.Get(1).WhatWifiIP()) +
-                " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + "\n";
+                " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + ";\n" + 
+                " route add default gw " + node.WhatGW() + ";\n";
         return script;
     }
 
@@ -3731,14 +3733,6 @@ public class CastadivaModel {
             positionZ = Float.parseFloat(nsText[i + 2].split(" ")[3]);
             id = Integer.parseInt(nsText[i].split("\\)")[0].split("\\(")[1]);
             String[] ap = ObtainStoredApData((i / 3) - 1);
-            /*AP node  = new AP(ObtainStoredApData((i/3)-1)[1], ObtainStoredApData((i/3)-1)[2],
-            ObtainStoredApData((i/3)-1)[0],ObtainStoredApData((i/3)-1)[6],
-            ObtainStoredApData((i/3)-1)[7], DEFAULT_ID+id, positionX,
-            positionY, positionZ, Float.parseFloat(ObtainStoredApData((i/3)-1)[5]),
-            ObtainStoredApData((i/3)-1)[9], ObtainStoredApData((i/3)-1)[8],
-            Integer.parseInt(ObtainStoredApData((i/3)-1)[3]), DEFAULT_MODE,
-            ObtainStoredApData((i/3)-1)[4]);*/
-
             String name = "";
             try {
                 name = ap[10];
@@ -3747,7 +3741,7 @@ public class CastadivaModel {
             }
             AP node = new AP(ap[1], ap[2], ap[0], ap[6], ap[7], name, positionX, positionY, positionZ,
                     Float.parseFloat(ap[5]), ap[9], ap[8], Integer.parseInt(ap[3]), DEFAULT_MODE,
-                    ap[4]);
+                    ap[4], DEFAULT_GW);
             accessPoints.Add(node);
         }
         return i;
