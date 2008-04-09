@@ -284,8 +284,8 @@ public class SimulationGUI extends javax.swing.JFrame {
         ZTextField.setText(m_model.selectionedAP1.z + "");
         ATextField.setText(m_model.selectionedAP1.range + "");
     }
-    
-    void UpdateShowNodeRange(){
+
+    void UpdateShowNodeRange() {
         ShowCheckBox.setSelected(m_model.selectionedAP1.showRange);
     }
 
@@ -1440,8 +1440,11 @@ public class SimulationGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_LabelCheckBoxItemStateChanged
 
     private void RangeRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_RangeRadioButtonItemStateChanged
-        if(RangeRadioButton.isSelected()) ShowCheckBox.setEnabled(true);
-        else ShowCheckBox.setEnabled(false);
+        if (RangeRadioButton.isSelected()) {
+            ShowCheckBox.setEnabled(true);
+        } else {
+            ShowCheckBox.setEnabled(false);
+        }
         ModifyBlackBoard();
     }//GEN-LAST:event_RangeRadioButtonItemStateChanged
 
