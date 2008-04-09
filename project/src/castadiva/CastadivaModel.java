@@ -27,7 +27,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
-
 /**
  * Following the Model - View - Controler programming guide, this class is the Model.
  * <p>
@@ -51,13 +50,12 @@ import javax.swing.table.AbstractTableModel;
  * @see CastadivaController
  */
 public class CastadivaModel {
+
     Computer computer;
     public APs accessPoints = new APs();
-    
     //Node connection
     float visibilityMatrix[][];
     Integer gatewayMatrix[][];
-    
     //Default folders variables
     private final String STATISTICS_UDP_DESTINATION_FILE = "CastadivaUdpDestino";
     private final String STATISTICS_TCP_DESTINATION_FILE = "CastadivaTcpDestino";
@@ -72,20 +70,19 @@ public class CastadivaModel {
     private final String FILE_APS = "APs.dat";
     private final String FILE_SCENARIO = "Scenario.dat";
     private final String FILE_EXTERNAL_TRAFFIC = "ExternalTraffic.dat";
-    private String STARTING_FOLDER ="/";
+    private String STARTING_FOLDER = "/";
     public final String DEFAULT_CONFIG_DIRECTORY = "configuration";
     public final String DEFAULT_APPLICATION_FILE = "applications.txt";
-    
     //Simulation variables
     public final int TRAFFIC_SERVER_TIME_WAIT = 2;
     public final int TTCP_SERVER_MAX_WAIT = 10;
     public int VISIBILITY_TIME_WAIT = 8;
     public int PROTOCOL_TIME_WAIT = 0;
     private final int ROUTING_EXTRA_TIME = 0;
-    private final int TRAFFIC_PORT=23000;
+    private final int TRAFFIC_PORT = 23000;
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
-    private final String WIFI_SSID="CASTADIVA";
+    private final String WIFI_SSID = "CASTADIVA";
     private boolean statisticsShowed = true;
     private int stopwatch;
     private Timer timer;
@@ -127,7 +124,6 @@ public class CastadivaModel {
     public boolean RTS = false;
     public Integer simulationSeconds = 0;
     private boolean simulating = false;
-    
     //NS export/import
     private final String DEFAULT_USER = "root";
     private final String DEFAULT_PWD = "";
@@ -147,16 +143,13 @@ public class CastadivaModel {
     public final String DEFAULT_NFS_DIRECTORY = "/CASTADIVA/nfs";
     Random randomGenerator;
     private NodePositionsFromNsMobility nsData;
-    
     //Traffic variables.
     TrafficTableModel tableModel;
     RandomTrafficTableModel randomTrafficModel;
     List<ExternalTraffic> externalTrafficFlow = new ArrayList<ExternalTraffic>();
-    
     //If WRITE_TIME_IN_FILE != 0 write in file the arriving time of each packet.
     //Useful to see the retransmision time of TCP
     private final int WRITE_TIME_IN_FILE = 0;
-    
     //Random simulation variables.
     public Integer minNodes = 0;
     public Integer maxNodes = 0;
@@ -173,7 +166,6 @@ public class CastadivaModel {
     public boolean isRandomTraffic = true;
     private List<Integer> listAddressNodes = new ArrayList<Integer>();
     private List<Integer> listSourceNodes = new ArrayList<Integer>();
-    
     //Mobility Variables.
     private MobilityVectors allAddresses;
     private float pause = 0;
@@ -182,7 +174,6 @@ public class CastadivaModel {
     NodeCheckPoint nodePositions[][];
     private Integer[] sleep;
     private final Integer DELETING_INSTRUCTIONS_WAITING_TIME = 1;
-    
     //Help Varibales.
     String Help_Folder = "helpEN";
     int selectedHelp = 0;
@@ -190,252 +181,250 @@ public class CastadivaModel {
     final int ATTACH_INDEX = 1;
     final int SCENARIO_INDEX = 2;
     final int MAINMENU_INDEX = 4;
-    
     final String[] helpFiles = {
-        "addNode.txt","attachTraffic.txt", "scenario.txt",
-        "about.txt", "mainMenu.txt"};
+        "addNode.txt", "attachTraffic.txt", "scenario.txt",
+        "about.txt", "mainMenu.txt"
+    };
 
     //If true, show output in console.
     final boolean debug = false;
-    
-    
+
     /** Creates a new instance of CastadivaModel */
     public CastadivaModel() {
         randomGenerator = new Random();
-        boardSize = (int)Math.max(WhatBoundX(),WhatBoundY());
+        boardSize = (int) Math.max(WhatBoundX(), WhatBoundY());
         tableModel = new TrafficTableModel(accessPoints.GetTraffic());
         randomTrafficModel = new RandomTrafficTableModel(accessPoints.GetRandomTraffic());
         computer = new Computer();
         SetStopwatch(0);
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                             INQUERY METHODS
      *
      ****************************************************************************/
-    
-    
     /**
      * Allow to obtain the interface used by the computer. Useful for the GUI windows.
      * @see Computer
      */
-    public String WhatComputerInterfaceString(){
+    public String WhatComputerInterfaceString() {
         return computer.WhatInterfaceString();
     }
-    
+
     /**
      * Allow to obtain the directory where all datas are saved. Useful for the GUI windows.
      * @see Computer
      */
-    public String WhatComputerWorkingDirectory(){
+    public String WhatComputerWorkingDirectory() {
         return computer.WhatWorkingDirectory();
     }
-    
+
     /**
      * Change the directory where all data are saved.
      * @see Computer
      */
-    public void SetComputerWorkingDirectory(String directory){
+    public void SetComputerWorkingDirectory(String directory) {
         computer.ChangeWorkingDirectory(directory);
     }
-    
+
     /**
      * Change the interface used by the class computer.
      * @see Computer
      */
-    public void SetComputerInterface(String device){
+    public void SetComputerInterface(String device) {
         computer.ChangeInterface(device);
         computer.CalculateIpFromInterface();
     }
-    
+
     /**
      * Return the value of the stopwatch. The stopwatch control the simulation time.
      */
-    public Integer WhatStopwatch(){
+    public Integer WhatStopwatch() {
         return stopwatch;
     }
-    
+
     /**
      * Set a value into the stopwatch used to control the simulation time.
      * @param value The new stopwatch value.
      */
-    public void SetStopwatch(Integer value){
+    public void SetStopwatch(Integer value) {
         stopwatch = value;
     }
-    
+
     /**
      * return the dimension of te simulation board.
      */
-    public Integer WhatBoardSize(){
+    public Integer WhatBoardSize() {
         return boardSize;
     }
-    
+
     /**
      * Return the simulation bound X. An AP out of bounds will not be used into
      * the simulation.
      */
-    public Float WhatBoundX(){
+    public Float WhatBoundX() {
         return x;
     }
-    
+
     /**
      * Return the simulation bound Y. An AP out of bounds will not be used into
      * the simulation.
      */
-    public Float WhatBoundY(){
+    public Float WhatBoundY() {
         return y;
     }
-    
+
     /**
      * Return the max time defined to stop the movement of an AP, like NS.
      */
-    public Float WhatTimePause(){
+    public Float WhatTimePause() {
         return pause;
     }
-    
+
     /**
      * Return the maximum speed allowed for the nodes.
      */
-    public Float WhatMaxSpeed(){
+    public Float WhatMaxSpeed() {
         return maxSpeed;
     }
-    
-    public Float WhatMinSpeed(){
+
+    /**
+     * Return the minimum speed allowed for the nodes.
+     */
+    public Float WhatMinSpeed() {
         return minSpeed;
     }
-    
+
     /**
      * Change the simulation bound X. An AP out of bounds will not be used into
      * the simulation.
      */
-    public void SetBoundX(Float boundX){
+    public void SetBoundX(Float boundX) {
         x = boundX;
     }
-    
+
     /**
      * Change the simulation bound Y. An AP out of bounds will not be used into
      * the simulation.
      */
-    public void SetBoundY(float boundY){
+    public void SetBoundY(float boundY) {
         y = boundY;
     }
-    
+
     /**
      * Activate or desactivate the wifi RTS/CTS option
      */
-    public void SetRTS(boolean value){
+    public void SetRTS(boolean value) {
         RTS = value;
     }
-    
+
     /**
      * Change the max pause time between moves allowed for every AP.
      */
-    public void SetSimulationPause(float value){
+    public void SetSimulationPause(float value) {
         pause = value;
     }
-    
+
     /**
      * Change the speed value of the mobility simulation option.
      */
-    public void SetMobilityMaxSpeed(float value){
+    public void SetMobilityMaxSpeed(float value) {
         maxSpeed = value;
     }
-    
-    public void SetMobilityMinSpeed(float value){
+
+    public void SetMobilityMinSpeed(float value) {
         minSpeed = value;
     }
-    
+
     /**
      * Change the total simulation board.
      */
-    public void ChangeBoardSize(Integer size){
+    public void ChangeBoardSize(Integer size) {
         boardSize = size;
     }
-    
+
     /**
      * Change a determined AP used in the simulation for another one.
      * @param position The index for the old AP in the APs list.
      * @param node The new AP to replace the old.
      */
-    public void ChangeAP(Integer position, AP node){
+    public void ChangeAP(Integer position, AP node) {
         accessPoints.Set(position, node);
     }
-    
+
     /**
      * Delete an AP used in the simulation.
      * @param position The position of the Ap to delete in the APs list.
      */
-    public void RemoveAP(Integer position){
+    public void RemoveAP(Integer position) {
         accessPoints.RemoveIndex(position);
     }
-    
+
     /**
      * Return the total of AP used in the simulation.
      */
-    public Integer HowManyAP(){
+    public Integer HowManyAP() {
         return accessPoints.Size();
     }
-    
+
     /**
      * Select into the simulation an AP.
      */
-    public void SelectAP(Integer i){
+    public void SelectAP(Integer i) {
         selectionedAP1 = GetAP(i);
     }
-    
+
     /**
      * Return an AP Object located in a determined position of the APs list.
      * @param i The index of the AP desired.
      */
-    public AP GetAP(Integer i){
+    public AP GetAP(Integer i) {
         return accessPoints.Get(i);
     }
-    
+
     /**
      * Return the value of the Simulation bound X.
      */
-    public Float GetBoundX(){
+    public Float GetBoundX() {
         return x;
     }
-    
+
     /**
      * Return the value of the Simulation bound Y.
      */
-    public Float GetBoundY(){
+    public Float GetBoundY() {
         return y;
     }
-    
+
     /**
      * Return the pause time allowed between movements of the APs.
      */
-    public Float GetSimulationPause(){
+    public Float GetSimulationPause() {
         return pause;
     }
-    
+
     /**
      * Return if the simulation is already waiting to show the traffic statistics.
      */
-    public boolean IsStatisticsAlreadyShowed(){
+    public boolean IsStatisticsAlreadyShowed() {
         return statisticsShowed;
     }
-    
+
     /**
      * The traffics statitistics are interesting for no more.
      */
-    public void StatisticsAreShowed(){
+    public void StatisticsAreShowed() {
         statisticsShowed = true;
     }
-    
+
     /**
      * Return if the simulation has finished.
      */
-    public boolean IsSimulationFinished(){
+    public boolean IsSimulationFinished() {
         return !simulating;
     }
-    
+
     /**
      * Change an AP for another one.
      * @param number The position in the APs list of the AP wanted to replace.
@@ -459,12 +448,12 @@ public class CastadivaModel {
     public void SetAP(Integer number, String address, String wifiAddress,
             String wifiMac, String user, String pwd, String id, float x,
             float y, float z, float range, String directory, String processor,
-            Integer channel, String mode, String wfDevice){
+            Integer channel, String mode, String wfDevice) {
         AP tmp_AP = new AP(address, wifiAddress, wifiMac, user, pwd, id, x,
                 y, z, range, directory, processor, channel, mode, wfDevice);
         accessPoints.Set(number, tmp_AP);
     }
-    
+
     /**
      * Add an AP to the Simulation. This AP now can be used and placed into the simulation
      * @param address The ethernet address to connect the computer with the AP.
@@ -485,374 +474,388 @@ public class CastadivaModel {
      */
     public void AddAP(String address, String wifiAddress, String wifiMac, String user,
             String pwd, String id, float x, float y, float z, String directory,
-            String processor, Integer channel, String mode, String wfDevice){
+            String processor, Integer channel, String mode, String wfDevice) {
         AP tmp_AP = new AP(address, wifiAddress, wifiMac, user, pwd, id, x,
                 y, z, DEFAULT_RANGE, directory, processor, channel, mode, wfDevice);
         accessPoints.Add(tmp_AP);
     }
-    
+
     /**
      * Return a matrix witch contains the information describing what APs see anothers.
      */
-    public float[][] WhatVisibilityMatrix(){
+    public float[][] WhatVisibilityMatrix() {
         return visibilityMatrix;
     }
-    
+
     /**
      * Indicate if the mobility is used.
      */
-    public boolean MobiliyActivated(){
-        if(maxSpeed > 0) return true;
+    public boolean MobiliyActivated() {
+        if (maxSpeed > 0) {
+            return true;
+        }
         return false;
     }
-    
+
     /**
      * Return true si a mobility has defined.
      */
-    public boolean ExistsOldMobility(){
-        try{
-            if(nodePositions[0].length > 0) return true;
-        }catch(NullPointerException ne){
+    public boolean ExistsOldMobility() {
+        try {
+            if (nodePositions[0].length > 0) {
+                return true;
+            }
+        } catch (NullPointerException ne) {
             return false;
         }
         return false;
     }
-    
+
     /**
      * Return a string with the path to a folder in the system where the user
      * can save, load, import from ns.
      */
-    public String GetDefaultExplorationFolder(){
+    public String GetDefaultExplorationFolder() {
         return STARTING_FOLDER;
     }
-    
+
     /**
      * Change the default folder where the user can save, load or import from ns.
      */
-    public void ChangeDefaultExplorationFolder(String path){
+    public void ChangeDefaultExplorationFolder(String path) {
         STARTING_FOLDER = path;
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                                    TIME CONTROL
      *
      ****************************************************************************/
-    
-    
     /**
      * Obtain the simulation total time.
      * @see GetSimulationTime
      */
-    public Integer GetRealSimulationTime(){
+    public Integer GetRealSimulationTime() {
         return GetWaitingSimulationTime() + GetSimulationTime();
     }
-    
+
     /**
      * Obtain only the time expended in traffic.
      * @ see GetRealSimulationTime
      */
-    public Integer GetSimulationTime(){
+    public Integer GetSimulationTime() {
         return totalTime;
     }
-    
+
     /**
      * Set only the time expended in traffic.
      * @ see GetSimulationTime
      */
-    public void SetSimulationTime(Integer value){
+    public void SetSimulationTime(Integer value) {
         totalTime = value;
     }
-    
+
     /**
      * Return the time used for starting the routing protocols, the mobility calculos, etc.
      */
-    public Integer GetWaitingSimulationTime(){
+    public Integer GetWaitingSimulationTime() {
         return GetApTimeWaiting() + ROUTING_EXTRA_TIME;
     }
-    
+
     /**
      * Return when the routing protocol is loaded.
      */
-    public Integer GetProtocolLoadingTimeWaiting(){
+    public Integer GetProtocolLoadingTimeWaiting() {
         return PROTOCOL_TIME_WAIT;
     }
-    
+
     /**
      * Obtain the total time used to prepare the APs
      */
-    public Integer GetApTimeWaiting(){
+    public Integer GetApTimeWaiting() {
         return GetProtocolLoadingTimeWaiting() +
                 TRAFFIC_SERVER_TIME_WAIT + VISIBILITY_TIME_WAIT;
     }
-    
+
     /**
      * The visibility time depends on the number of nodes that are used into the
      * simulation. This function recalculate an optimized pause time.
      */
-    public void ObtainNewVisibilityTime(){
-        VISIBILITY_TIME_WAIT = 3 + accessPoints.Size()/2;
+    public void ObtainNewVisibilityTime() {
+        VISIBILITY_TIME_WAIT = 3 + accessPoints.Size() / 2;
     }
-    
+
     /**
      * Control if the traffic is finished to show the results.
      */
-    boolean IsStatisticsEnded(){
-        if(stopwatch > GetRealSimulationTime() &&
-                statisticsControl.IsEndOfStatistics()) return true;
+    boolean IsStatisticsEnded() {
+        if (stopwatch > GetRealSimulationTime() &&
+                statisticsControl.IsEndOfStatistics()) {
+            return true;
+        }
         return false;
     }
-    
+
     /**
      * Prepare the Castadiva time control for a new simulation.
      * This means that the stopwatch return to the value zero.
      */
-    private void NewStopwatch(){
+    private void NewStopwatch() {
         stopwatch = 0;
         timer = new Timer();
         timerTask = new CastadivaMainTimerTask();
         timer.scheduleAtFixedRate(timerTask, 0, 1000);
     }
-    
+
     /**
      * Stops the Castadiva time control.
      */
-    void EndStopwatch(){
-        try{
+    void EndStopwatch() {
+        try {
             timer.cancel();
-        }catch(NullPointerException ex){}
+        } catch (NullPointerException ex) {
+        }
     }
-    
+
     /**
      * If the simulation needs more time that users specificated time, change the simulation time.
      */
-    public void CalculateRealSimulationTime(){
+    public void CalculateRealSimulationTime() {
         int finalRealTime = 0;
-        TrafficRecord record=null;
-        
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
-            record=(TrafficRecord)accessPoints.GetTraffic().get(i);
-            if(record.getStop() > finalRealTime)
-                finalRealTime = record.getStop()+1;
+        TrafficRecord record = null;
+
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
+            if (record.getStop() > finalRealTime) {
+                finalRealTime = record.getStop() + 1;
+            }
         }
-        if(totalTime < finalRealTime){
+        if (totalTime < finalRealTime) {
             totalTime = finalRealTime;
         }
     }
-    
+
     /**
      * If the Random simulation needs more time that users specificated time, change the simulation time.
      */
-    public void CalculateRandomRealSimulationTime(){
+    public void CalculateRandomRealSimulationTime() {
         int finalRealTime = 0;
-        RandomTrafficRecord record=null;
-        
-        for(int i=0; i<accessPoints.GetRandomTrafficSize(); i++){
-            record=(RandomTrafficRecord)accessPoints.GetRandomTraffic().get(i);
+        RandomTrafficRecord record = null;
+
+        for (int i = 0; i < accessPoints.GetRandomTrafficSize(); i++) {
+            record = (RandomTrafficRecord) accessPoints.GetRandomTraffic().get(i);
             // int trafficLineTime = record.getStart() + (record.getMaxPackets() / record.getPacketsSeconds());
             //if(trafficLineTime > finalRealTime) finalRealTime = trafficLineTime;
-            if(record.getStop() > finalRealTime)
-                finalRealTime = record.getStop()+1;
+            if (record.getStop() > finalRealTime) {
+                finalRealTime = record.getStop() + 1;
+            }
         }
-        if(totalTime < finalRealTime){
+        if (totalTime < finalRealTime) {
             totalTime = finalRealTime;
         }
     }
-    
-    
-    
-    
+
     /****************************************************************************
      *
      *                              NODE CONNECTION
      *
      ****************************************************************************/
-    
-    
     /**
      * Call to all methods to obtain the node visibility between APs.
      */
-    private void CalculateNewNodeVisibility(){
+    private void CalculateNewNodeVisibility() {
         DeleteOldVisibilityInstructions();
         GenerateStaticVisibilityMatrix();
         AddNodeVisibility(true);
     }
-    
+
     /**
      * Return the distance in metres between two nodes.
      * @param node1 The firt node to calculate the distance.
      * @param node2 The second node.
      */
-    private float CalculateNodeDistance(AP node1, AP node2){
-        return (float)Math.sqrt(Math.pow((node1.x-node2.x),2) +
-                Math.pow((node1.y-node2.y),2)+Math.pow((node1.z-node2.z),2));
+    private float CalculateNodeDistance(AP node1, AP node2) {
+        return (float) Math.sqrt(Math.pow((node1.x - node2.x), 2) +
+                Math.pow((node1.y - node2.y), 2) + Math.pow((node1.z - node2.z), 2));
     }
-    
+
     /**
      * Calculate what nodes are in range from other nodes.
      * Depends on the node signal range.
      * @param second The second where the visibility will be generated.
      */
-    public float[][] GenerateMobilityVisibilityMatrix(Integer second){
+    public float[][] GenerateMobilityVisibilityMatrix(Integer second) {
         AP node1, node2;
         float distance, distance1, distance2 = 0;
         float[][] matrix;
         NodeCheckPoint checkPointNode1, checkPointNode2, checkPointNode1b, checkPointNode2b;
-        
+
         matrix = new float[accessPoints.Size()][accessPoints.Size()];
-        
-        for(int i=0; i<accessPoints.Size();i++){
-            for(int j=i;j<accessPoints.Size();j++){
-                try{
-                checkPointNode1 = nodePositions[i][second];
-                checkPointNode2 = nodePositions[j][second];
-               
-                //If the two nodes are too close to be out of range, we considere it out of range.
-                if(second < GetSimulationTime()-1){
-                    checkPointNode1b = nodePositions[i][second+1];
-                    checkPointNode2b = nodePositions[j][second+1];
-                    distance2 = CalculateCheckPointDistance(checkPointNode1b, checkPointNode2b);
-                }
-                node1 = accessPoints.Get(i);
-                node2 = accessPoints.Get(j);
-                if(j==i) distance = 0;
-                else {
-                    distance1 = CalculateCheckPointDistance(checkPointNode1, checkPointNode2);
-                    if(second < GetSimulationTime()-1){
-                        if((distance1+distance2)/2 > node1.range) distance = -1;
-                        else distance = (distance1+distance2)/2;
-                    }else{
-                        distance = distance1;
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            for (int j = i; j < accessPoints.Size(); j++) {
+                try {
+                    checkPointNode1 = nodePositions[i][second];
+                    checkPointNode2 = nodePositions[j][second];
+
+                    //If the two nodes are too close to be out of range, we considere it out of range.
+                    if (second < GetSimulationTime() - 1) {
+                        checkPointNode1b = nodePositions[i][second + 1];
+                        checkPointNode2b = nodePositions[j][second + 1];
+                        distance2 = CalculateCheckPointDistance(checkPointNode1b, checkPointNode2b);
                     }
-                }
-                if(distance < node1.range) matrix[i][j] = distance;
-                else matrix[i][j] = -1;
-                if(distance < node2.range) matrix[j][i] = distance;
-                else matrix[j][i] = -1;
-                 }catch(NullPointerException npe){
+                    node1 = accessPoints.Get(i);
+                    node2 = accessPoints.Get(j);
+                    if (j == i) {
+                        distance = 0;
+                    } else {
+                        distance1 = CalculateCheckPointDistance(checkPointNode1, checkPointNode2);
+                        if (second < GetSimulationTime() - 1) {
+                            if ((distance1 + distance2) / 2 > node1.range) {
+                                distance = -1;
+                            } else {
+                                distance = (distance1 + distance2) / 2;
+                            }
+                        } else {
+                            distance = distance1;
+                        }
+                    }
+                    if (distance < node1.range) {
+                        matrix[i][j] = distance;
+                    } else {
+                        matrix[i][j] = -1;
+                    }
+                    if (distance < node2.range) {
+                        matrix[j][i] = distance;
+                    } else {
+                        matrix[j][i] = -1;
+                    }
+                } catch (NullPointerException npe) {
                     break;
                 }
             }
         }
         return matrix;
     }
-    
+
     /**
      * Generate a visibility matrix for static simulations (nodes without movement).
      */
-    public void GenerateStaticVisibilityMatrix(){
+    public void GenerateStaticVisibilityMatrix() {
         visibilityMatrix = GenerateVisibilityMatrix();
     }
-    
+
     /**
      * Calculate what nodes are in range from other nodes.
      * Depends on the node signal range.
      * @return a matrix with values 0 if is the same node, -1 if is out of range or
      * positive integer that represent the distance in range.
      */
-    private float[][] GenerateVisibilityMatrix(){
+    private float[][] GenerateVisibilityMatrix() {
         AP node1, node2;
         float distance;
         float[][] matrix;
-        
+
         matrix = new float[accessPoints.Size()][accessPoints.Size()];
-        for(int i=0; i<accessPoints.Size();i++){
-            for(int j=i;j<accessPoints.Size();j++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            for (int j = i; j < accessPoints.Size(); j++) {
                 node1 = accessPoints.Get(i);
                 node2 = accessPoints.Get(j);
-                if(node1.equals(node2)) distance = 0;
-                else distance = CalculateNodeDistance(node1, node2);
-                if(distance < node1.range) matrix[i][j] = distance;
-                else matrix[i][j] = -1;
-                if(distance < node2.range) matrix[j][i] = distance;
-                else matrix[j][i] = -1;
+                if (node1.equals(node2)) {
+                    distance = 0;
+                } else {
+                    distance = CalculateNodeDistance(node1, node2);
+                }
+                if (distance < node1.range) {
+                    matrix[i][j] = distance;
+                } else {
+                    matrix[i][j] = -1;
+                }
+                if (distance < node2.range) {
+                    matrix[j][i] = distance;
+                } else {
+                    matrix[j][i] = -1;
+                }
             }
         }
         return matrix;
     }
-    
+
     /**
      * Generate the rules to prevent an AP to see another according to the simulation.
      * @param deleteInstructions If true delete all genered instructions at the end of time.
      */
-    private void AddNodeVisibility(boolean deleteInstructions){
+    private void AddNodeVisibility(boolean deleteInstructions) {
         String nodeInstructions;
         String delNodeInstructions;
-        
-        for(int i=0; i<accessPoints.Size(); i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             //Create the instruction list for one node.
             nodeInstructions = "#Starting visibility instructions.\n";
             delNodeInstructions = "#Deleting visibility instructions.\n";
-            
+
             //Adding the visibility rules.
-            for(int j=0; j<accessPoints.Size(); j++){
+            for (int j = 0; j < accessPoints.Size(); j++) {
                 AP nodo = accessPoints.Get(j);
-                if (visibilityMatrix[i][j] < 0){
+                if (visibilityMatrix[i][j] < 0) {
                     nodeInstructions = nodeInstructions + LocateIptables(i) +
-                            " -I INPUT -m mac --mac-source "+ nodo.WhatWifiMac() +
+                            " -I INPUT -m mac --mac-source " + nodo.WhatWifiMac() +
                             " -j DROP\n" +
                             LocateIptables(i) +
-                            " -I FORWARD -m mac --mac-source "+ nodo.WhatWifiMac() +
+                            " -I FORWARD -m mac --mac-source " + nodo.WhatWifiMac() +
                             " -j DROP\n";
                     delNodeInstructions = delNodeInstructions + LocateIptables(i) +
-                            " -D INPUT -m mac --mac-source "+ nodo.WhatWifiMac() +
+                            " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac() +
                             " -j DROP\n" +
                             LocateIptables(i) +
-                            " -D FORWARD -m mac --mac-source "+ nodo.WhatWifiMac() +
+                            " -D FORWARD -m mac --mac-source " + nodo.WhatWifiMac() +
                             " -j DROP\n";
                 }
             }
             //Add both instructions path.
-            if(deleteInstructions){
+            if (deleteInstructions) {
                 nodeInstructions = nodeInstructions + "sleep " +
-                        (GetRealSimulationTime() + VISIBILITY_TIME_WAIT)
-                        + "\n" + delNodeInstructions;
+                        (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
             }
             //Enqueue the new created instructions.
-            addInstruction.add(i,nodeInstructions);
+            addInstruction.add(i, nodeInstructions);
         }
     }
-    
+
     /**
      * Delete the old rules that prevent one AP to see another.
      */
-    private void DeleteOldVisibilityInstructions(){        
+    private void DeleteOldVisibilityInstructions() {
         String oldInstruction;
         String[] oldInstructions;
-        String deleteInstruction="";
-        
-        for(int i=0; i < instructionsAnt.size(); i++){
+        String deleteInstruction = "";
+
+        for (int i = 0; i < instructionsAnt.size(); i++) {
             //Empty the old rules.
             oldInstruction = (String) instructionsAnt.get(i);
-            oldInstructions=oldInstruction.split("\n");
-            deleteInstruction="";
-            for(int j=0; j<oldInstructions.length;j++){
-                if(oldInstructions[j].contains("-I")){
-                    deleteInstruction = deleteInstruction + oldInstructions[j].replace("-I","-D") + "\n";
+            oldInstructions = oldInstruction.split("\n");
+            deleteInstruction = "";
+            for (int j = 0; j < oldInstructions.length; j++) {
+                if (oldInstructions[j].contains("-I")) {
+                    deleteInstruction = deleteInstruction + oldInstructions[j].replace("-I", "-D") + "\n";
                 }
             }
             //Adding the delete instruccions to each node.
-            removeInstruction.add(i,deleteInstruction);
+            removeInstruction.add(i, deleteInstruction);
         }
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                             STATIC SIMULATION FUNCTIONS
      *
      ****************************************************************************/
-    
-    
     /**
      * Send one instruction for all nodes connected by SSH.
      * @param instruction The instruction to send (in bash syntax).
      * @param withExit If must be showed the return of the instruction.
      */
-    void InstructionForAll(String instruction, boolean withExit){
+    void InstructionForAll(String instruction, boolean withExit) {
         String action;
         List<List<String>> nodeInstructions = new ArrayList<List<String>>();
         SshNode ssh;
@@ -861,27 +864,27 @@ public class CastadivaModel {
         String nodeSelfDestructionInstruction = "kill -9 $(ps -e |" +
                 " grep \"/usr/sbin/dropbear\" | grep -v grep | grep -v \"400 S\" " +
                 "| tail -1 | cut -n -d \"r\" -f1 )";
-        
+
         aux.add(instruction);
         //Kill the SSH session (sometimes, not end).
         aux.add(nodeSelfDestructionInstruction);
-        
+
         nodeInstructions.add(aux);
-        
-        
+
+
         RunSimulation(SSHInstructionThread, nodeInstructions, withExit);
-        
+
         //Close the session.
-        try{
-            for(int i=0; i<SSHInstructionThread.size();i++){
+        try {
+            for (int i = 0; i < SSHInstructionThread.size(); i++) {
                 ssh = (SshNode) SSHInstructionThread.get(i);
                 ssh.Disconnect();
             }
             SSHInstructionThread = null;
-        }catch(NullPointerException npe){
+        } catch (NullPointerException npe) {
         }
     }
-    
+
     /**
      * LaunchStatisticRecovery generate a Thread for every declared line in
      * the traffic table.
@@ -891,20 +894,20 @@ public class CastadivaModel {
      * Allow to control when all the threads ends.
      *
      */
-    void LaunchStatisticRecovery(StatisticExchangeBuffer statisticsControl){
+    void LaunchStatisticRecovery(StatisticExchangeBuffer statisticsControl) {
         List<ObtainStatisticsThread> VectorStatisticThread = new ArrayList<ObtainStatisticsThread>();
-        
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
+
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             TrafficRecord trafficLine = (TrafficRecord) accessPoints.GetTraffic().get(i);
             //Generate a thread to control the end of the traffic deppending of the kind of traffic.
-            if(trafficLine.getTCPUDP().equals("UDP")){
+            if (trafficLine.getTCPUDP().equals("UDP")) {
                 ObtainStatisticsThread StatisticsUDP = new ObtainStatisticsThread(
                         computer.WhatWorkingDirectory() + File.separatorChar +
                         STATISTICS_UDP_DESTINATION_FILE + (i + 1), 20, accessPoints.GetTraffic(),
                         i, statisticsControl);
                 VectorStatisticThread.add(i, StatisticsUDP);
                 StatisticsUDP.start();
-            }else{
+            } else {
                 ObtainStatisticsThread StatisticsTCP = new ObtainStatisticsThread(
                         computer.WhatWorkingDirectory() + File.separatorChar +
                         STATISTICS_TCP_DESTINATION_FILE + (i + 1), 20, accessPoints.GetTraffic(),
@@ -914,7 +917,7 @@ public class CastadivaModel {
             }
         }
     }
-    
+
     /**
      * This function stop the simulation when all the traffic data has been calculate.
      *
@@ -923,23 +926,23 @@ public class CastadivaModel {
      * @see LaunchStatisticRecovery
      * @see IsStatisticsEnded
      */
-    private void EndStatisticsSeeker(){
-        if(statisticsControl.IsEndOfStatistics()){
+    private void EndStatisticsSeeker() {
+        if (statisticsControl.IsEndOfStatistics()) {
             EndStopwatch();
         }
     }
-    
+
     /**
      * Prepare the simulation working directory for a new simulation.
      */
-    private void PrepareComputerDirectory(){
+    private void PrepareComputerDirectory() {
         DeleteDirectory(computer.WhatWorkingDirectory());
     }
-    
+
     /**
      * Clear all data for an old simulation and generate the new one to start another.
      */
-    private void PrepareSimulation(){
+    private void PrepareSimulation() {
         EndStopwatch();
         NewStopwatch();
         NodeDisconnect();
@@ -949,28 +952,28 @@ public class CastadivaModel {
         PrepareRoutingProtocol();
         EmptyInstructionsList();
     }
-    
+
     /**
      * To start a new simulation, first the program must be sure that all datas are ready.
      */
-    void AllSimulationSteaps(){
+    void AllSimulationSteaps() {
         PrepareSimulation();
         //StartSimulation();
         StartFileSimulation();
     }
-    
+
     /**
      * Replay the last simulation.
      */
-    void ReplaySimulationSteaps(){
+    void ReplaySimulationSteaps() {
         PrepareSimulation();
         ReplayFileSimulation();
     }
-    
+
     /**
      * Start a new simulation with all defined datas (traffic, APs, ...).
      */
-    private void StartSimulation(){
+    private void StartSimulation() {
         instructions = MergeInstructionsList(removeInstruction, addInstruction);
         //statisticsControl mark if all traffic lines are ended.
         statisticsControl = new StatisticExchangeBuffer(accessPoints.GetTrafficSize());
@@ -983,68 +986,68 @@ public class CastadivaModel {
         RunSimulation(SSHServerThread, serverInstructions, false);
         RunSimulation(SSHClientThread, clientInstructions, false);
     }
-    
+
     /**
      * Prepare the simulation without mobility
      */
-    private void StartStaticSimulation(){
+    private void StartStaticSimulation() {
         CalculateNewNodeVisibility();
         instructions = MergeInstructionsList(removeInstruction, addInstruction);
         CreateTraffic();
         externalTrafficInstructions = GenerateExternalTrafficInstructions();
         GenerateRoutingInstructions();
     }
-    
+
     /**
      * Start a new simulation, storing first the instructions in a file.
      */
-    private void StartFileSimulation(){
+    private void StartFileSimulation() {
         List startingInstructions;
-        
+
         statisticsShowed = false;
         simulating = true;
         //statisticsControl mark if all traffic lines are ended.
         statisticsControl = new StatisticExchangeBuffer(accessPoints.GetTrafficSize());
-        if(MobiliyActivated()){
+        if (MobiliyActivated()) {
             StartMobility();
-        }else{
+        } else {
             StartStaticSimulation();
         }
         GenerateFileInstructionsForAllNodes();
         startingInstructions = GenerateStartingInstructionsForSSH();
         RunSimulation(SSHThread, startingInstructions, false);
     }
-    
+
     /**
      * Replay the last simulation, storing first the instructions in a file.
      */
-    private void ReplayFileSimulation(){
+    private void ReplayFileSimulation() {
         List startingInstructions;
-        
-        
+
+
         statisticsShowed = false;
         simulating = true;
         //statisticsControl mark if all traffic lines are ended.
         statisticsControl = new StatisticExchangeBuffer(accessPoints.GetTrafficSize());
-        
-        if(MobiliyActivated()){
+
+        if (MobiliyActivated()) {
             ReplayMobility();
-        }else{
+        } else {
             StartStaticSimulation();
         }
         GenerateFileInstructionsForAllNodes();
         startingInstructions = GenerateStartingInstructionsForSSH();
         RunSimulation(SSHThread, startingInstructions, false);
     }
-    
+
     /**
      * Generate one list ready to be sended by SSH to exectue the starting script
      * of the simulation.
      */
-    public List GenerateStartingInstructionsForSSH(){
+    public List GenerateStartingInstructionsForSSH() {
         List<List> startingInstructions = new ArrayList<List>();
         String data;
-        for(int i = 0 ; i < accessPoints.Size();i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             List<String> nodeStartingInstruction = new ArrayList<String>();
             AP node = accessPoints.Get(i);
             data = "sh " + node.WhatWorkingDirectory() + File.separator +
@@ -1053,31 +1056,31 @@ public class CastadivaModel {
             nodeStartingInstruction.add(data);
             startingInstructions.add(nodeStartingInstruction);
         }
-        
+
         return startingInstructions;
     }
-    
+
     /**
      * Generate one file for each node witch contain all instructions for
      * this node.
      */
-    public void GenerateFileInstructionsForAllNodes(){
-        for(int i = 0; i < accessPoints.Size(); i++){
+    public void GenerateFileInstructionsForAllNodes() {
+        for (int i = 0; i < accessPoints.Size(); i++) {
             StoreAllInstructionsForOneNode(i);
         }
     }
-    
+
     /**
      * Select all instructions for one node and store it in a default file.
      * @param node The number of the node.
      */
-    public void StoreAllInstructionsForOneNode(Integer node){
+    public void StoreAllInstructionsForOneNode(Integer node) {
         String folder = computer.WhatWorkingDirectory() + File.separator +
                 DEFAULT_INSTRUCTIONS_FOLDER + (node + 1);
         List<String> startingInstructions = new ArrayList<String>();
-        
+
         GenerateFolder(folder);
-        
+
         String visibilityFile = folder + File.separator + INSTRUCTIONS_VISIBILITY_FILE;
         String clientFile = folder + File.separator + INSTRUCTIONS_CLIENT_FILE;
         String serverFile = folder + File.separator + INSTRUCTIONS_SERVER_FILE;
@@ -1085,7 +1088,7 @@ public class CastadivaModel {
         String startingFile = folder + File.separator + DEFAULT_STARTING_INSTRUCTION;
         String externalTrafficFile = folder + File.separator + DEFAULT_EXTERNAL_TRAFFIC_INSTRUCTION;
         //String deletingUdpFile = folder + file.separator + FINISH_UDP_INSTRUCTIONS_FILE;
-        
+
         startingInstructions.addAll(KillAllOldInstructions());
         startingInstructions.add(SetWifiConfiguration(node));
         startingInstructions.addAll(GenerateRunAllFilesOfSimulation(node));
@@ -1095,32 +1098,32 @@ public class CastadivaModel {
         StoreInFileInstructionForOneNode(serverInstructions, node, serverFile);
         StoreInFileInstructionForOneNode(clientInstructions, node, clientFile);
         StoreInFileInstructionForOneNode(externalTrafficInstructions, node, externalTrafficFile);
-        //StoreInFileInstructionForOneNode(killUdpClientInstructions, node, deletingUdpFile);
+    //StoreInFileInstructionForOneNode(killUdpClientInstructions, node, deletingUdpFile);
     }
-    
+
     /**
      * kill all instructions of a previous simulation.
      */
-    public List<String> KillAllOldInstructions(){
+    public List<String> KillAllOldInstructions() {
         List<String> killInstructions = new ArrayList<String>();
         //killInstructions.add("kill -9 `pidof unik-olsr` 2>/dev/null");
         killInstructions.add("/usr/bin/killall sleep 2>/dev/null;");
         return killInstructions;
     }
-    
+
     /**
      * Configure the wifi of an access points to be in the same network of Castadiva.
      */
-    public String SetWifiConfiguration(Integer node){
+    public String SetWifiConfiguration(Integer node) {
         AP ap = accessPoints.Get(node);
-        String encryption=" key restricted [1] 0012-3498-76";
+        String encryption = " key restricted [1] 0012-3498-76";
         String wifi;
-        if(RTS){
+        if (RTS) {
             wifi = LocateIwconfig(node) + ap.WhatWifiDevice() +
                     " essid " + WIFI_SSID + " channel " +
                     ap.WhatChannel() + " mode " + ap.WhatMode() + " rts 0 " +
                     encryption;
-        }else{
+        } else {
             wifi = LocateIwconfig(node) + ap.WhatWifiDevice() +
                     " essid " + WIFI_SSID + " channel " +
                     ap.WhatChannel() + " mode " + ap.WhatMode() + " rts 2347" +
@@ -1128,12 +1131,12 @@ public class CastadivaModel {
         }
         return wifi;
     }
-    
+
     /**
      * Generate one script to run all the needed scripts in the simulation.
      * @param node The node number witch is generated this script.
      */
-    public List<String> GenerateRunAllFilesOfSimulation(Integer node){
+    public List<String> GenerateRunAllFilesOfSimulation(Integer node) {
         List<String> AllFilesInstructions = new ArrayList<String>();
         AP ap = accessPoints.Get(node);
         File file = null;
@@ -1151,75 +1154,78 @@ public class CastadivaModel {
         //AllFilesInstructions.add("sh ./" + FINISH_UDP_INSTRUCTIONS_FILE + " & ");
         return AllFilesInstructions;
     }
-    
+
     /**
      * Store in a file only de instructions for one node in a file.
      * @param instructionListForAllNodes a group of instructions for all nodes.
      * @param node The node number.
      */
     public void StoreInFileInstructionForOneNode(List<List<String>> instructionListForAllNodes,
-            Integer node, String file){
+            Integer node, String file) {
         List<String> instructionsOneNode = new ArrayList<String>();
         instructionsOneNode.add("#!/bin/sh");
-        if(node < instructionListForAllNodes.size())
-            instructionsOneNode.addAll((List<String>)instructionListForAllNodes.get(node));
+        if (node < instructionListForAllNodes.size()) {
+            instructionsOneNode.addAll((List<String>) instructionListForAllNodes.get(node));
+        }
         SaveInFile(instructionsOneNode, file);
     }
-    
-    private List<List<String>> StopVisibilityInstructions(){
+
+    private List<List<String>> StopVisibilityInstructions() {
         List<List<String>> stopVisibility = new ArrayList<List<String>>();
-        
+
         String instructionStop = "/usr/bin/killall sleep";
-        for(int i=0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             List<String> aux = new ArrayList<String>();
             stopVisibility.add(aux);
         }
         return stopVisibility;
     }
-    
+
     /**
      * Abort a simulation in course.
      */
-    public void StopSimulation(){       
-         List<List<String>> stopVisibility = StopVisibilityInstructions();
-         RunSimulation(SSHThread, stopVisibility, false);
-         //Desconectamos las sesiones SSH
-         NodeDisconnect();
+    public void StopSimulation() {
+        List<List<String>> stopVisibility = StopVisibilityInstructions();
+        RunSimulation(SSHThread, stopVisibility, false);
+        //Desconectamos las sesiones SSH
+        NodeDisconnect();
     }
-    
+
     /**
      * Delete all instruction sended by CASTADIVA.
      */
-    private void EmptyInstructionsList(){
+    private void EmptyInstructionsList() {
         instructionsAnt = addInstruction;
         addInstruction = new ArrayList<String>();
         removeInstruction = new ArrayList<String>();
     }
-    
+
     /**
      * Combine two instructions list in one.
      */
-    private List<List<String>> MergeInstructionsList(List<String> instructionsList1, List<String> instructionsList2){
+    private List<List<String>> MergeInstructionsList(List<String> instructionsList1, List<String> instructionsList2) {
         List<List<String>> instructionsCombinadas = new ArrayList<List<String>>();
         List<String> nodeInstructionsFinal;
         String cadena;
-        
-        for(int i=0; i<accessPoints.Size(); i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             cadena = "";
             nodeInstructionsFinal = new ArrayList<String>();
-            try{
+            try {
                 cadena = instructionsList1.get(i).toString();
                 nodeInstructionsFinal.add(cadena);
-            }catch(IndexOutOfBoundsException ioe){}
-            try{
+            } catch (IndexOutOfBoundsException ioe) {
+            }
+            try {
                 cadena = instructionsList2.get(i).toString();
                 nodeInstructionsFinal.add(cadena);
-            }catch(IndexOutOfBoundsException ioe){}
+            } catch (IndexOutOfBoundsException ioe) {
+            }
             instructionsCombinadas.add(nodeInstructionsFinal);
         }
         return instructionsCombinadas;
     }
-    
+
     /**
      * Connet to the APs and send the instructions generated.
      * @param sshThreadList The list of Threads to control the SSH connection.
@@ -1229,81 +1235,78 @@ public class CastadivaModel {
      * @see CreateTraffic
      * @see StartSimulation
      */
-    private void RunSimulation(List<SSH> sshThreadList, List<List<String>> instructionsList, boolean exit){
+    private void RunSimulation(List<SSH> sshThreadList, List<List<String>> instructionsList, boolean exit) {
         //Generamos los hilos pertienentes.
         List emptyList = new ArrayList();
-        for(int i=0; i<accessPoints.Size();i++){
-            if(instructionsList.size()>0){
-                try{
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            if (instructionsList.size() > 0) {
+                try {
                     SshNode ssh = new SshNode(accessPoints.Get(i), (List) instructionsList.get(i),
                             exit, emptyList, computer.WhatWorkingDirectory());
                     sshThreadList.add(i, ssh);
                     ssh.start();
-                }catch(ClassCastException ce){
-                }catch(IndexOutOfBoundsException ex){}
+                } catch (ClassCastException ce) {
+                } catch (IndexOutOfBoundsException ex) {
+                }
             }
         }
     }
-    
+
     /**
      * End the SSH connection to all APs.
      */
-    private void NodeDisconnect(){
-        for(int i=0; i<SSHThread.size();i++){
+    private void NodeDisconnect() {
+        for (int i = 0; i < SSHThread.size(); i++) {
             SshNode ssh = (SshNode) SSHThread.get(i);
             ssh.Disconnect();
         }
-        for(int i=0; i<SSHClientThread.size();i++){
+        for (int i = 0; i < SSHClientThread.size(); i++) {
             SshNode ssh = (SshNode) SSHClientThread.get(i);
             ssh.Disconnect();
         }
-        for(int i=0; i<SSHServerThread.size();i++){
+        for (int i = 0; i < SSHServerThread.size(); i++) {
             SshNode ssh = (SshNode) SSHServerThread.get(i);
             ssh.Disconnect();
         }
-        
+
     }
-    
+
     /**
      * Kill a started simulation.
      */
-    void KillSimulation(){
+    void KillSimulation() {
         String stopAll = KillAllOldInstructions() +
                 StopTraffic();
         InstructionForAll(stopAll, false);
         EndStopwatch();
         StopSimulation();
     }
-   
-    
-    
+
     /****************************************************************************
      *
      *                              TRAFFIC SIMULATION
      *
      ****************************************************************************/
-    
-    
     /**
      * Get ready the packet traffic store data.
      */
-    private void PrepareTraffic(){
+    private void PrepareTraffic() {
         Vector<TrafficRecord> tmp_traffic;
         //Preparing Traffic Table.
-        for(int i = 0; i < accessPoints.GetTrafficSize(); i++){
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             TrafficRecord traffic = (TrafficRecord) accessPoints.GetTraffic().get(i);
             traffic.setLastSpeed(Float.parseFloat("0"));
             traffic.setPacketsReceived(0);
-            
+
             tmp_traffic = accessPoints.GetTraffic();
             tmp_traffic.set(i, traffic);
         }
-        
+
         //Preparing traffic instruction list.
-        for(int i=0; i< accessPoints.Size();i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             List trafficInstructionsTemporal = new ArrayList();
         }
-        
+
         serverInstructions = new ArrayList<List<String>>();
         clientInstructions = new ArrayList<List<String>>();
         clientLastTime = new ArrayList<Integer>();
@@ -1313,139 +1316,142 @@ public class CastadivaModel {
         throughputAverage = new Float(0);
         udpAverage = new Float(0);
     }
-    
+
     /**
      * Create a pause time before starting clients.
      * @param record The traffic record from the program read the instruction.
      * @param node The node to set the sleep time.
      * @return The instruction in one string.
      */
-    private String GenerateStartingTimeOfClientInstructions(TrafficRecord record, Integer node){
+    private String GenerateStartingTimeOfClientInstructions(TrafficRecord record, Integer node) {
         Integer startingTime;
         String sleepInstruction;
-        
+
         startingTime = record.getStart();
         sleepInstruction = "sleep " + startingTime + " && ";
         return sleepInstruction;
     }
-    
+
     /**
      * Create a pause time before starting servers.
      * @param record The traffic record from the program read the instruction.
      * @param node The node to set the sleep time.
      * @return The instruction in one string.
      */
-    private String GenerateStartingTimeOfServersInstructions(TrafficRecord record, Integer node){
+    private String GenerateStartingTimeOfServersInstructions(TrafficRecord record, Integer node) {
         Integer startingTime;
         String sleepInstruction;
-        
+
         startingTime = record.getStart();
         sleepInstruction = "sleep " + startingTime + " && ";
         return sleepInstruction;
     }
-    
+
     /**
      * Create a pause time before killing clients.
      * @param record The traffic record from the program read the instruction.
      * @param node The node to set the sleep time.
      * @return The instruction in one string.
      */
-    private String GenerateEndingTimeOfClientUdpInstructions(TrafficRecord record, Integer node){
+    private String GenerateEndingTimeOfClientUdpInstructions(TrafficRecord record, Integer node) {
         Integer endingTime;
         String sleepInstruction;
-        
+
         endingTime = record.getStop();
         sleepInstruction = "sleep " + endingTime + " && ";
         return sleepInstruction;
     }
-    
+
     /**
      * Create an UDP instructions to stop the AP when the simulation is finished.
      */
-    private String CreateDeletingUdpInstructions(TrafficRecord record, Integer number){
+    private String CreateDeletingUdpInstructions(TrafficRecord record, Integer number) {
         /*String InstructionForDeleteUdpClients = " kill -9 `ps -e | grep \"ttcp -t -p "+
-                (TRAFFIC_PORT + number) + "\" | awk '{print $1}'` 2> /dev/null ";   */
+        (TRAFFIC_PORT + number) + "\" | awk '{print $1}'` 2> /dev/null ";   */
         String InstructionForDeleteUdpClients = "\n";
         return InstructionForDeleteUdpClients;
     }
-    
+
     /**
      * Create a TCP instructions to stop the AP when the simulation is finished.
      */
-    private String CreateDeletingTcpInstructions(TrafficRecord record, Integer number){
+    private String CreateDeletingTcpInstructions(TrafficRecord record, Integer number) {
         String InstructionForDeleteUdpClients = "\n";
         return InstructionForDeleteUdpClients;
     }
-    
+
     /**
      * Cretate one UDP instruction for a client.
      * @param record The traffic record from the program read the instruction.
      * @param number The number of the instruction.
      * @return The instruction in one string.
      */
-    private String GenerateClientTrafficUdpInstuction(TrafficRecord record, int number){
+    private String GenerateClientTrafficUdpInstuction(TrafficRecord record, int number) {
         String sourceInstruction;
         Integer startNode, endNode;
         AP sourceNode, destinationNode;
-        Integer burst=100;
+        Integer burst = 100;
         Integer realSendedPackets;
         Integer sendedPackets;
         File file = null;
-        
+
         startNode = accessPoints.SearchAP(record.getSource());
         endNode = accessPoints.SearchAP(record.getAddress());
         sourceNode = accessPoints.Get(startNode);
         destinationNode = accessPoints.Get(endNode);
-        
+
         int segundosEsperaServidor = ((record.getMaxPackets() /
                 record.getPacketsSeconds()) - record.getStart() +
                 TRAFFIC_SERVER_TIME_WAIT + PROTOCOL_TIME_WAIT) * 1000;
-        
+
         //Obtain the packets thar really will be sended in the simulation.
-        sendedPackets = record.getPacketsSeconds()*(record.getStop() -
+        sendedPackets = record.getPacketsSeconds() * (record.getStop() -
                 record.getStart());
-        if(record.getMaxPackets() > sendedPackets) realSendedPackets = sendedPackets;
-        else realSendedPackets = record.getMaxPackets();
-        
+        if (record.getMaxPackets() > sendedPackets) {
+            realSendedPackets = sendedPackets;
+        } else {
+            realSendedPackets = record.getMaxPackets();
+        }
+
         sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
                 "UdpFlowClient" + sourceNode.WhatProcessor() + " " +
-                destinationNode.WhatWifiIP() + " "  + (TRAFFIC_PORT + number) + " " +
+                destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
                 record.getSize() + " " + record.getPacketsSeconds() + " " +
-                (record.getStop()-record.getStart()) + " ";
+                (record.getStop() - record.getStart()) + " ";
         return sourceInstruction;
     }
-    
+
     /**
      * Cretate one TCP instruction for a client.
      * @param record The traffic record from the program read the instruction.
      * @param number The number of the instruction.
      * @return The instruction in one string.
      */
-    private String GenerateClientTrafficTcpInstuction(TrafficRecord record, int number){
+    private String GenerateClientTrafficTcpInstuction(TrafficRecord record, int number) {
         String sourceInstruction;
         Integer startNode, endNode;
         AP sourceNode, destinationNode;
         File file = null;
-        
+
         startNode = accessPoints.SearchAP(record.getSource());
         endNode = accessPoints.SearchAP(record.getAddress());
         sourceNode = accessPoints.Get(startNode);
         destinationNode = accessPoints.Get(endNode);
-        
+
         sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
                 "TcpFlowClient" + sourceNode.WhatProcessor() + " " +
-                destinationNode.WhatWifiIP() + " "  + (TRAFFIC_PORT + number) + " " +
-                record.getTransferSize() + " " + (record.getStop()-record.getStart()) + " ";
+                destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
+                record.getTransferSize() + " " + (record.getStop() - record.getStart()) + " ";
         return sourceInstruction;
     }
-    
+
     /**
      * Preparte the TTCP tool to behaviour like a client sending packets.
      * The traffic UDP is generated with the ttcp tool. This tool need one server
      * and one client. This method send the client instructions.
      */
-    private void GenerateClientTrafficInstructions(){
-        TrafficRecord record=null;
+    private void GenerateClientTrafficInstructions() {
+        TrafficRecord record = null;
         Integer startNode;
         AP router;
         String sourceInstruction;
@@ -1454,11 +1460,11 @@ public class CastadivaModel {
         List<String> nodeDeleteInstructions;
         String trueInstruction;
         String trueDeleteInstruction;
-        
+
         //By default, the instructions are empty.
         nodeInstructions = new ArrayList<String>();
         nodeDeleteInstructions = new ArrayList<String>();
-        for (int i=0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             //nodeInstructions.add("\nsleep " + (TRAFFIC_SERVER_TIME_WAIT + PROTOCOL_TIME_WAIT) + " &");
             //nodeDeleteInstructions.add("\nsleep " + (TRAFFIC_SERVER_TIME_WAIT + PROTOCOL_TIME_WAIT) + " &");
             nodeInstructions.add("#Adding new traffic instructions.");
@@ -1466,55 +1472,55 @@ public class CastadivaModel {
             clientLastTime.add(0);
             clientEndingUdpTime.add(0);
         }
-        
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
-            record=(TrafficRecord)accessPoints.GetTraffic().get(i);
+
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             startNode = accessPoints.SearchAP(record.getSource());
             sourceInstruction = GenerateStartingTimeOfClientInstructions(record, startNode);
             deleteInstruction = GenerateEndingTimeOfClientUdpInstructions(record, startNode);
-            
+
             //Dependind if the traffic is TCP or UDP
-            if(record.getTCPUDP().equals("UDP")){
+            if (record.getTCPUDP().equals("UDP")) {
                 sourceInstruction = sourceInstruction + GenerateClientTrafficUdpInstuction(record, i);
                 deleteInstruction = deleteInstruction + CreateDeletingUdpInstructions(record, i);
-            }else{
+            } else {
                 // Is defined the traffic like TCP.
                 sourceInstruction = sourceInstruction + GenerateClientTrafficTcpInstuction(record, i);
                 deleteInstruction = deleteInstruction + CreateDeletingTcpInstructions(record, i);
             }
             //Write the instrucciont to the client instructions list
             router = accessPoints.Get(startNode);
-            sourceInstruction = nodeInstructions.get(startNode) + "& \n" +  sourceInstruction;
+            sourceInstruction = nodeInstructions.get(startNode) + "& \n" + sourceInstruction;
             deleteInstruction = nodeDeleteInstructions.get(startNode) + "& \n" + deleteInstruction;
             nodeInstructions.set(startNode, sourceInstruction);
             nodeDeleteInstructions.set(startNode, deleteInstruction);
-            
+
             //Save the last instruction starting/ending time. This time is used to calculate when the
             //next instruction will start/end.
             clientLastTime.add(startNode, record.getStart());
-            clientEndingUdpTime.add(startNode,record.getStop());
+            clientEndingUdpTime.add(startNode, record.getStop());
         }
-        
+
         //Adding the instructions to each node.
-        for (int i = 0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             trueInstruction = nodeInstructions.get(i).toString();
             trueDeleteInstruction = nodeDeleteInstructions.get(i).toString();
-            if (!trueInstruction.equals("")){
+            if (!trueInstruction.equals("")) {
                 AddInstructionToNode(clientInstructions, trueInstruction, i);
             }
-            if(!trueDeleteInstruction.equals("")){
+            if (!trueDeleteInstruction.equals("")) {
                 AddInstructionToNode(killUdpClientInstructions, trueDeleteInstruction, i);
             }
         }
     }
-    
+
     /**
      * Cretate one UDP instruction for a server.
      * @param router The AP that act as a server.
      * @param number The number of the instruction.
      * @return The instruction in one string.
      */
-    private String GeneranteServerTrafficUDPInstruction(AP router, int number, int seconds){
+    private String GeneranteServerTrafficUDPInstruction(AP router, int number, int seconds) {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
@@ -1525,163 +1531,161 @@ public class CastadivaModel {
                 STATISTICS_UDP_DESTINATION_FILE + (number + 1);
         return addressInstruction;
     }
-    
+
     /**
      * Cretate one TCP instruction for a server.
      * @param router The AP that act as a server.
      * @param number The number of the instruction.
      * @return The instruction in one string.
      */
-    private String GeneranteServerTrafficTCPInstruction(AP router, int number){
+    private String GeneranteServerTrafficTCPInstruction(AP router, int number) {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
                 "TcpFlowServer" + router.WhatProcessor() + " " +
-                (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " "
-                + WRITE_TIME_IN_FILE + " > " + router.WhatWorkingDirectory() +
+                (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " + WRITE_TIME_IN_FILE + " > " + router.WhatWorkingDirectory() +
                 File.separator + STATISTICS_TCP_DESTINATION_FILE + (number + 1);
         return addressInstruction;
     }
-    
+
     /**
      * Activate the program tcpdump in the desired node.
      * @param node
      */
-    private String GenerateInstructionForReplay(Integer node){
+    private String GenerateInstructionForReplay(Integer node) {
         String instructionReplay;
         instructionReplay = "NET_DEVICE=`NET=\\`ifconfig | grep " + accessPoints.Get(node).WhatWifiIP() +
-                " -n | cut -d\":\" -f1 | head  -1\\` && " +"let NET=$NET-1 && ifconfig |  " +
-                "head -$NET | tail -1 | cut -d\" \" -f1`" +" && /usr/sbin/tcpdump -w "+
-                accessPoints.Get(node).WhatWorkingDirectory() +"tcpdump"+ node +
+                " -n | cut -d\":\" -f1 | head  -1\\` && " + "let NET=$NET-1 && ifconfig |  " +
+                "head -$NET | tail -1 | cut -d\" \" -f1`" + " && /usr/sbin/tcpdump -w " +
+                accessPoints.Get(node).WhatWorkingDirectory() + "tcpdump" + node +
                 ".dump -i $NET_DEVICE & ";
         return instructionReplay;
     }
-    
+
     /**
      * Preparte the TTCP tool to behaviour like a server.
      * The traffic UDP is generated with the ttcp tool. This tool need one server
      * and one client. This method send the server instructions to prepare an Ap
      * to receive packets.
      */
-    private void GenerateServerTrafficInstructions(){
-        TrafficRecord record=null;
+    private void GenerateServerTrafficInstructions() {
+        TrafficRecord record = null;
         Integer nodo;
         AP router;
         String addressInstruction;
         List<String> nodeInstructions;
         String trueInstruction;
         String instructionReplay;
-        
+
         //Empty instructions and add the default one.
         nodeInstructions = new ArrayList<String>();
-        for (int i=0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             //No borrar el espacio!!!
             nodeInstructions.add(" ");
             serverLastTime.add(0);
         }
-        
+
         //Generating the instruction.
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
-            record=(TrafficRecord)accessPoints.GetTraffic().get(i);
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             nodo = accessPoints.SearchAP(record.getAddress());
             router = accessPoints.Get(nodo);
-            
+
             addressInstruction = GenerateStartingTimeOfServersInstructions(record, nodo);
-            
+
             //Dependind if the traffic is TCP or UDP
-            if(record.getTCPUDP().equals("UDP")){
+            if (record.getTCPUDP().equals("UDP")) {
                 addressInstruction = addressInstruction + GeneranteServerTrafficUDPInstruction(router, i,
                         record.getStop() - record.getStart());
-            }else{
+            } else {
                 // Is defined the traffic like TCP.
                 addressInstruction = addressInstruction + GeneranteServerTrafficTCPInstruction(router, i);
             }
-            
+
             //Adding the new instruction.
-            addressInstruction = nodeInstructions.get(nodo) +  addressInstruction + " & \n";
+            addressInstruction = nodeInstructions.get(nodo) + addressInstruction + " & \n";
             nodeInstructions.set(nodo, addressInstruction);
-            
+
             //Store the last instruction starting time.
             serverLastTime.add(nodo, record.getStart());
         }
-        
+
         //Adding all instruction to the node.
-        for (int i=0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             trueInstruction = nodeInstructions.get(i).toString();
-            if(replay){
+            if (replay) {
                 //Adding net scan instruction only for wifi device.
                 instructionReplay = GenerateInstructionForReplay(i);
                 trueInstruction = instructionReplay + trueInstruction;
             }
-            if (!trueInstruction.equals("")){
+            if (!trueInstruction.equals("")) {
                 AddInstructionToNode(serverInstructions, trueInstruction, i);
             }
         }
     }
-    
+
     /**
      * Generate all the traffic instructions needed and prepare it to send to the APs.
      * @see GenerateClientTrafficInstructions
      * @see GenerateServerTrafficInstructions
      */
-    private void CreateTraffic(){
+    private void CreateTraffic() {
         GenerateClientTrafficInstructions();
         GenerateServerTrafficInstructions();
     }
-    
+
     /**
      * Order the traffic vector in order of starting time of each instruction.
      */
-    void OrderTrafficVector(Vector<TrafficRecord> traffic ){
+    void OrderTrafficVector(Vector<TrafficRecord> traffic) {
         Vector<TrafficRecord> aux = new Vector<TrafficRecord>();
         TrafficRecord record;
         TrafficRecord recordAux = null;
         Integer firstRowValue;
         int firstRow = 0;
-        
+
         Vector<TrafficRecord> newVector = new Vector<TrafficRecord>();
-        VectorCopyTo(traffic, newVector, traffic.size()-1);
-        
-        while(newVector.size()>0){
+        VectorCopyTo(traffic, newVector, traffic.size() - 1);
+
+        while (newVector.size() > 0) {
             firstRowValue = 10000000;
-            for(int i=0; i<newVector.size();i++){
-                record=(TrafficRecord)newVector.get(i);
-                if(record.getStart() < firstRowValue){
+            for (int i = 0; i < newVector.size(); i++) {
+                record = (TrafficRecord) newVector.get(i);
+                if (record.getStart() < firstRowValue) {
                     firstRow = i;
                     firstRowValue = record.getStart();
                 }
             }
             aux.add(newVector.get(firstRow));
-            record = (TrafficRecord)newVector.get(firstRow);
+            record = (TrafficRecord) newVector.get(firstRow);
             newVector.remove(firstRow);
         }
         UpdateTraffic(aux);
     }
-    
+
     /**
      * Duplicate one row of traffic clonning other line.
      */
-    void DuplicateTrafficRow(List<TrafficRecord> traffic, Integer row){
+    void DuplicateTrafficRow(List<TrafficRecord> traffic, Integer row) {
         TrafficRecord recordAux;
-        
-        if(row > -1 && row < traffic.size()-1){
-            traffic.remove(traffic.size()-1);
-            recordAux = (TrafficRecord)traffic.get(row);
+
+        if (row > -1 && row < traffic.size() - 1) {
+            traffic.remove(traffic.size() - 1);
+            recordAux = (TrafficRecord) traffic.get(row);
             traffic.add(new TrafficRecord(
                     recordAux.getTCPUDP(), recordAux.getSource(),
                     recordAux.getAddress(), recordAux.getSize(),
                     recordAux.getStart(), recordAux.getStop(),
                     recordAux.getTransferSize(), recordAux.getPacketsSeconds(),
                     recordAux.getMaxPackets(), recordAux.getLastSpeed(),
-                    recordAux.getPacketsReceived()
-                    ));
+                    recordAux.getPacketsReceived()));
         }
     }
-    
+
     /**
      * Cancel all traffic sended to the APs.
      */
-    private String StopTraffic(){
+    private String StopTraffic() {
         String instruction = "/usr/bin/killall TcpFlowServerMIPS 1>&2; " +
                 "/usr/bin/killall UdpFlowServerMIPS 1>&2; " +
                 "/usr/bin/killall UdpFlowClientMIPS 1>&2; " +
@@ -1692,312 +1696,322 @@ public class CastadivaModel {
                 "/usr/bin/killall TcpFlowClientX86 1>&2; ";
         return instruction;
     }
-    
+
     /**
      * Check if one traffic instruction has identical source and destination.
      * @return The line number where it happen.
      * @see TrafficRecord
      */
-    int TrafficIdenticalSourceDestination(){
+    int TrafficIdenticalSourceDestination() {
         TrafficRecord Linea;
-        for(int i = 0; i<accessPoints.GetTrafficSize(); i++){
-            Linea = (TrafficRecord)accessPoints.GetTraffic().get(i);
-            if(Linea.getAddress().equals(Linea.getSource()))
-                return i+1;
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            Linea = (TrafficRecord) accessPoints.GetTraffic().get(i);
+            if (Linea.getAddress().equals(Linea.getSource())) {
+                return i + 1;
+            }
         }
         return 0;
     }
-    
+
     /**
      * Check the traffic table to controlate all the lines are written
      * in order.
      * @return The line number where it happen.
      * @see TrafficRecord
      */
-    int TrafficCheckTimeOrder(){
+    int TrafficCheckTimeOrder() {
         List<Integer> lastTime = new ArrayList<Integer>();
-        TrafficRecord record=null;
+        TrafficRecord record = null;
         int startNode;
-        
-        for(int i=0; i<accessPoints.Size(); i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             lastTime.add(0);
         }
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
-            record = (TrafficRecord)accessPoints.GetTraffic().get(i);
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             startNode = accessPoints.SearchAP(record.getSource());
-            if((Integer)lastTime.get(startNode) > record.getStart()){
-                return i+1;
-            }else{
-                lastTime.set(startNode,(Integer)record.getStart());
+            if ((Integer) lastTime.get(startNode) > record.getStart()) {
+                return i + 1;
+            } else {
+                lastTime.set(startNode, (Integer) record.getStart());
             }
         }
         return 0;
     }
-    
+
     /**
      * Generate a list with all traffic in plain text.
      * @return A list with has every line of the traffic data.
      */
-    private List ExportTrafficToText(){
-        TrafficRecord record=null;
+    private List ExportTrafficToText() {
+        TrafficRecord record = null;
         String line = null;
         List<String> trafficPlainText = new ArrayList<String>();
-        
+
         trafficPlainText.add("Line\tStrt\tStop\tSrce\tAddr\tTraff\t" +
                 "Transf.\tSize\tPkt/sec\tPackt\t" +
                 "Thrghpt\tRecevided");
         trafficPlainText.add("----------------------------------------" +
                 "-----------------------------------------------------" +
                 "------------");
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
-            record=(TrafficRecord)accessPoints.GetTraffic().get(i);
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             line = "";
-            if(record.getTCPUDP().equals("UDP"))
-                trafficPlainText.add((i+1)+"\t"+record.getStart()+"\t"+record.getStop()+
-                        "\t"+record.getSource()+"\t"+record.getAddress()+"\t"+
-                        record.getTCPUDP()+"\t \t"+record.getSize()
-                        +"\t"+record.getPacketsSeconds()+"\t"+record.getMaxPackets()+"\t"+
-                        +record.getLastSpeed()+"\t"+record.getPacketsPerCentReceived());
-            else
-                trafficPlainText.add((i+1)+"\t"+record.getStart()+"\t"+record.getStop()+
-                        "\t"+record.getSource()+"\t"+record.getAddress()+
-                        "\t"+record.getTCPUDP()+"\t"+record.getTransferSize()+"\t \t \t" +
-                        "\t"+ record.getLastSpeed());
+            if (record.getTCPUDP().equals("UDP")) {
+                trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop() +
+                        "\t" + record.getSource() + "\t" + record.getAddress() + "\t" +
+                        record.getTCPUDP() + "\t \t" + record.getSize() + "\t" + record.getPacketsSeconds() + "\t" + record.getMaxPackets() + "\t" +
+                        +record.getLastSpeed() + "\t" + record.getPacketsPerCentReceived());
+            } else {
+                trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop() +
+                        "\t" + record.getSource() + "\t" + record.getAddress() +
+                        "\t" + record.getTCPUDP() + "\t" + record.getTransferSize() + "\t \t \t" +
+                        "\t" + record.getLastSpeed());
+            }
         }
         trafficPlainText.add("\n\nTotal UDP packets received: " + udpAverage);
         trafficPlainText.add("Average throughput: " + throughputAverage);
         return trafficPlainText;
     }
-    
+
     /**
      * Generate a file with all the traffic in plain text. Useful for printing.
      * @see ExportTrafficToText
      */
-    void PrintTraffic(String file){
+    void PrintTraffic(String file) {
         List trafficPlainText;
         trafficPlainText = ExportTrafficToText();
         //ShowTraffic(trafficPlainText);
-        SaveInFile(trafficPlainText,file);
+        SaveInFile(trafficPlainText, file);
     }
-    
+
     /**
      * Update all data structures involved in the traffic.
      * @param vector The new traffic value.
      */
-    void UpdateTraffic(Vector<TrafficRecord> vector){
+    void UpdateTraffic(Vector<TrafficRecord> vector) {
         accessPoints.SetTraffic(vector);
         tableModel.UpdateData(vector);
     }
-    
+
     /**
      * Calculate the average TCP Throughput and the average UDP packet lost.
      */
-    void ObtainAverageTraffic(){
-        TrafficRecord record=null;
+    void ObtainAverageTraffic() {
+        TrafficRecord record = null;
         Float totalPacketsLost = new Float(0);
         Integer totalUdp = 0;
         Float totalThroughput = new Float(0);
-        
-        for(int i=0; i<accessPoints.GetTrafficSize(); i++){
-            record=(TrafficRecord)accessPoints.GetTraffic().get(i);
+
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             totalThroughput += record.getLastSpeed();
-            if(record.getTCPUDP().equals("UDP")){
-                totalPacketsLost +=record.getPacketsPerCentReceived();
-                totalUdp ++;
+            if (record.getTCPUDP().equals("UDP")) {
+                totalPacketsLost += record.getPacketsPerCentReceived();
+                totalUdp++;
             }
         }
         udpAverage = totalPacketsLost / totalUdp;
         throughputAverage = totalThroughput / accessPoints.GetTrafficSize();
-        if(udpAverage.isNaN()) udpAverage = new Float(0);
-        if(throughputAverage.isNaN()) throughputAverage = new Float(0);
+        if (udpAverage.isNaN()) {
+            udpAverage = new Float(0);
+        }
+        if (throughputAverage.isNaN()) {
+            throughputAverage = new Float(0);
+        }
     }
-    
+
     /**
      * Return the path of the iptables binary of a determined node.
      */
-    String LocateIptables(int node){
+    String LocateIptables(int node) {
         AP ap = accessPoints.Get(node);
-        if(ap.WhatProcessor().equals("MIPS")){
+        if (ap.WhatProcessor().equals("MIPS")) {
             return "/usr/sbin/iptables ";
         }
-        if(ap.WhatProcessor().equals("X86")){
+        if (ap.WhatProcessor().equals("X86")) {
             return "/sbin/iptables ";
         }
         return "";
     }
-    
+
     /**
      * Return the path of the iwconfig binary of a determined node.
      */
-    String LocateIwconfig(int node){
+    String LocateIwconfig(int node) {
         AP ap = accessPoints.Get(node);
-        if(ap.WhatProcessor().equals("MIPS")){
+        if (ap.WhatProcessor().equals("MIPS")) {
             return "/usr/sbin/iwconfig ";
         }
-        if(ap.WhatProcessor().equals("X86")){
+        if (ap.WhatProcessor().equals("X86")) {
             return "/sbin/iwconfig ";
         }
         return "";
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                              EXTERNAL TRAFFIC
      *
      ****************************************************************************/
-    
-    
     /**
      * Check if exists an external traffic with this id.
      * @return the index of the equal traffic id.
      */
-    private int ExistExternalTrafficWithThisName(String name){
+    private int ExistExternalTrafficWithThisName(String name) {
         ExternalTraffic externalTraffic;
-        for(int i=0; i<externalTrafficFlow.size(); i++){
-            externalTraffic = (ExternalTraffic)externalTrafficFlow.get(i);
-            if(externalTraffic.name.equals(name)) return i;
+        for (int i = 0; i < externalTrafficFlow.size(); i++) {
+            externalTraffic = (ExternalTraffic) externalTrafficFlow.get(i);
+            if (externalTraffic.name.equals(name)) {
+                return i;
+            }
         }
         return -1;
     }
-    
+
     /**
      * Add an external traffic flow to Castadiva.
      */
     public int AttachExternalTraffic(String tmp_startPort, String tmp_endPort,
             String tmp_fromIp, String tmp_toIp, int tmp_fromAp, String tmp_fromNet,
-            int tmp_toAp, String tmp_toNet, String tmp_protocol, String tmp_id){
+            int tmp_toAp, String tmp_toNet, String tmp_protocol, String tmp_id) {
         ExternalTraffic externalTraffic;
-        
-        
-        try{
+
+
+        try {
             externalTraffic = new ExternalTraffic(Integer.parseInt(tmp_startPort),
                     Integer.parseInt(tmp_endPort), tmp_fromIp, tmp_toIp,
-                    tmp_fromAp, tmp_fromNet, tmp_toAp, tmp_toNet,tmp_protocol, tmp_id);
+                    tmp_fromAp, tmp_fromNet, tmp_toAp, tmp_toNet, tmp_protocol, tmp_id);
             int existIndex = ExistExternalTrafficWithThisName(tmp_id);
-            if(existIndex < 0){
+            if (existIndex < 0) {
                 externalTrafficFlow.add(externalTraffic);
-            }else{
+            } else {
                 externalTrafficFlow.set(existIndex, externalTraffic);
             }
             return 0;
-        }catch(NumberFormatException nfe){
-            if(debug)
+        } catch (NumberFormatException nfe) {
+            if (debug) {
                 System.out.println("Error inserting external traffic!");
+            }
             return -1;
         }
     }
-    
+
     /**
      * Return all instructions for one determined node to adapt it to external traffic.
      */
-    private List<String> GenerateExternalTrafficInstructionsForOneNode(int node){
+    private List<String> GenerateExternalTrafficInstructionsForOneNode(int node) {
         List<String> externalTrafficInstructionsForNode = new ArrayList<String>();
-        if (debug) System.out.println(" ** External Traffic: \n");
-        for(int i=0; i<externalTrafficFlow.size(); i++){
+        if (debug) {
+            System.out.println(" ** External Traffic: \n");
+        }
+        for (int i = 0; i < externalTrafficFlow.size(); i++) {
             ExternalTraffic externalTraffic = externalTrafficFlow.get(i);
             //Select the instructions of the desired node.
-            
+
             /* Laptop 192.168.1.32 (in AP1) to laptop 192.168.1.30 (in AP5) */
-            if(node == externalTraffic.fromAp){                
+            if (node == externalTraffic.fromAp) {
                 /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.1.32 
-                 --dport 5000:5099 -j DNAT --to-destination 192.168.2.5 & */
-                String instruction1 = LocateIptables(externalTraffic.fromAp) +   
+                --dport 5000:5099 -j DNAT --to-destination 192.168.2.5 & */
+                String instruction1 = LocateIptables(externalTraffic.fromAp) +
                         " -t nat -A PREROUTING -p " + externalTraffic.protocol +
                         " -s " + externalTraffic.fromIp + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j DNAT --to-destination " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction1);
-                
+
                 /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.1.32 
-                 --dport 5000:5099 -j SNAT --to 192.168.2.1 */
-                String instruction2 = LocateIptables(externalTraffic.fromAp) +   
+                --dport 5000:5099 -j SNAT --to 192.168.2.1 */
+                String instruction2 = LocateIptables(externalTraffic.fromAp) +
                         " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                         " -s " + externalTraffic.fromIp + " --dport " +
+                        " -s " + externalTraffic.fromIp + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j SNAT --to " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction2);
-                
+
                 /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.2.5 
-                 --dport 5000:5099 -j DNAT --to-destination 192.168.1.32 && */
-                String instruction3 = LocateIptables(externalTraffic.fromAp) +   
+                --dport 5000:5099 -j DNAT --to-destination 192.168.1.32 && */
+                String instruction3 = LocateIptables(externalTraffic.fromAp) +
                         " -t nat -A PREROUTING -p " + externalTraffic.protocol +
                         " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j DNAT --to-destination " + externalTraffic.fromIp + " && ";
                 externalTrafficInstructionsForNode.add(instruction3);
-                
+
                 /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.2.5 
-                 --dport 5000:5099 -j SNAT --to 192.168.1.30 */
-                String instruction4 = LocateIptables(externalTraffic.fromAp) +   
+                --dport 5000:5099 -j SNAT --to 192.168.1.30 */
+                String instruction4 = LocateIptables(externalTraffic.fromAp) +
                         " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                         " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport " +
+                        " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j SNAT --to " + externalTraffic.toIp + " && ";
-                externalTrafficInstructionsForNode.add(instruction4);               
-                
-                if (debug) System.out.println(instruction1 + "\n" + instruction2 + "\n" + instruction3 +"\n" + instruction4);
+                externalTrafficInstructionsForNode.add(instruction4);
+
+                if (debug) {
+                    System.out.println(instruction1 + "\n" + instruction2 + "\n" + instruction3 + "\n" + instruction4);
+                }
             }
-            
-            if(node == externalTraffic.toAp){
+
+            if (node == externalTraffic.toAp) {
                 /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.1.30 
-                 --dport 5000:5099 -j DNAT --to-destination 192.168.2.1 & */
-                String instruction1 = LocateIptables(externalTraffic.toAp) +   
+                --dport 5000:5099 -j DNAT --to-destination 192.168.2.1 & */
+                String instruction1 = LocateIptables(externalTraffic.toAp) +
                         " -t nat -A PREROUTING -p " + externalTraffic.protocol +
                         " -s " + externalTraffic.toIp + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j DNAT --to-destination " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction1);
-                
+
                 /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.1.30 
-                 --dport 5000:5099 -j SNAT --to 192.168.2.5 & */
-                String instruction2 = LocateIptables(externalTraffic.toAp) +   
+                --dport 5000:5099 -j SNAT --to 192.168.2.5 & */
+                String instruction2 = LocateIptables(externalTraffic.toAp) +
                         " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                         " -s " + externalTraffic.toIp + " --dport " +
+                        " -s " + externalTraffic.toIp + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j SNAT --to " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction2);
-                
+
                 /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.2.1 
-                 --dport 5000:5099 -j DNAT --to-destination 192.168.1.30 & && */
-                String instruction3 = LocateIptables(externalTraffic.toAp) +   
+                --dport 5000:5099 -j DNAT --to-destination 192.168.1.30 & && */
+                String instruction3 = LocateIptables(externalTraffic.toAp) +
                         " -t nat -A PREROUTING -p " + externalTraffic.protocol +
                         " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j DNAT --to-destination " + externalTraffic.toIp + " && ";
                 externalTrafficInstructionsForNode.add(instruction3);
-                
+
                 /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.2.1 
-                 --dport 5000:5099 -j SNAT --to 192.168.1.32 */
-                String instruction4 = LocateIptables(externalTraffic.toAp) +   
+                --dport 5000:5099 -j SNAT --to 192.168.1.32 */
+                String instruction4 = LocateIptables(externalTraffic.toAp) +
                         " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                         " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport " +
+                        " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport " +
                         externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
                         " -j SNAT --to " + externalTraffic.fromIp + " && ";
-                externalTrafficInstructionsForNode.add(instruction4);               
-                
-                if (debug) System.out.println(instruction1 + "\n" + instruction2 + "\n" + instruction3 +"\n" + instruction4);
+                externalTrafficInstructionsForNode.add(instruction4);
+
+                if (debug) {
+                    System.out.println(instruction1 + "\n" + instruction2 + "\n" + instruction3 + "\n" + instruction4);
+                }
             }
         }
         return externalTrafficInstructionsForNode;
     }
-    
+
     /**
      * Obtain all instructions for all nodes to adapt them to external traffic.
      */
-    private List<List<String>> GenerateExternalTrafficInstructions(){
+    private List<List<String>> GenerateExternalTrafficInstructions() {
         List<String> oneNodeInstructionsList;
         List<String> deleteoneNodeInstructionsList;
         List<List<String>> totalAllNodeInstructionsList = new ArrayList<List<String>>();
-        for(int i=0; i<accessPoints.Size();i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             oneNodeInstructionsList = GenerateExternalTrafficInstructionsForOneNode(i);
             deleteoneNodeInstructionsList = new ArrayList<String>();
             //Deleting all instructions when the simulation finish.
-            for(int j=0; j<oneNodeInstructionsList.size(); j++){
+            for (int j = 0; j < oneNodeInstructionsList.size(); j++) {
                 String oneNodeInstruction = oneNodeInstructionsList.get(j);
                 //When the simulation is finished, delete the instructions.
-                String deleteoneNodeInstruction = oneNodeInstruction.replace("-A","-D");
+                String deleteoneNodeInstruction = oneNodeInstruction.replace("-A", "-D");
                 deleteoneNodeInstructionsList.add(deleteoneNodeInstruction);
             }
             //Waiting the time of the simulation.             
@@ -2006,57 +2020,54 @@ public class CastadivaModel {
             oneNodeInstructionsList.addAll(deleteoneNodeInstructionsList);
             totalAllNodeInstructionsList.add(oneNodeInstructionsList);
         }
-        
+
         return totalAllNodeInstructionsList;
     }
-    
-    void DeleteExternalTrafficInstruction(int index){
-        if(index < externalTrafficFlow.size() && index >= 0)
+
+    void DeleteExternalTrafficInstruction(int index) {
+        if (index < externalTrafficFlow.size() && index >= 0) {
             externalTrafficFlow.remove(index);
+        }
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                              ROUTING PROTOCOLS
      *
      ****************************************************************************/
-    
-    
     /**
      * Clean all Routing variables.
      */
-    private void PrepareRoutingProtocol(){
+    private void PrepareRoutingProtocol() {
         routingInstruction.removeAll(routingInstruction);
     }
-    
+
     /**
      * Change the routing protocol used in the simulation.
      * @param protocolName A string containing the name of the protocol.
      */
-    void ChangeRoutingProtocol(String protocolName){
+    void ChangeRoutingProtocol(String protocolName) {
         routingProtocol = protocolName;
     }
-    
+
     /**
      * Prepare Castadiva wtih all needed instructions to select a routing protocol.
      */
-    private void GenerateRoutingInstructions(){
+    private void GenerateRoutingInstructions() {
         DeactivateRoutingProtocol();
         ActivateRoutingProtocol();
     }
-    
+
     /**
      * If you kill the olsrd in the Openwrt or stop the Optimum routing protocol,
      * some route entries persist into the device.
      * This function clean all route entries for the wifi device and generate
      * the default one.
      */
-    private String CleanRoutingRules(AP node){
+    private String CleanRoutingRules(AP node) {
         String script =
                 "#Clean all Castadiva route entries.\n" +
-                "i=$((`route -n| wc -l`+1));\n"+
+                "i=$((`route -n| wc -l`+1));\n" +
                 "while [ \"$i\" -gt \"3\" ] \n" +
                 "do \n" +
                 "i=$(($i-1));\n" +
@@ -2064,89 +2075,94 @@ public class CastadivaModel {
                 "gw=`route -n | head -$i | tail -n 1 | awk '{print $2}'`\n" +
                 "mask=`route -n | head -$i | tail -n 1 | awk '{print $3}'`\n" +
                 "device=`route -n | head -$i | tail -n 1 | awk '{print $8}'`\n" +
-                "if [ \"$device\" = \""+ node.WhatWifiDevice() + "\" ];then\n" + 
+                "if [ \"$device\" = \"" + node.WhatWifiDevice() + "\" ];then\n" +
                 "route del -net $net netmask $mask\n" +
                 "fi\n" +
                 "done\n\n" +
-                
                 "#Add default entries.\n" +
                 "route add -net " + ObtainNetTypeC(accessPoints.Get(1).WhatWifiIP()) +
-                " netmask 255.255.255.0 dev "+ node.WhatWifiDevice() + "\n" ;
+                " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + "\n";
         return script;
     }
-    
+
     /**
      * Kill the old routing Protocol (if exists) running in the APs.
      */
-    private void DeactivateRoutingProtocol(){
-        String killAodv ="kill -9 `pidof aodv` 2>/dev/null";
+    private void DeactivateRoutingProtocol() {
+        String killAodv = "kill -9 `pidof aodv` 2>/dev/null";
         //String killOlsr ="kill -9 `pidof unik-olsr` 2>/dev/null";
         //String killOlsr ="killall olsrd 2>/dev/null";
         String killOptimum = deleteOptimumInstruction;
         String deleteInstruction = "";
         PROTOCOL_TIME_WAIT = 0;
-        
-        if(!routingProtocol.equals(lastRoutingProtocol)){
-            for(int i=0; i<accessPoints.Size(); i++){
-                if(lastRoutingProtocol.equals("AODV")) deleteInstruction = killAodv;
-                if(lastRoutingProtocol.equals("OLSR")) deleteInstruction = CleanRoutingRules(accessPoints.Get(i));
-                if(lastRoutingProtocol.equals("Optimum")) deleteInstruction = killOptimum;
-                if(lastRoutingProtocol.equals("none")) deleteInstruction = "";
+
+        if (!routingProtocol.equals(lastRoutingProtocol)) {
+            for (int i = 0; i < accessPoints.Size(); i++) {
+                if (lastRoutingProtocol.equals("AODV")) {
+                    deleteInstruction = killAodv;
+                }
+                if (lastRoutingProtocol.equals("OLSR")) {
+                    deleteInstruction = CleanRoutingRules(accessPoints.Get(i));
+                }
+                if (lastRoutingProtocol.equals("Optimum")) {
+                    deleteInstruction = killOptimum;
+                }
+                if (lastRoutingProtocol.equals("none")) {
+                    deleteInstruction = "";
+                }
                 AddInstructionToNode(routingInstruction, deleteInstruction, i);
             }
         }
     }
-    
+
     /**
      * Generate the instructions to send to the AP for activating the Selectioned protocol.
      * @return boolean value depending if the system must to change the protocol.
      */
-    private void ActivateRoutingProtocol(){
-        
-        if(routingProtocol.equals("none")){
+    private void ActivateRoutingProtocol() {
+
+        if (routingProtocol.equals("none")) {
             PROTOCOL_TIME_WAIT = 0;
         }
-        if(routingProtocol.equals("AODV")){
+        if (routingProtocol.equals("AODV")) {
             GenerateAodvInstructions();
         }
-        if(routingProtocol.equals("Optimum")){
+        if (routingProtocol.equals("Optimum")) {
             GenerateOptimumInstructions();
         }
-        
-        if(routingProtocol.equals("OLSR")){
+
+        if (routingProtocol.equals("OLSR")) {
             GenerateOlsrInstructions();
         }
     }
-    
+
     /**
      * Generate all specific instructions for activating the AODV protocol.
      */
-    private void GenerateAodvInstructions(){
+    private void GenerateAodvInstructions() {
         PROTOCOL_TIME_WAIT = 30;
         String protocolInstruction = "";
-        
-        for(int i=0; i<accessPoints.Size(); i++){
-            protocolInstruction = accessPoints.Get(i).WhatWorkingDirectory()+
-                    File.separator + "aodvd.sh "+ accessPoints.Get(i).WhatProcessor()
-                    + " " + accessPoints.Get(i).WhatWorkingDirectory() +" \n";
-            protocolInstruction = protocolInstruction + "; sleep " + GetRealSimulationTime()
-            + ";\n" + "/sur/bin/kill -9 `pidof aodv` 2>/dev/null";
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            protocolInstruction = accessPoints.Get(i).WhatWorkingDirectory() +
+                    File.separator + "aodvd.sh " + accessPoints.Get(i).WhatProcessor() + " " + accessPoints.Get(i).WhatWorkingDirectory() + " \n";
+            protocolInstruction = protocolInstruction + "; sleep " + GetRealSimulationTime() + ";\n" + "/sur/bin/kill -9 `pidof aodv` 2>/dev/null";
             SetInstructionToNode(routingInstruction, protocolInstruction, i);
         }
     }
-    
+
     /**
      * Obtain all instructions to use the Optimum protocol without movement.
      */
-    private void GenerateStaticOptimumInstructions(){
+    private void GenerateStaticOptimumInstructions() {
         String protocolInstruction = "";
         List<String> delList;
-        
+
         PROTOCOL_TIME_WAIT = 2;
         Gateways();
-        for(int i=0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             delList = new ArrayList<String>();
-            for(int j=0; j<accessPoints.Size(); j++){
+            for (int j = 0; j < accessPoints.Size(); j++) {
                 //I.E. route add -host 192.168.1.2 gw 192.168.1.1 eth1
                 protocolInstruction = "route add -host " +
                         accessPoints.Get(j).WhatWifiIP() + " gw " +
@@ -2158,418 +2174,423 @@ public class CastadivaModel {
             SetInstructionToNode(routingInstruction, "sleep " + GetSimulationTime(), i);
             //Generating the deletion of the routing
             deleteOptimumInstruction = "";
-            for(int j=delList.size(); j>0; j--){
-                protocolInstruction = (String)delList.get(j-1);
+            for (int j = delList.size(); j > 0; j--) {
+                protocolInstruction = (String) delList.get(j - 1);
                 protocolInstruction = Replace(protocolInstruction, "add", "del");
                 deleteOptimumInstruction = deleteOptimumInstruction + protocolInstruction + " & ";
                 SetInstructionToNode(routingInstruction, protocolInstruction, i);
             }
         }
     }
-    
+
     /**
      * Obtain all instructions to use the Optimum protocol with mobility.
      */
-    private void GenerateMobilityOptimumInstrucions(){
-        String protocolInstruction = "", deleteInstruction ="", totalInstruction ="";
+    private void GenerateMobilityOptimumInstrucions() {
+        String protocolInstruction = "", deleteInstruction = "", totalInstruction = "";
         Integer oldGatewayMatrix[][];
         Integer sleepTime[], elapsedTime[];
-        
+
         PROTOCOL_TIME_WAIT = 2;
         oldGatewayMatrix = GenerateMatrix(accessPoints.Size(), accessPoints.Size(), 0);
         sleepTime = GenerateVector(accessPoints.Size(), 0);
         elapsedTime = GenerateVector(accessPoints.Size(), 0);
-        for(int k=0; k<GetSimulationTime();k++){
-            if(k>0) oldGatewayMatrix = gatewayMatrix.clone();
+        for (int k = 0; k < GetSimulationTime(); k++) {
+            if (k > 0) {
+                oldGatewayMatrix = gatewayMatrix.clone();
+            }
             Gateways(k);
-            for(int i=0; i<accessPoints.Size(); i++){
-                totalInstruction="";
-                for(int j=0; j<accessPoints.Size(); j++){
-                    if(oldGatewayMatrix[i][j] != gatewayMatrix[i][j]){
+            for (int i = 0; i < accessPoints.Size(); i++) {
+                totalInstruction = "";
+                for (int j = 0; j < accessPoints.Size(); j++) {
+                    if (oldGatewayMatrix[i][j] != gatewayMatrix[i][j]) {
                         protocolInstruction = "";
                         deleteInstruction = "";
                         //If there is a new gateway.
-                        if(gatewayMatrix[i][j] != 0){
+                        if (gatewayMatrix[i][j] != 0) {
                             protocolInstruction = "route add -host " +
                                     accessPoints.Get(j).WhatWifiIP() + " gw " +
                                     accessPoints.Get(gatewayMatrix[i][j]).WhatWifiIP() + " " +
                                     accessPoints.Get(i).WhatWifiDevice() + "\n";
                         }
                         //If is necessary, delete the old one.
-                        if(oldGatewayMatrix[i][j] != 0){
+                        if (oldGatewayMatrix[i][j] != 0) {
                             deleteInstruction = "route del -host " +
                                     accessPoints.Get(j).WhatWifiIP() + " gw " +
                                     accessPoints.Get(oldGatewayMatrix[i][j]).WhatWifiIP() + " " +
                                     accessPoints.Get(i).WhatWifiDevice() + "\n";
                         }
-                        if(sleepTime[i] != 0) totalInstruction = "sleep " + sleepTime[i] + "\n";
+                        if (sleepTime[i] != 0) {
+                            totalInstruction = "sleep " + sleepTime[i] + "\n";
+                        }
                         totalInstruction = totalInstruction + deleteInstruction +
                                 protocolInstruction;
                         //If an instruction is added, reset the waiting time.
-                        if(oldGatewayMatrix[i][j] != 0 || gatewayMatrix[i][j] != 0){
-                            elapsedTime[i]+=sleepTime[i];
+                        if (oldGatewayMatrix[i][j] != 0 || gatewayMatrix[i][j] != 0) {
+                            elapsedTime[i] += sleepTime[i];
                             sleepTime[i] = 0;
                         }
                     }
                     //We prepare the sleep for the next second.
-                    if(j==accessPoints.Size()-1) {
+                    if (j == accessPoints.Size() - 1) {
                         sleepTime[i]++;
                     }
                 }
-                if(!totalInstruction.equals(""))
+                if (!totalInstruction.equals("")) {
                     SetInstructionToNode(routingInstruction, totalInstruction, i);
+                }
             }
         }
         //Deleting all remaining routing instructions.
-        for(int i=0; i<accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             SetInstructionToNode(routingInstruction, "sleep " + (GetRealSimulationTime() - elapsedTime[i]), i);
             SetInstructionToNode(routingInstruction, CleanRoutingRules(accessPoints.Get(i)), i);
         }
-        
+
     }
-    
+
     /**
      * Generate all instructions to define the routing in the network without
      * routing protocol.
      */
-    private void GenerateOptimumInstructions(){
-        if(MobiliyActivated()){
+    private void GenerateOptimumInstructions() {
+        if (MobiliyActivated()) {
             GenerateMobilityOptimumInstrucions();
-        }else{
+        } else {
             GenerateStaticOptimumInstructions();
         }
     }
-    
+
     /**
      * Generate all specific instructions for activating the OLSR protocol.
      */
-    private void GenerateOlsrInstructions(){
+    private void GenerateOlsrInstructions() {
         PROTOCOL_TIME_WAIT = 8;
         String protocolInstruction = "";
-        
-        for(int i=0; i<accessPoints.Size(); i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             protocolInstruction = "#Start olsrd protocol.\n" +
                     "/usr/sbin/olsrd\n\n" +
-                    "#Wait for the end of simulation.\n"+
-                    "sleep " + GetRealSimulationTime() + "\n\n"+
+                    "#Wait for the end of simulation.\n" +
+                    "sleep " + GetRealSimulationTime() + "\n\n" +
                     "#Kill olsrd protocol\n" +
                     "kill -9 `pidof olsrd` 2>/dev/null \n\n" +
                     CleanRoutingRules(accessPoints.Get(i));
             SetInstructionToNode(routingInstruction, protocolInstruction, i);
         }
     }
-    
+
     /**
      * Show a matrix with the nearest node to send a packet to reach anotherone.
      * Columns and rows are the nodes and the value is the gateway. I.E: To reach
      * Y node from X node, see the position X,Y and see the gateway of X.
      */
-    public void Gateways(){
+    public void Gateways() {
         gatewayMatrix = new Integer[accessPoints.Size()][accessPoints.Size()];
         Integer tree[] = new Integer[accessPoints.Size()];
         Integer gateways[] = new Integer[accessPoints.Size()];
-        
+
         //Set gateway matrix to 0
-        for(int j=0; j<accessPoints.Size(); j++){
-            for(int i=0; i<accessPoints.Size();i++){
-                gatewayMatrix[i][j]=0;
+        for (int j = 0; j < accessPoints.Size(); j++) {
+            for (int i = 0; i < accessPoints.Size(); i++) {
+                gatewayMatrix[i][j] = 0;
             }
         }
-        
-        for(int i=0; i<accessPoints.Size();i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             //Calculate the tree of this node.
-            tree=TreeGenerator(i);
-            gateways=GatewayOfOneNode(tree, i);
-            
-            for(int j=0; j<accessPoints.Size();j++){
-                gatewayMatrix[i][j]=gateways[j];
+            tree = TreeGenerator(i);
+            gateways = GatewayOfOneNode(tree, i);
+
+            for (int j = 0; j < accessPoints.Size(); j++) {
+                gatewayMatrix[i][j] = gateways[j];
             }
         }
     }
-    
+
     /**
      * Show a matrix with the nearest node to send a packet to reach anotherone.
      * Columns and rows are the nodes and the value is the gateway. I.E: To reach
      * Y node from X node, see the position X,Y and see the gateway of X.
      */
-    public void Gateways(Integer second){
+    public void Gateways(Integer second) {
         gatewayMatrix = new Integer[accessPoints.Size()][accessPoints.Size()];
         Integer tree[] = new Integer[accessPoints.Size()];
         Integer gateways[] = new Integer[accessPoints.Size()];
-        
+
         //Set gateway matrix to 0
-        for(int j=0; j<accessPoints.Size(); j++){
-            for(int i=0; i<accessPoints.Size();i++){
-                gatewayMatrix[i][j]=0;
+        for (int j = 0; j < accessPoints.Size(); j++) {
+            for (int i = 0; i < accessPoints.Size(); i++) {
+                gatewayMatrix[i][j] = 0;
             }
         }
-        
-        for(int i=0; i<accessPoints.Size();i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             //Calculate the tree of this node.
-            tree=TreeGenerator(i, second);
-            gateways=GatewayOfOneNode(tree, i);
-            
-            for(int j=0; j<accessPoints.Size();j++){
-                gatewayMatrix[i][j]=gateways[j];
+            tree = TreeGenerator(i, second);
+            gateways = GatewayOfOneNode(tree, i);
+
+            for (int j = 0; j < accessPoints.Size(); j++) {
+                gatewayMatrix[i][j] = gateways[j];
             }
         }
     }
-    
+
     /**
      * Obtain the gateways of one node.
      */
-    public Integer[] GatewayOfOneNode(Integer[] tree, Integer node){
+    public Integer[] GatewayOfOneNode(Integer[] tree, Integer node) {
         Integer gateways[] = new Integer[accessPoints.Size()];
         Integer prevNode;
         Integer nextNode;
-        
-        for(int i=0;i<accessPoints.Size();i++){
-            prevNode=i;
-            nextNode=-1;
-            if(tree[i]==node){
-                gateways[i]=i;
-            }else{
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            prevNode = i;
+            nextNode = -1;
+            if (tree[i] == node) {
+                gateways[i] = i;
+            } else {
                 //Searching the next hop in the routing.
-                while(nextNode!=node){
-                    if(tree[prevNode]==0) break;
-                    prevNode=tree[prevNode];
-                    nextNode=tree[prevNode];
+                while (nextNode != node) {
+                    if (tree[prevNode] == 0) {
+                        break;
+                    }
+                    prevNode = tree[prevNode];
+                    nextNode = tree[prevNode];
                 }
-                gateways[i]=prevNode;
+                gateways[i] = prevNode;
             }
         }
         return gateways;
     }
-    
+
     /**
      * Create a tree of a graph with a determinated root.
      */
-    public Integer[] TreeGenerator(Integer node){
+    public Integer[] TreeGenerator(Integer node) {
         Integer nodeUsed;
         Integer visited[] = new Integer[accessPoints.Size()];
         List<Integer> next = new ArrayList<Integer>();
         Integer tree[] = new Integer[accessPoints.Size()];
-        
-        for(int i=0; i<accessPoints.Size();i++){
-            tree[i]=0;
-            visited[i]=0;
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            tree[i] = 0;
+            visited[i] = 0;
         }
-        
-        visited[node]=1;
+
+        visited[node] = 1;
         next.add(node);
-        
-        while(next.size()>0){
-            nodeUsed=(Integer)next.get(0);
+
+        while (next.size() > 0) {
+            nodeUsed = (Integer) next.get(0);
             next.remove(0);
-            for(int i=0;i<accessPoints.Size();i++){
+            for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
-                if(visibilityMatrix[nodeUsed][i]>0)
-                    //It is not reached yet
-                    if(visited[i]==0){
-                    //Add to the list.
-                    next.add(i);
-                    visited[i]=1;
-                    tree[i]=nodeUsed;
+                if (visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
+                {
+                    if (visited[i] == 0) {
+                        //Add to the list.
+                        next.add(i);
+                        visited[i] = 1;
+                        tree[i] = nodeUsed;
                     }
+                }
             }
         }
         return tree;
     }
-    
+
     /**
      * Create a tree of a graph with a determinated root.
      */
-    public Integer[] TreeGenerator(Integer node, Integer second){
+    public Integer[] TreeGenerator(Integer node, Integer second) {
         Integer nodeUsed;
         Integer visited[] = new Integer[accessPoints.Size()];
         List<Integer> next = new ArrayList<Integer>();
         Integer tree[] = new Integer[accessPoints.Size()];
-        
-        for(int i=0; i<accessPoints.Size();i++){
-            tree[i]=0;
-            visited[i]=0;
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            tree[i] = 0;
+            visited[i] = 0;
         }
-        
-        visited[node]=1;
+
+        visited[node] = 1;
         next.add(node);
-        
+
         visibilityMatrix = GenerateMobilityVisibilityMatrix(second);
-        while(next.size()>0){
-            nodeUsed=(Integer)next.get(0);
+        while (next.size() > 0) {
+            nodeUsed = (Integer) next.get(0);
             next.remove(0);
-            for(int i=0;i<accessPoints.Size();i++){
+            for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
-                if(visibilityMatrix[nodeUsed][i]>0)
-                    //It is not reached yet
-                    if(visited[i]==0){
-                    //Add to the list.
-                    next.add(i);
-                    visited[i]=1;
-                    tree[i]=nodeUsed;
+                if (visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
+                {
+                    if (visited[i] == 0) {
+                        //Add to the list.
+                        next.add(i);
+                        visited[i] = 1;
+                        tree[i] = nodeUsed;
                     }
+                }
             }
         }
         return tree;
     }
-    
-    
-    
-    
-    
+
     /****************************************************************************
      *
      *                        MOBILITY SIMULATION FUNCTIONS
      *
      ****************************************************************************/
-    
-    
     /**
      * Return the distance in metres between two nodes.
      * @param node1 The firt node to calculate the distance.
      * @param node2 The second node.
      */
-    private float CalculateCheckPointDistance(NodeCheckPoint node1, NodeCheckPoint node2){
-        return (float)Math.sqrt(Math.pow((node1.xCoordinate-node2.xCoordinate),2) +
-                Math.pow((node1.yCoordinate-node2.yCoordinate),2)+
-                Math.pow((node1.zCoordinate-node2.zCoordinate),2));
+    private float CalculateCheckPointDistance(NodeCheckPoint node1, NodeCheckPoint node2) {
+        return (float) Math.sqrt(Math.pow((node1.xCoordinate - node2.xCoordinate), 2) +
+                Math.pow((node1.yCoordinate - node2.yCoordinate), 2) +
+                Math.pow((node1.zCoordinate - node2.zCoordinate), 2));
     }
-    
+
     /**
      * Generate the starting visibility instructions for each node at the start of the simulaton.
      * @param markInsertedInstructions Store if exists an iptable rule for a later elimination.
      */
-    private float[][] StartingVisibilityInstructionsForMobility(boolean markInsertedInstructions[][]){
+    private float[][] StartingVisibilityInstructionsForMobility(boolean markInsertedInstructions[][]) {
         //float startingVisibilityMatrix[][];
-        
+
         //Create starting instructions. These instructions will be stored in addIntructions list.
         visibilityMatrix = GenerateVisibilityMatrix();
-        if(debug){
+        if (debug) {
             System.out.println("Starting nodes distance:");
             PrintMatrix(visibilityMatrix);
         }
         AddNodeVisibility(false);
-        
+
         //Mark all starting instructions to be deleted at the end of simulation.
-        for(int i=0; i<accessPoints.Size(); i++){
-            for(int j=0; j<accessPoints.Size(); j++){
-                if(visibilityMatrix[i][j] == -1)
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            for (int j = 0; j < accessPoints.Size(); j++) {
+                if (visibilityMatrix[i][j] == -1) {
                     markInsertedInstructions[i][j] = true;
-                else
+                } else {
                     markInsertedInstructions[i][j] = false;
+                }
             }
         }
         return visibilityMatrix;
     }
-    
+
     /**
      * Generate the rules to prevent an AP to see another according to the simulation.
      */
-    private void AddNodeVisibilityWithMobility(){
+    private void AddNodeVisibilityWithMobility() {
         String nodeInstructions;
         String delNodeInstructions;
         float oldVisibilityMatrix[][];
-        boolean deleteIptable [][];
+        boolean deleteIptable[][];
         List<String> temporalInstructions = new ArrayList<String>();
-        
+
         //Delete all visibility instructions when the simulation ends.
         deleteIptable = GenerateMatrix(accessPoints.Size(), accessPoints.Size(), false);
         oldVisibilityMatrix = StartingVisibilityInstructionsForMobility(deleteIptable);
-        
+
         sleep = GenerateVector(accessPoints.Size(), 0);
         //Inicialize instructions.
-        for (int p=0; p<accessPoints.Size(); p++){
+        for (int p = 0; p < accessPoints.Size(); p++) {
             temporalInstructions.add("#Changes into the visibility on simulation time.\n");
         }
-        
+
         //Create future instructions.
-        for(int k=0; k<GetSimulationTime(); k++){
-            if(k>0) oldVisibilityMatrix = visibilityMatrix.clone();
+        for (int k = 0; k < GetSimulationTime(); k++) {
+            if (k > 0) {
+                oldVisibilityMatrix = visibilityMatrix.clone();
+            }
             visibilityMatrix = GenerateMobilityVisibilityMatrix(k);
-            
-            for(int i=0; i<accessPoints.Size(); i++){
+
+            for (int i = 0; i < accessPoints.Size(); i++) {
                 //Create the instruction list for one node.
                 AP nodo1 = accessPoints.Get(i);
-                nodeInstructions = (String)temporalInstructions.get(i);
-                
+                nodeInstructions = (String) temporalInstructions.get(i);
+
                 //Adding the visibility rules.
-                for(int j=0; j<accessPoints.Size(); j++){
+                for (int j = 0; j < accessPoints.Size(); j++) {
                     AP nodo2 = accessPoints.Get(j);
                     //The nodes not change the visibility.
-                    if(!((oldVisibilityMatrix[i][j] >= 0 && visibilityMatrix[i][j] >= 0)
-                    || (oldVisibilityMatrix[i][j] < 0 && visibilityMatrix[i][j] < 0))){
+                    if (!((oldVisibilityMatrix[i][j] >= 0 && visibilityMatrix[i][j] >= 0) || (oldVisibilityMatrix[i][j] < 0 && visibilityMatrix[i][j] < 0))) {
                         //If one node gets out of range.
-                        if (visibilityMatrix[i][j] < 0){
-                            nodeInstructions = nodeInstructions + "sleep " +  sleep[i] +
+                        if (visibilityMatrix[i][j] < 0) {
+                            nodeInstructions = nodeInstructions + "sleep " + sleep[i] +
                                     "\n" + LocateIptables(i) +
-                                    " -I INPUT -m mac --mac-source "+ nodo2.WhatWifiMac() +
+                                    " -I INPUT -m mac --mac-source " + nodo2.WhatWifiMac() +
                                     " -j DROP\n" +
                                     LocateIptables(i) +
-                                    " -I FORWARD -m mac --mac-source "+ nodo2.WhatWifiMac() +
+                                    " -I FORWARD -m mac --mac-source " + nodo2.WhatWifiMac() +
                                     " -j DROP\n";
                             deleteIptable[i][j] = true;
                         }
                         //If one node gets in range.
-                        if (visibilityMatrix[i][j] > 0){
-                            nodeInstructions = nodeInstructions + "sleep " +  sleep[i] +
+                        if (visibilityMatrix[i][j] > 0) {
+                            nodeInstructions = nodeInstructions + "sleep " + sleep[i] +
                                     "\n" + LocateIptables(i) +
-                                    " -D INPUT -m mac --mac-source "+ nodo2.WhatWifiMac() +
+                                    " -D INPUT -m mac --mac-source " + nodo2.WhatWifiMac() +
                                     " -j DROP\n" +
                                     LocateIptables(i) +
-                                    " -D FORWARD -m mac --mac-source "+ nodo2.WhatWifiMac() +
+                                    " -D FORWARD -m mac --mac-source " + nodo2.WhatWifiMac() +
                                     " -j DROP\n";
                             deleteIptable[i][j] = false;
                         }
-                        if (visibilityMatrix[i][j] != 0){
-                            sleep[i]=0;
+                        if (visibilityMatrix[i][j] != 0) {
+                            sleep[i] = 0;
                         }
                     }
                     //Only increment sleep if Castadiva compruebes the last node.
-                    if(j==accessPoints.Size()-1) {
+                    if (j == accessPoints.Size() - 1) {
                         sleep[i]++;
                     }
                 }
                 temporalInstructions.set(i, nodeInstructions);
             }
         }
-        
+
         //Delete at the end of the simulation all rules.
-        for(int z=0; z<accessPoints.Size();z++){
-            String allInstructions = (String)temporalInstructions.get(z);
+        for (int z = 0; z < accessPoints.Size(); z++) {
+            String allInstructions = (String) temporalInstructions.get(z);
             //Ensure that all iptables are deleted.
             delNodeInstructions = "";
-            for(int l=0; l<accessPoints.Size(); l++){
-                if(deleteIptable[z][l]){
+            for (int l = 0; l < accessPoints.Size(); l++) {
+                if (deleteIptable[z][l]) {
                     AP nodo = accessPoints.Get(l);
-                    delNodeInstructions = delNodeInstructions + LocateIptables(l) +
-                            " -D INPUT -m mac --mac-source "+ nodo.WhatWifiMac() +
+                    delNodeInstructions = delNodeInstructions + LocateIptables(z) +
+                            " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac() +
                             " -j DROP\n" +
-                            LocateIptables(l) +
-                            " -D FORWARD -m mac --mac-source "+ nodo.WhatWifiMac() +
+                            LocateIptables(z) +
+                            " -D FORWARD -m mac --mac-source " + nodo.WhatWifiMac() +
                             " -j DROP\n";
                 }
             }
             allInstructions = allInstructions + "\n#Delete remaining visibility " +
                     "instructions at the end of the simulation.\nsleep " + (sleep[z] +
                     DELETING_INSTRUCTIONS_WAITING_TIME) + "\n" + delNodeInstructions;
-            String aux = (String)addInstruction.get(z);
+            String aux = (String) addInstruction.get(z);
             aux = aux + "\n" + allInstructions;
-            addInstruction.set(z,aux);
+            addInstruction.set(z, aux);
         }
     }
-    
+
     /**
      * Call to all methods to obtain the node visibility between APs.
      */
-    private void CalculateNewNodeVisibilityWithMobility(){
+    private void CalculateNewNodeVisibilityWithMobility() {
         sleep = new Integer[accessPoints.Size()];
         DeleteOldVisibilityInstructions();
         AddNodeVisibilityWithMobility();
     }
-    
+
     /**
      * Start a new simulation.
      */
-    private void StartMobilitySimulation(){
+    private void StartMobilitySimulation() {
         CalculateNewNodeVisibilityWithMobility();
         //Delete the old simulation IPtables instructions.
         instructions = MergeInstructionsList(removeInstruction, addInstruction);
@@ -2577,72 +2598,83 @@ public class CastadivaModel {
         externalTrafficInstructions = GenerateExternalTrafficInstructions();
         GenerateRoutingInstructions();
     }
-    
+
     /**
      * Start the mobility of all simulation.
      */
-    public void StartMobility(){
-        if(MobiliyActivated()){
+    public void StartMobility() {
+        if (MobiliyActivated()) {
             ObtainNodePositionsForEntireSimulation();
             StartMobilitySimulation();
         }
     }
-    
+
     /**
      * Start the mobility of all simulation.
      */
-    public void ReplayMobility(){
+    public void ReplayMobility() {
         PositionateNodesInDeterminedSecond(0);
-        if(MobiliyActivated()){
-            if(debug)
+        if (MobiliyActivated()) {
+            if (debug) {
                 System.out.println("\nReplaing simulation with mobility...");
+            }
             StartMobilitySimulation();
         }
     }
-    
+
     /**
      * Move each node the covered distance in one second.
      */
-    private void ObtainNodePositionsForEntireSimulation(){
-        nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime()+1];
-        allAddresses = new MobilityVectors(this, accessPoints,minSpeed, maxSpeed, pause);
+    private void ObtainNodePositionsForEntireSimulation() {
+        nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
+        allAddresses = new MobilityVectors(this, accessPoints, minSpeed, maxSpeed, pause);
         allAddresses.ObtainNodePositionsForEntireSimulation(accessPoints);
     }
-    
+
     /**
      * Extends NodeMovent to use more simulation time.
      */
-    public void ExtendNodePositions(){
-        try{
-            if(nodePositions[0].length < GetSimulationTime()+1){
-                NodeCheckPoint[][] extendedNodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime()+1];
+    public void ExtendNodePositions() {
+        try {
+            if (nodePositions[0].length < GetSimulationTime() + 1) {
+                NodeCheckPoint[][] extendedNodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
                 //Copy the old movemnts.
-                for(int i=0; i<nodePositions.length; i++){
-                    for(int j=0; j<nodePositions[0].length; j++){
+                for (int i = 0; i < nodePositions.length; i++) {
+                    for (int j = 0; j < nodePositions[0].length; j++) {
                         extendedNodePositions[i][j] = nodePositions[i][j];
                     }
                 }
                 //Calculate new movemnts with the old movements and an inertia.
-                if(nodePositions[0].length > 1){
-                    for(int i=0; i<nodePositions.length; i++){
+                if (nodePositions[0].length > 1) {
+                    for (int i = 0; i < nodePositions.length; i++) {
                         NodeCheckPoint pos1, pos2;
-                        
-                        for(int j=nodePositions[i].length; j<extendedNodePositions[i].length; j++){
-                            pos2 = extendedNodePositions[i][j-1];
-                            pos1 = extendedNodePositions[i][j-2];
-                            
+
+                        for (int j = nodePositions[i].length; j < extendedNodePositions[i].length; j++) {
+                            pos2 = extendedNodePositions[i][j - 1];
+                            pos1 = extendedNodePositions[i][j - 2];
+
                             Float xInertia = pos2.xCoordinate - pos1.xCoordinate;
                             Float yInertia = pos2.yCoordinate - pos1.yCoordinate;
                             Float zInertia = pos2.zCoordinate - pos1.zCoordinate;
                             Float newX = pos2.xCoordinate + xInertia;
-                            if(newX < 0) newX = new Float(0);
-                            if(newX > WhatBoundX()) newX = WhatBoundX();
-                            Float newY= pos2.yCoordinate + yInertia;
-                            if(newY < 0) newY = new Float(0);
-                            if(newY > WhatBoundY()) newY = WhatBoundY();
+                            if (newX < 0) {
+                                newX = new Float(0);
+                            }
+                            if (newX > WhatBoundX()) {
+                                newX = WhatBoundX();
+                            }
+                            Float newY = pos2.yCoordinate + yInertia;
+                            if (newY < 0) {
+                                newY = new Float(0);
+                            }
+                            if (newY > WhatBoundY()) {
+                                newY = WhatBoundY();
+                            }
                             Float newZ = pos2.zCoordinate + zInertia;
-                            if(newZ < 0) newZ = new Float(0);
-                            
+                            if (newZ < 0) {
+                                newZ = new Float(0);
+                            }
+
                             NodeCheckPoint newPosition = new NodeCheckPoint(newX, newY, newZ);
                             extendedNodePositions[i][j] = newPosition;
                         }
@@ -2651,288 +2683,292 @@ public class CastadivaModel {
                     nodePositions = extendedNodePositions;
                 }
             }
-        }catch(NullPointerException npe){}
+        } catch (NullPointerException npe) {
+        }
     }
-    
+
     /**
      * Positionate all nodes in a determined second with the calculated checkpoints.
      */
-    public void PositionateNodesInDeterminedSecond(Integer second){
-        for(int i=0; i<accessPoints.Size(); i++){
+    public void PositionateNodesInDeterminedSecond(Integer second) {
+        for (int i = 0; i < accessPoints.Size(); i++) {
             AP node = accessPoints.Get(i);
-            try{
+            try {
                 NodeCheckPoint point = nodePositions[i][second];
                 node.x = point.xCoordinate;
                 node.y = point.yCoordinate;
                 node.z = point.zCoordinate;
-            }catch(NullPointerException npe){
-                
+            } catch (NullPointerException npe) {
+
             }
         }
         GenerateMobilityVisibilityMatrix(second);
     }
-    
+
     /**
      * Store the position of one node in determined second.
      */
-    public void StoreNodePosition(Integer nodeNumber, Integer second, NodeCheckPoint checkPoint){
+    public void StoreNodePosition(Integer nodeNumber, Integer second, NodeCheckPoint checkPoint) {
         nodePositions[nodeNumber][second] = checkPoint;
     }
-    
-    
+
     /****************************************************************************
      *
      *                          RANDOM SIMULATION FUNCTIONS
      *
      ****************************************************************************/
-    
-    
     /**
      * Generate a randomly position for all defined nodes.
      */
-    public void SetRandomScenery(){
+    public void SetRandomScenery() {
         AP nodo;
         Double aux;
-        
-        for(int i=0; i<accessPoints.Size(); i++){
+
+        for (int i = 0; i < accessPoints.Size(); i++) {
             nodo = accessPoints.Get(i);
-            if(randomSimulating &&
-                    i >= minNodes+iteration*granularity) {
+            if (randomSimulating &&
+                    i >= minNodes + iteration * granularity) {
                 //Send far of the network the nodes not used
                 //into the simulation.
-                nodo.x=-1000000;
-                nodo.y=-1000000;
-            }else{
-                aux = (randomGenerator.nextDouble()*x);
+                nodo.x = -1000000;
+                nodo.y = -1000000;
+            } else {
+                aux = (randomGenerator.nextDouble() * x);
                 nodo.x = aux.floatValue();
-                aux = (randomGenerator.nextDouble()*y);
-                nodo.y= aux.floatValue();
+                aux = (randomGenerator.nextDouble() * y);
+                nodo.y = aux.floatValue();
             }
-            accessPoints.Set(i,nodo);
+            accessPoints.Set(i, nodo);
         }
     }
-    
+
     /**
      * Update all data structures involved in the traffic.
      * @param vector The new traffic value.
      */
-    void UpdateRandomTraffic(Vector<RandomTrafficRecord> vector){
+    void UpdateRandomTraffic(Vector<RandomTrafficRecord> vector) {
         accessPoints.SetRandomTraffic(vector);
         randomTrafficModel.UpdateData(vector);
     }
-    
+
     /**
      * Save all data files (scenary/traffic) of a random simulation.
      * @see ExportNsScenario
      * @see SaveCastadivaAps
      * @see PrintTraffic
      */
-    void SaveRandomSimulation(String path){
+    void SaveRandomSimulation(String path) {
         String scenary;
         String directory;
-        
-        scenary = (minNodes+granularity*iteration)+"nodes_"+loop+"loop"+ "-"
-                + routingProtocol ;
-        directory = "Nodes:"+ minNodes + "-" + maxNodes + "in" +
-                +x+"x"+y;
+
+        scenary = (minNodes + granularity * iteration) + "nodes_" + loop + "loop" + "-" + routingProtocol;
+        directory = "Nodes:" + minNodes + "-" + maxNodes + "in" +
+                +x + "x" + y;
         File newDirectory = new java.io.File(path + File.separator + directory);
         newDirectory.mkdir();
-        if(fileRandomScenaryFormat.equals("NS-2")){
+        if (fileRandomScenaryFormat.equals("NS-2")) {
             ExportNsScenario(path + File.separator + directory +
                     File.separator + scenary + ".ns", maxNodes);
             ExportNsTraffic(path + File.separator + directory +
                     File.separator + scenary + "_Traffic.ns");
             PrintTraffic(path + File.separator + directory +
-                    File.separator + scenary +"_Traffic.txt");
+                    File.separator + scenary + "_Traffic.txt");
         }
-        if(fileRandomScenaryFormat.equals("Castadiva")){
+        if (fileRandomScenaryFormat.equals("Castadiva")) {
             SaveCastadivaAps(path + File.separator + directory, scenary + ".dat");
-            PrintTraffic(path + File.separator + directory
-                    + File.separator + scenary +"Traffic.txt");
+            PrintTraffic(path + File.separator + directory + File.separator + scenary + "Traffic.txt");
         }
     }
-    
+
     /**
      * Duplicate one row of the random traffic clonning other line.
      */
-    void DuplicateRandomTrafficRow(List<RandomTrafficRecord> traffic, Integer row){
+    void DuplicateRandomTrafficRow(List<RandomTrafficRecord> traffic, Integer row) {
         RandomTrafficRecord recordAux;
-        
-        if(row > -1 && row < traffic.size()-1){
-            traffic.remove(traffic.size()-1);
-            recordAux = (RandomTrafficRecord)traffic.get(row);
+
+        if (row > -1 && row < traffic.size() - 1) {
+            traffic.remove(traffic.size() - 1);
+            recordAux = (RandomTrafficRecord) traffic.get(row);
             traffic.add(new RandomTrafficRecord(
                     recordAux.getTCPUDP(), recordAux.getSize(),
                     recordAux.getStart(), recordAux.getStop(),
                     recordAux.getTransferSize(), recordAux.getPacketsSeconds(),
-                    recordAux.getFlows()
-                    ));
+                    recordAux.getFlows()));
         }
     }
-    
+
     /**
      * Order the random traffic vector in order of starting time of each instruction.
      */
-    public void OrderRandomTrafficVector(Vector traffic ){
+    public void OrderRandomTrafficVector(Vector traffic) {
         Vector<RandomTrafficRecord> aux = new Vector<RandomTrafficRecord>();
         RandomTrafficRecord record;
         RandomTrafficRecord recordAux = null;
         Integer firstRowValue;
         int firstRow = 0;
-        
+
         Vector<RandomTrafficRecord> newVector = new Vector<RandomTrafficRecord>();
-        VectorCopyTo(traffic, newVector, traffic.size()-1);
-        
-        while(newVector.size()>0){
+        VectorCopyTo(traffic, newVector, traffic.size() - 1);
+
+        while (newVector.size() > 0) {
             firstRowValue = 10000000;
-            for(int i=0; i<newVector.size();i++){
-                record=(RandomTrafficRecord)newVector.get(i);
-                if(record.getStart() < firstRowValue){
+            for (int i = 0; i < newVector.size(); i++) {
+                record = (RandomTrafficRecord) newVector.get(i);
+                if (record.getStart() < firstRowValue) {
                     firstRow = i;
                     firstRowValue = record.getStart();
                 }
             }
             aux.add(newVector.get(firstRow));
-            record = (RandomTrafficRecord)newVector.get(firstRow);
+            record = (RandomTrafficRecord) newVector.get(firstRow);
             newVector.remove(firstRow);
         }
         UpdateRandomTraffic(aux);
     }
-    
+
     /**
      * Share traffic randomly among nodes.
      */
-    private TrafficRecord ShareTrafficRandomly(Integer totalAP, RandomTrafficRecord randomRecord){
+    private TrafficRecord ShareTrafficRandomly(Integer totalAP, RandomTrafficRecord randomRecord) {
         Double aux1, aux2;
         String source, address;
         TrafficRecord record;
-        
-        aux1 = (randomGenerator.nextDouble()*totalAP);
+
+        aux1 = (randomGenerator.nextDouble() * totalAP);
         source = accessPoints.Get(aux1.intValue()).WhatAP();
-        do{
-            aux2 = (randomGenerator.nextDouble()*totalAP);
-        }while(aux1.intValue() == aux2.intValue());
+        do {
+            aux2 = (randomGenerator.nextDouble() * totalAP);
+        } while (aux1.intValue() == aux2.intValue());
         address = accessPoints.Get(aux2.intValue()).WhatAP();
         record = new TrafficRecord(randomRecord.getTCPUDP(), source,
                 address, randomRecord.getSize(), randomRecord.getStart(),
                 randomRecord.getStop(), randomRecord.getTransferSize(),
                 randomRecord.getPacketsSeconds(), randomRecord.getMaxPackets(),
-                Float.parseFloat("0"),(Integer)0);
+                Float.parseFloat("0"), (Integer) 0);
         return record;
     }
-    
+
     /**
      * Generate a list with all node numbers shuffled.
      */
-    private List<Integer> GenerateRandomNodeOrderList(){
+    private List<Integer> GenerateRandomNodeOrderList() {
         List<Integer> originalList = new ArrayList<Integer>();
         List<Integer> suffledList = new ArrayList<Integer>();
         Double aux;
-        String list ="";
-        
-        for(int i=0; i<(minNodes+(iteration)*granularity); i++) originalList.add(i);
-        
-        do{
-            aux = (randomGenerator.nextDouble()*originalList.size());
+        String list = "";
+
+        for (int i = 0; i < (minNodes + (iteration) * granularity); i++) {
+            originalList.add(i);
+        }
+
+        do {
+            aux = (randomGenerator.nextDouble() * originalList.size());
             suffledList.add(originalList.get(aux.intValue()));
             originalList.remove(aux.intValue());
-        }while(originalList.size() > 0);
-        
+        } while (originalList.size() > 0);
+
         return suffledList;
     }
-    
+
     /**
      * Calculate a node address sharing traffic balanced.
      */
-    private Integer ObtainAnUnrepeatedAddress(Integer node1){
+    private Integer ObtainAnUnrepeatedAddress(Integer node1) {
         Integer node;
-        
-        if(listAddressNodes.size() == 0) listAddressNodes = GenerateRandomNodeOrderList();
-        node = (Integer)listAddressNodes.get(0);
+
+        if (listAddressNodes.size() == 0) {
+            listAddressNodes = GenerateRandomNodeOrderList();
+        }
+        node = (Integer) listAddressNodes.get(0);
         listAddressNodes.remove(0);
-        if(node1 == node){
+        if (node1 == node) {
             //If there are no other node, generate a new list.
-            if(listAddressNodes.size() == 0){
+            if (listAddressNodes.size() == 0) {
                 listAddressNodes = GenerateRandomNodeOrderList();
                 listAddressNodes.add(node);
                 return ObtainAnUnrepeatedAddress(node1);
-            }else{
+            } else {
                 listAddressNodes.add(node);
                 return ObtainAnUnrepeatedAddress(node1);
             }
         }
         return node;
     }
-    
+
     /**
      * Calculate a node source sharing traffic balanced.
      */
-    private Integer ObtainAnUnrepeatedSource(){
+    private Integer ObtainAnUnrepeatedSource() {
         Integer node;
-        
-        if(listSourceNodes.size() == 0) listSourceNodes = GenerateRandomNodeOrderList();
-        node = (Integer)listSourceNodes.get(0);
+
+        if (listSourceNodes.size() == 0) {
+            listSourceNodes = GenerateRandomNodeOrderList();
+        }
+        node = (Integer) listSourceNodes.get(0);
         listSourceNodes.remove(node);
         return node;
     }
-    
+
     /**
      * Share traffic balanced among nodes.
      */
     private TrafficRecord ShareTrafficBalanced(Integer totalAP,
-            RandomTrafficRecord randomRecord){
+            RandomTrafficRecord randomRecord) {
         Double aux1, aux2;
         String source, address;
         TrafficRecord record;
         Integer node1, node2;
         Integer lastElement;
-        
+
         node1 = ObtainAnUnrepeatedSource();
         node2 = ObtainAnUnrepeatedAddress(node1);
-        
+
         source = accessPoints.Get(node1).WhatAP();
         address = accessPoints.Get(node2).WhatAP();
-        
+
         record = new TrafficRecord(randomRecord.getTCPUDP(), source,
                 address, randomRecord.getSize(), randomRecord.getStart(),
                 randomRecord.getStop(), randomRecord.getTransferSize(),
                 randomRecord.getPacketsSeconds(), randomRecord.getMaxPackets(),
-                Float.parseFloat("0"),(Integer)0);
+                Float.parseFloat("0"), (Integer) 0);
         return record;
     }
-    
+
     /**
      * With de traffic data defined by the user, generate the complete traffic.
      * @return True if the translation was successful.
      */
-    private boolean TranslateRandomTrafficToTraffic(){
+    private boolean TranslateRandomTrafficToTraffic() {
         RandomTrafficRecord randomRecord;
         TrafficRecord record;
         Vector<TrafficRecord> newTraffic = new Vector<TrafficRecord>();
         Integer totalAP;
-        
-        
-        if(accessPoints.Size()<2) return false;
-        
+
+
+        if (accessPoints.Size() < 2) {
+            return false;
+        }
+
         //Calculating the AP used in this iteration.
-        if(minNodes+iteration*granularity < accessPoints.Size())
-            totalAP = minNodes+iteration*granularity;
-        else
+        if (minNodes + iteration * granularity < accessPoints.Size()) {
+            totalAP = minNodes + iteration * granularity;
+        } else {
             totalAP = accessPoints.Size();
-        
-        for(int i=0; i<accessPoints.GetRandomTrafficSize(); i++){
-            randomRecord=(RandomTrafficRecord)accessPoints.GetRandomTraffic().get(i);
+        }
+
+        for (int i = 0; i < accessPoints.GetRandomTrafficSize(); i++) {
+            randomRecord = (RandomTrafficRecord) accessPoints.GetRandomTraffic().get(i);
             //If Castadiva must share all traffic completly random.
-            for(int j=0; j<randomRecord.getFlows(); j++){
-                if(isRandomTraffic){
+            for (int j = 0; j < randomRecord.getFlows(); j++) {
+                if (isRandomTraffic) {
                     record = ShareTrafficRandomly(totalAP, randomRecord);
-                }else{
+                } else {
                     //Castadiva share traffic balanced.
                     record = ShareTrafficBalanced(totalAP, randomRecord);
                 }
-                if(debug)
-                    System.out.println(record.getSource() + " " +record.getAddress()
-                    + " " + record.getTCPUDP() + " " + record.getMaxPackets());
+                if (debug) {
+                    System.out.println(record.getSource() + " " + record.getAddress() + " " + record.getTCPUDP() + " " + record.getMaxPackets());
+                }
                 newTraffic.add(record);
             }
         }
@@ -2942,19 +2978,18 @@ public class CastadivaModel {
         accessPoints.SetTraffic(newTraffic);
         return true;
     }
-    
+
     /**
      * Start a new Random Simulation.
      */
-    public void GenerateRandomSimulation(String saveFolder, Integer loops){
+    public void GenerateRandomSimulation(String saveFolder, Integer loops) {
         savePath = saveFolder;
         routingProtocol = protocolSelectedRandomSimulation.get(routingLoop).toString();
-        if(debug){
+        if (debug) {
             System.out.println("---------------------------------");
             System.out.println("          NEW SIMULATION         ");
             System.out.println("---------------------------------");
-            System.out.println("Nodes: " + (minNodes+(iteration)*granularity)
-            + " Loop: " + loop);
+            System.out.println("Nodes: " + (minNodes + (iteration) * granularity) + " Loop: " + loop);
             System.out.println("Protocol: " + routingProtocol);
             System.out.println("---------------------------------");
         }
@@ -2962,82 +2997,79 @@ public class CastadivaModel {
         SetRandomScenery();
         this.loops = loops;
         CalculateNewNodeVisibility();
-        if(TranslateRandomTrafficToTraffic()){
+        if (TranslateRandomTrafficToTraffic()) {
             StartFileSimulation();
         }
     }
-    
+
     /**
      * This function tells if CASTADIVA must to do a next
      * iteration or not.
      * @return true if the last simulation round is
      * started
      */
-    public boolean IsEndOfRandomSimulation(){
-        if((minNodes+(iteration)*granularity) > maxNodes){
+    public boolean IsEndOfRandomSimulation() {
+        if ((minNodes + (iteration) * granularity) > maxNodes) {
             return true;
         }
         return false;
     }
-    
+
     /**
      * Reset the iteration count to begin a new one.
      */
-    public void StartIterationCount(){
+    public void StartIterationCount() {
         iteration = 0;
-        loop=0;
-        routingLoop=0;
+        loop = 0;
+        routingLoop = 0;
     }
-    
+
     /**
      * Create a new Iteration of the Random Simulation.
      */
-    public void NextIteration(Integer loops){
+    public void NextIteration(Integer loops) {
         routingLoop++;
-        if(routingLoop == protocolSelectedRandomSimulation.size()){
+        if (routingLoop == protocolSelectedRandomSimulation.size()) {
             loop++;
-            routingLoop=0;
-            if(loop.equals(loops)){
-                loop=0;
+            routingLoop = 0;
+            if (loop.equals(loops)) {
+                loop = 0;
                 iteration++;
                 simulationSeconds = 0;
             }
         }
     }
-    
-    
+
     /****************************************************************************
      *
      *                              NODE INSTALATION
      *
      ****************************************************************************/
-    
-    
     /**
      * Obtain the OpenWRT packet list stored in a external file.
      */
-    private List WhatPackets(){
+    private List WhatPackets() {
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_PACKET_LIST);
         return ReadTextFileInLines(file);
     }
-    
+
     /**
      * Generate the instructions needed to install the OpenWRT packets.
      */
-    private String InstallOpenwrtPackets(List packets){
+    private String InstallOpenwrtPackets(List packets) {
         String installInstruction;
         String packetInstallation = "";
-        for(int i=0; i< packets.size(); i++){
+        for (int i = 0; i < packets.size(); i++) {
             installInstruction = "ipkg install " + packets.get(i);
             packetInstallation = packetInstallation + installInstruction;
-            if(i<packets.size()-1){
+            if (i < packets.size() - 1) {
                 packetInstallation = packetInstallation + " && ";
             }
         }
         packetInstallation = "ipkg update && " + packetInstallation;
         return packetInstallation;
     }
-    
+
     /**
      * Generate the text of a script that allow a OpenWRT node to generate the deseared
      * the net configuration every time that it starts.
@@ -3054,100 +3086,94 @@ public class CastadivaModel {
      * @return The entire script.
      */
     private String GenerateNetScriptText(String ethDevice, String wifiDevice, String switchDevice,
-            String bridgeDevice, String newEthIp, String newWifiIp, String gateway){
+            String bridgeDevice, String newEthIp, String newWifiIp, String gateway) {
         String script = null;
-        
-        script ="#!/bin/sh \n\n" +
-                
+
+        script = "#!/bin/sh \n\n" +
                 "IPT=/usr/sbin/iptables\n" +
                 "SWITCH_IP=\\\"" + newEthIp + "\\\"\n" +
                 "SWITCH_NET=\\\"" + ObtainNetTypeC(newEthIp) + "/24\\\"\n" +
-                "WIFI_IP=\\\""+ newWifiIp +"\\\"\n" +
+                "WIFI_IP=\\\"" + newWifiIp + "\\\"\n" +
                 "WIFI_NET=\\\"" + ObtainNetTypeC(newWifiIp) + "/24\\\"\n" +
                 "ETH_DEV=" + ethDevice + "\n" +
                 "SWITCH_DEV=" + switchDevice + "\n" +
                 "WIFI_DEV=" + wifiDevice + "\n" +
                 "BRIDGE=" + bridgeDevice + "\n" +
                 "GW=\\\"" + gateway + "\\\"\n\n" +
-                
                 "insmod /lib/modules/2.4.30/ipt_mac.o\n\n" +
-                
                 "ifconfig \\$BRIDGE down\n" +
                 "brctl delif \\$BRIDGE \\$SWITCH_DEV\n" +
                 "brctl delif \\$BRIDGE \\$WIFI_DEV\n" +
                 "brctl delbr \\$BRIDGE\n\n" +
-                
                 "ifconfig \\$SWITCH_DEV  \\$SWITCH_IP netmask 255.255.255.0\n" +
                 "ifconfig \\$ETH_DEV \\$SWITCH_IP netmask 255.255.255.0\n" +
                 "ifconfig \\$WIFI_DEV  \\$WIFI_IP netmask 255.255.255.0\n" +
-                
                 "\\$IPT -t nat -F\n" +
                 "\\$IPT -P FORWARD ACCEPT\n" +
                 "echo \\\"1\\\" > /proc/sys/net/ipv4/ip_forward\n" +
                 "echo \\\"1\\\" > /proc/sys/net/ipv4/conf/all/rp_filter\n\n" +
-                
-                "route add default gw \\$GW dev \\$SWITCH_DEV\n" ;
+                "route add default gw \\$GW dev \\$SWITCH_DEV\n";
         return script;
     }
-    
+
     /**
      * The instruction to generate the script in the AP.
      * @param folder Where the script will be saved.
      * @param scriptName The name of the file where the script will be stored.
      * @param text The text of the script.
      */
-    private String GenerateScript(String folder, String scriptName, String text){
+    private String GenerateScript(String folder, String scriptName, String text) {
         String file = folder + File.separator + scriptName;
-        return  "echo \"" + text + "\" > " + file + "\n" ;
+        return "echo \"" + text + "\" > " + file + "\n";
     }
-    
+
     /**
      * Change the nvram openwrt variables for consistence purpose.
      */
-    private String SetNvramVariables(String script, String eth, String vlan){
-        return "echo \""+
+    private String SetNvramVariables(String script, String eth, String vlan) {
+        return "echo \"" +
                 "/usr/sbin/nvram set lan_ifname=" + eth + "\n" +
                 "/usr/sbin/nvram set vlan_iface=" + vlan + "\n" +
                 "\" >> " + script;
     }
-    
+
     /**
      * Generate the instruction to create the folder where all Castadiva scripts
      * will be saved. Change the folder owner to nobody.
      * @param folder. The folder to be created.
      */
-    private String GenerateScriptsFolders(String folder){
+    private String GenerateScriptsFolders(String folder) {
         String path[];
         String way = File.separator;
         String folderInstallation = "";
         /*path = folder.split(File.separator);
         for(int i=1; i<path.length; i++){
-            way = way + path[i] + File.separator;
-            folderInstallation = folderInstallation + "mkdir " + way + " && chown nobody " + way + " ";
-            if(i < path.length - 1){
-                folderInstallation = folderInstallation +  " && ";
-            }
+        way = way + path[i] + File.separator;
+        folderInstallation = folderInstallation + "mkdir " + way + " && chown nobody " + way + " ";
+        if(i < path.length - 1){
+        folderInstallation = folderInstallation +  " && ";
+        }
         }*/
         folderInstallation = "/bin/mkdir -p " + folder + " & chown nobody " + folder + "; ";
         return folderInstallation;
     }
-    
+
     /**
      * Generate the simbolic link in the AP needed to autoboot the network script.
      * @param file The name of the file to be linked.
      */
-    private String GenerateAutoBootInstruction(String file){
+    private String GenerateAutoBootInstruction(String file) {
         return "ln -s " + file + " /etc/init.d/S91Castadiva ";
     }
-    
+
     /**
      * Change the configuration file olsrd to prepare the protocol to use the wifi card.
      */
-    private List<String> ConfigureOLSRInstruction(String wifiDevice, String net, String mask){
+    private List<String> ConfigureOLSRInstruction(String wifiDevice, String net, String mask) {
         List<String> addOlsr = new ArrayList<String>();
-        String changeNetwork = "sed 's/@@HNA_IP@@/\""+ net +"\"/g' /etc/olsrd.conf > /tmp/tmpCasta && mv /tmp/tmpCasta /etc/olsrd.conf";
-        String changeMask = "sed 's/@@HNA_MASK@@/\""+ mask +"\"/g' /etc/olsrd.conf > /tmp/tmpCasta && mv /tmp/tmpCasta /etc/olsrd.conf";
-        String changeInterface = "sed 's/@@INTERFACE@@/\""+ wifiDevice +"\"/g' /etc/olsrd.conf > /tmp/tmpCasta && mv /tmp/tmpCasta /etc/olsrd.conf";
+        String changeNetwork = "sed 's/@@HNA_IP@@/\"" + net + "\"/g' /etc/olsrd.conf > /tmp/tmpCasta && mv /tmp/tmpCasta /etc/olsrd.conf";
+        String changeMask = "sed 's/@@HNA_MASK@@/\"" + mask + "\"/g' /etc/olsrd.conf > /tmp/tmpCasta && mv /tmp/tmpCasta /etc/olsrd.conf";
+        String changeInterface = "sed 's/@@INTERFACE@@/\"" + wifiDevice + "\"/g' /etc/olsrd.conf > /tmp/tmpCasta && mv /tmp/tmpCasta /etc/olsrd.conf";
         String noBootWithOlsrd = "rm /etc/init.d/S60olsrd";
         addOlsr.add(changeNetwork);
         addOlsr.add(changeMask);
@@ -3155,7 +3181,7 @@ public class CastadivaModel {
         addOlsr.add(noBootWithOlsrd);
         return addOlsr;
     }
-    
+
     /**
      * Add a instruction to generate a NFS folder to one scrpit.
      * @param script The script where the instruction would be added.
@@ -3164,12 +3190,11 @@ public class CastadivaModel {
      * @param time The time to wait before installing the nfs foler.
      * @return The instruction.
      */
-    String LoadNfsFolder(String script, String nfsComputerFolder, String nfsApFolder){
-        return "echo \"sleep " + randomGenerator.nextInt(30) + " && mount -t nfs \\$GW:"
-                + nfsComputerFolder + " " + nfsApFolder + " -o nolock,wsize=8192,rsize=8192,timeo=14 \n\" " +
+    String LoadNfsFolder(String script, String nfsComputerFolder, String nfsApFolder) {
+        return "echo \"sleep " + randomGenerator.nextInt(30) + " && mount -t nfs \\$GW:" + nfsComputerFolder + " " + nfsApFolder + " -o nolock,wsize=8192,rsize=8192,timeo=14 \n\" " +
                 " >> " + script;
     }
-    
+
     /**
      * Send the group of instructions to one AP not installed in CASTADIVA by SSH.
      * @param ip The ip of the AP.
@@ -3177,14 +3202,16 @@ public class CastadivaModel {
      * @param pwd The password for SSH.
      * @param instructions The instructions to be sended.
      */
-    void SendInstruction(String ip, String user, String pwd, List instructions){
+    void SendInstruction(String ip, String user, String pwd, List instructions) {
         List<Integer> numInst = new ArrayList<Integer>();
-        for(int i=0; i<instructions.size();i++)numInst.add(i);
+        for (int i = 0; i < instructions.size(); i++) {
+            numInst.add(i);
+        }
         installNode = new SshHost(ip, user, pwd, instructions,
                 false, numInst, "/tmp");
         installNode.start();
     }
-    
+
     /**
      * Generate all the instructions to prepare an AP to run with CASTADIVA. The ap
      * must have installed an OpenWRT operative system. This function change the
@@ -3208,8 +3235,8 @@ public class CastadivaModel {
     void InstallAp(String ethDevice, String wifiDevice, String switchDevice,
             String bridgeDevice, String newEthIp, String newWifiIp, String gateway,
             String nfsComputerFolder, String nfsApFolder, String scriptsApFolder,
-            String user, String pwd, String currentIp){
-        
+            String user, String pwd, String currentIp) {
+
         List<String> instructionList = new ArrayList<String>();
         List packets;
         List<String> changeOlsrConf;
@@ -3218,7 +3245,7 @@ public class CastadivaModel {
         String nvram;
         String scriptName = "Castadiva.sh";
         String creatingNfsFolder = "";
-        
+
         packets = WhatPackets();
         packetInstallation = InstallOpenwrtPackets(packets);
         scriptText = GenerateNetScriptText(ethDevice, wifiDevice, switchDevice,
@@ -3230,12 +3257,12 @@ public class CastadivaModel {
                 nfsComputerFolder, nfsApFolder);
         autoBoot = GenerateAutoBootInstruction(scriptsApFolder + File.separator + scriptName);
         chmodScript = "chown nobody " + scriptsApFolder + File.separator + scriptName +
-                " && chmod u+x "+ scriptsApFolder + File.separator + scriptName +
+                " && chmod u+x " + scriptsApFolder + File.separator + scriptName +
                 " && chown nobody " + nfsApFolder + " && chmod 777 " + nfsApFolder;
         changeOlsrConf = ConfigureOLSRInstruction(wifiDevice, ObtainNetTypeC(newWifiIp), "255.255.255.0");
         nvram = SetNvramVariables(scriptsApFolder + File.separator + scriptName,
                 ethDevice, switchDevice);
-        
+
         createFolders = folderScriptInstallation + " & " + folderNfs;
         instructionList.add(packetInstallation);
         instructionList.add(createFolders);
@@ -3248,341 +3275,343 @@ public class CastadivaModel {
         //ShowList(instructionList);
         SendInstruction(currentIp, user, pwd, instructionList);
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                              MAYA EXPORT
      *
      ****************************************************************************/
-    
-    
     /**
      * Generate the head of the file to export the data to Maya.
      * @param MayaList A empty list of data.
      */
-    private void CreateMayaHead(List<String> MayaList){
+    private void CreateMayaHead(List<String> MayaList) {
         MayaList.add(x + " " + y);
     }
-    
+
     /**
      * Translate every Castadiva node to Maya node.
      * @param MayaList A list with the head of Maya.
      */
-    private void CreateMayaNodes(List<String> MayaList){
+    private void CreateMayaNodes(List<String> MayaList) {
         AP node = null;
-        for(int i=0; i<accessPoints.Size();i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             node = accessPoints.Get(i);
             MayaList.add(node.WhatWifiIP() + " " + node.x + " " + node.y + " " +
                     node.z + " " + node.range + " " + node.WhatUser() + " " +
                     node.WhatPwd());
         }
     }
-    
+
     /**
      * Create a list of data ready to export to Maya.
      * @param MayaList A empty list of data.
      * @see CreateMayaHead
      * @see CreateMayaNodes
      */
-    private void CreateMaya(List<String> MayaList){
+    private void CreateMaya(List<String> MayaList) {
         CreateMayaHead(MayaList);
         CreateMayaNodes(MayaList);
     }
-    
+
     /**
      * Generate a file with all the Castadiva information ready for the Maya system.
      * @param file The path to save the file.
      * @see CreateMaya
      */
-    void ExportMaya(String file){
+    void ExportMaya(String file) {
         List<String> MayaList;
         MayaList = new LinkedList<String>();
         CreateMaya(MayaList);
         SaveInFile(MayaList, file);
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                              NS IMPORT/EXPORT
      *
      ****************************************************************************/
-    
-    
     /**
      * Generate a file with a structure that can be readed by the simulator NS.
      * @param file The path to save the file.
      * @param nodes The number of real nodes used.
      * @see CreateNS
      */
-    void ExportNsScenario(String file, Integer nodes){
+    void ExportNsScenario(String file, Integer nodes) {
         List<String> NsScenario, NsNodes, NsMobility;
         NsScenario = CreateNSHead(nodes);
         NsNodes = CreateNSNodes(nodes);
         NsScenario.addAll(NsNodes);
-        if(MobiliyActivated()){
+        if (MobiliyActivated()) {
             NsMobility = GenerateNsMobility();
             NsScenario.addAll(NsMobility);
         }
         SaveInFile(NsScenario, file);
     }
-    
+
     /**
      * Generate a file with a structure that can be readed by the simulator NS.
      * @param file The path to save the file.
      * @see CreateNS
      */
-    void ExportNsTraffic(String file){
+    void ExportNsTraffic(String file) {
         List NsTraffic;
         NsTraffic = GenerateNsTraffic();
         SaveInFile(NsTraffic, file);
     }
-    
+
     /**
      * Write into a file all data to generate a scenario with mobility.
      * @param file The path to save the file.
      * @see CreateNS
      */
-    void ExportNSMobility(String file){
+    void ExportNSMobility(String file) {
         List NsMobility;
         NsMobility = GenerateNsMobility();
         SaveInFile(NsMobility, file);
     }
-    
+
     /**
      * Obtain the distance between tho NodeCheckPoints.
      */
     private float CalculateNodeCheckPointDistance(NodeCheckPoint node1,
-            NodeCheckPoint node2){
-        return (float)Math.sqrt(Math.pow((node1.xCoordinate-node2.xCoordinate),2) +
-                Math.pow((node1.yCoordinate-node2.yCoordinate),2)+
-                Math.pow((node1.zCoordinate-node2.zCoordinate),2));
+            NodeCheckPoint node2) {
+        return (float) Math.sqrt(Math.pow((node1.xCoordinate - node2.xCoordinate), 2) +
+                Math.pow((node1.yCoordinate - node2.yCoordinate), 2) +
+                Math.pow((node1.zCoordinate - node2.zCoordinate), 2));
     }
-    
+
     /**
      * Translate the data read to make easier to convert to NS.
      */
-    private List<NodeImportedData> ObtainNodeDestinations(List<NodeImportedData>
-            nodeMovements){
+    private List<NodeImportedData> ObtainNodeDestinations(List<NodeImportedData> nodeMovements) {
         List<NodeImportedData> tidiedNodeMovements = new ArrayList<NodeImportedData>();
-        
-        if(debug)System.out.println("Obtained:");
-        for(int i=0; i<nodeMovements.size()-1;i++){
+
+        if (debug) {
+            System.out.println("Obtained:");
+        }
+        for (int i = 0; i < nodeMovements.size() - 1; i++) {
             NodeImportedData box1 = nodeMovements.get(i);
-            NodeImportedData box2 = nodeMovements.get(i+1);
-            
+            NodeImportedData box2 = nodeMovements.get(i + 1);
+
             NodeImportedData movement = new NodeImportedData(box1.nodeNumber,
                     box2.xCoordinate, box2.yCoordinate, box1.speed, box1.second);
             tidiedNodeMovements.add(movement);
         }
         return tidiedNodeMovements;
     }
-    
+
     /**
      *
      */
-    List<NodeImportedData> ReadNodeDestinations(int node){
+    List<NodeImportedData> ReadNodeDestinations(int node) {
         List<NodeImportedData> nodeMovements = new ArrayList<NodeImportedData>();
         NodeCheckPoint point2 = null;
         float xIncrement, yIncrement, zIncrement,
-                prevXIncrement=0, prevYIncrement=0, prevZIncrement=0,
-                errorIncrement = new Float(0.0005), speed=0;
-        
-        if(debug)System.out.println("Node -> " + (node+1));
-        for(int i=1; i<nodePositions[node].length; i++){
-            NodeCheckPoint point1 = nodePositions[node][i-1];
+                prevXIncrement = 0, prevYIncrement = 0, prevZIncrement = 0,
+                errorIncrement = new Float(0.0005), speed = 0;
+
+        if (debug) {
+            System.out.println("Node -> " + (node + 1));
+        }
+        for (int i = 1; i < nodePositions[node].length; i++) {
+            NodeCheckPoint point1 = nodePositions[node][i - 1];
             point2 = nodePositions[node][i];
-            
+
             xIncrement = point2.xCoordinate - point1.xCoordinate;
             yIncrement = point2.yCoordinate - point1.yCoordinate;
             zIncrement = point2.zCoordinate - point1.zCoordinate;
-            
-            if(Math.abs(xIncrement - prevXIncrement) > errorIncrement ||
+
+            if (Math.abs(xIncrement - prevXIncrement) > errorIncrement ||
                     Math.abs(yIncrement - prevYIncrement) > errorIncrement ||
-                    Math.abs(zIncrement - prevZIncrement) > errorIncrement){
-                
+                    Math.abs(zIncrement - prevZIncrement) > errorIncrement) {
+
                 speed = CalculateNodeCheckPointDistance(point1, point2);
                 NodeImportedData movement = new NodeImportedData(node,
-                        point1.xCoordinate, point1.yCoordinate, speed, i-1);
-                if(debug)System.out.println("   Speed: " + movement.speed + " at second "
-                        + movement.second + " x:" + movement.xCoordinate + " y:"
-                        + movement.yCoordinate);
+                        point1.xCoordinate, point1.yCoordinate, speed, i - 1);
+                if (debug) {
+                    System.out.println("   Speed: " + movement.speed + " at second " + movement.second + " x:" + movement.xCoordinate + " y:" + movement.yCoordinate);
+                }
                 nodeMovements.add(movement);
             }
-            
+
             prevXIncrement = xIncrement;
             prevYIncrement = yIncrement;
             prevZIncrement = zIncrement;
         }
-        
+
         NodeImportedData movement = new NodeImportedData(node,
-                point2.xCoordinate, point2.yCoordinate, (float)0, nodePositions[node].length);
-        if(debug)System.out.println("   Speed: " + movement.speed + " at second "
-                + movement.second + " x:" + movement.xCoordinate + " y:"
-                + movement.yCoordinate);
+                point2.xCoordinate, point2.yCoordinate, (float) 0, nodePositions[node].length);
+        if (debug) {
+            System.out.println("   Speed: " + movement.speed + " at second " + movement.second + " x:" + movement.xCoordinate + " y:" + movement.yCoordinate);
+        }
         nodeMovements.add(movement);
-        
+
         return nodeMovements;
     }
-    
+
     /**
      * Order by time a group of NodeImportedData in one vector.
      */
-    private NodeImportedData[] SortNodeDestinations(List<NodeImportedData> allMovements[], int total){
+    private NodeImportedData[] SortNodeDestinations(List<NodeImportedData> allMovements[], int total) {
         NodeImportedData[] sequencedMovements = new NodeImportedData[total];
         int lastUsed[] = new int[nodePositions.length];
-        int min, inserted=0, selected=0;
-        
-        for(int j=0; j<nodePositions.length;j++){
-            lastUsed[j]=0;
+        int min, inserted = 0, selected = 0;
+
+        for (int j = 0; j < nodePositions.length; j++) {
+            lastUsed[j] = 0;
         }
-        
-        if(debug)
-            for(int i=0; i<allMovements.length;i++){
-            for(int j=0; j<allMovements[i].size();j++){
-                System.out.println("t:" + allMovements[i].get(j).second +
-                        " node: " + allMovements[i].get(j).nodeNumber +
-                        " x:"+allMovements[i].get(j).xCoordinate +
-                        " y:"+allMovements[i].get(j).yCoordinate +
-                        " s: "+ allMovements[i].get(j).speed);
+
+        if (debug) {
+            for (int i = 0; i < allMovements.length; i++) {
+                for (int j = 0; j < allMovements[i].size(); j++) {
+                    System.out.println("t:" + allMovements[i].get(j).second +
+                            " node: " + allMovements[i].get(j).nodeNumber +
+                            " x:" + allMovements[i].get(j).xCoordinate +
+                            " y:" + allMovements[i].get(j).yCoordinate +
+                            " s: " + allMovements[i].get(j).speed);
+                }
             }
-            }
-        
-        while(inserted < total){
+        }
+
+        while (inserted < total) {
             min = 10000;
-            for(int i=0; i<nodePositions.length; i++){
-                if(lastUsed[i] < allMovements[i].size() && allMovements[i].get(lastUsed[i]).second < min){
+            for (int i = 0; i < nodePositions.length; i++) {
+                if (lastUsed[i] < allMovements[i].size() && allMovements[i].get(lastUsed[i]).second < min) {
                     min = allMovements[i].get(lastUsed[i]).second;
                     selected = i;
                 }
             }
-            sequencedMovements[inserted]=allMovements[selected].get(lastUsed[selected]);
+            sequencedMovements[inserted] = allMovements[selected].get(lastUsed[selected]);
             inserted++;
             lastUsed[selected]++;
         }
         return sequencedMovements;
     }
-    
+
     /**
      * Generate a list with all instructions to represent the mobility for the NS simulator.
      */
-    private List<String> GenerateNsMobility(){
+    private List<String> GenerateNsMobility() {
         List<String> nsMobility = new ArrayList<String>();
         List<NodeImportedData> nodeMovements;
         List<NodeImportedData> allMovements[] = new ArrayList[nodePositions.length];
         NodeImportedData[] sequencedMovements;
         NodeImportedData node;
-        
+
         int sum = 0;
-        if(debug) System.out.println("Calculate Export to NS-2");
-        for(int j=0; j<nodePositions.length; j++){
+        if (debug) {
+            System.out.println("Calculate Export to NS-2");
+        }
+        for (int j = 0; j < nodePositions.length; j++) {
             nodeMovements = ReadNodeDestinations(j);
             nodeMovements = ObtainNodeDestinations(nodeMovements);
             allMovements[j] = nodeMovements;
             sum += nodeMovements.size();
         }
-        if(debug)System.out.println("Total movements detected: " + sum);
+        if (debug) {
+            System.out.println("Total movements detected: " + sum);
+        }
         sequencedMovements = SortNodeDestinations(allMovements, sum);
-        for(int i=0; i<sequencedMovements.length;i++){
+        for (int i = 0; i < sequencedMovements.length; i++) {
             node = sequencedMovements[i];
-            nsMobility.add("$ns_ at " + node.second + " \"$node_("+node.nodeNumber+") setdest "+ node.xCoordinate + " " + node.yCoordinate + " "+ node.speed +"\"");
+            nsMobility.add("$ns_ at " + node.second + " \"$node_(" + node.nodeNumber + ") setdest " + node.xCoordinate + " " + node.yCoordinate + " " + node.speed + "\"");
         }
         return nsMobility;
     }
-    
+
     /**
      * Generate the three first lines of a NS file. It contains the general data
      * of the file.
      * @return The firsts lines of a NS file.
      */
-    private List<String> CreateNSHead(Integer nodes){
+    private List<String> CreateNSHead(Integer nodes) {
         List<String> NSList = new ArrayList<String>();
         NSList.add("#");
-        NSList.add("# nodes: "+ nodes +", pause: "+ pause +", max speed: "+
-                maxSpeed + ", max x = "+ x +", max y: "+ y);
+        NSList.add("# nodes: " + nodes + ", pause: " + pause + ", max speed: " +
+                maxSpeed + ", max x = " + x + ", max y: " + y);
         NSList.add("#");
         return NSList;
     }
-    
+
     /**
      * Translate every castadiva node to NS node.
      * @return A list containing every position node in NS format.
      */
-    private List<String> CreateNSNodes(Integer nodes){
+    private List<String> CreateNSNodes(Integer nodes) {
         AP node = null;
         List<String> NSList = new ArrayList<String>();
-        
-        for(int i=0; i<nodes;i++){
+
+        for (int i = 0; i < nodes; i++) {
             node = accessPoints.Get(i);
-            NSList.add("$node_("+i+") set X_ "+node.x);
-            NSList.add("$node_("+i+") set Y_ "+node.y);
-            NSList.add("$node_("+i+") set Z_ "+node.z);
+            NSList.add("$node_(" + i + ") set X_ " + node.x);
+            NSList.add("$node_(" + i + ") set Y_ " + node.y);
+            NSList.add("$node_(" + i + ") set Z_ " + node.z);
         }
         return NSList;
     }
-    
+
     /**
      * Translate Castadiva Traffic to a file ready to be
      * importen to NS.
      * @return A list with all the traffic lines in NS format.
      */
-    private List<String> GenerateNsTraffic(){
+    private List<String> GenerateNsTraffic() {
         String head = "global ns_ udp_ cbr_ null_ node_ ";
         List<String> resultList = new ArrayList<String>();
         String line;
-        
+
         resultList.add(head);
-        for(int i=0; i<accessPoints.GetTrafficSize();i++){
-            TrafficRecord record=(TrafficRecord)accessPoints.GetTraffic().get(i);
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            TrafficRecord record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             float stop = record.getStart() + (record.getMaxPackets() /
                     record.getPacketsSeconds());
-            float ratio = 1/Float.parseFloat(record.getPacketsSeconds()+"");
-            line = "set udp_("+i+") [new Agent/UDP] " +
-                    "$ns_ attach-agent $node_("+accessPoints.SearchAP(record.getSource())+") $udp_("+i+") "+
-                    "set null_("+i+") [new Agent/Null] "+
-                    "$ns_ attach-agent $node_("+accessPoints.SearchAP(record.getAddress())+") $null_("+i+") "+
-                    "set cbr_("+i+") [new Application/Traffic/CBR] "+
-                    "$cbr_("+i+") set packetSize_ "+record.getSize()+" "+
-                    "$cbr_("+i+") set interval_ "+ratio+" "+
-                    "$cbr_("+i+") set random_ 0 "+
-                    "$cbr_("+i+") attach-agent $udp_("+i+") "+
-                    "$ns_ connect $udp_("+i+") $null_("+i+") "+
-                    "$ns_ at "+(float)record.getStart()+" \"$cbr_("+i+") start\" "+
-                    "$ns_ at "+stop+" \"$cbr_("+i+") stop\" ";
+            float ratio = 1 / Float.parseFloat(record.getPacketsSeconds() + "");
+            line = "set udp_(" + i + ") [new Agent/UDP] " +
+                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getSource()) + ") $udp_(" + i + ") " +
+                    "set null_(" + i + ") [new Agent/Null] " +
+                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getAddress()) + ") $null_(" + i + ") " +
+                    "set cbr_(" + i + ") [new Application/Traffic/CBR] " +
+                    "$cbr_(" + i + ") set packetSize_ " + record.getSize() + " " +
+                    "$cbr_(" + i + ") set interval_ " + ratio + " " +
+                    "$cbr_(" + i + ") set random_ 0 " +
+                    "$cbr_(" + i + ") attach-agent $udp_(" + i + ") " +
+                    "$ns_ connect $udp_(" + i + ") $null_(" + i + ") " +
+                    "$ns_ at " + (float) record.getStart() + " \"$cbr_(" + i + ") start\" " +
+                    "$ns_ at " + stop + " \"$cbr_(" + i + ") stop\" ";
             resultList.add(line);
         }
         return resultList;
     }
-    
+
     /**
      * Import a file written in NS format to datas for Castadiva.
      * @param file The path to load the file.
      * @return <code>true</code> it the file has been readed.
      */
-    boolean ImportNs(String file){
+    boolean ImportNs(String file) {
         String rawText;
         int lastReadedLine;
         String nsText[];
-        
+
         rawText = NSRead(file);
         nsText = rawText.split("\n");
-        
+
         //Se transforman los datos
-        try{
-            if(ReadNSHead(nsText)){
-                nsText=DeleteNsBodyComments(3, nsText);
+        try {
+            if (ReadNSHead(nsText)) {
+                nsText = DeleteNsBodyComments(3, nsText);
                 lastReadedLine = ReadNsNode(3, nsText);
-                if(maxSpeed > 0){
+                if (maxSpeed > 0) {
                     ReadNsMobility(lastReadedLine, nsText);
                     //DeduceNsSimulationTime();
                     TranslateNsDataToMobilityMatrix();
                 }
-            }else{return false;}
-            
-        }catch(ArrayIndexOutOfBoundsException ex){
+            } else {
+                return false;
+            }
+
+        } catch (ArrayIndexOutOfBoundsException ex) {
             ex.printStackTrace();
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "It is not a NS file!", "Load Error",
@@ -3590,18 +3619,18 @@ public class CastadivaModel {
         }
         return true;
     }
-    
+
     /**
      * Open a file written in NS format.
      * @param NSPath The path on where is stored the file.
      * @see ImportNs
      */
-    private String NSRead(String NSPath){
+    private String NSRead(String NSPath) {
         File fileNS = new File(NSPath);
         String text = "Error opening the file.";
         try {
             FileInputStream inputData = new FileInputStream(fileNS);
-            byte bt[] = new byte[(int)fileNS.length()];
+            byte bt[] = new byte[(int) fileNS.length()];
             int numBytes = inputData.read(bt);
             text = new String(bt);
             inputData.close();
@@ -3611,77 +3640,80 @@ public class CastadivaModel {
         }
         return text;
     }
-    
+
     /**
      * Read the three first lines of a NS file. In this lines are vital information
      * about the rest of the file (the size and the number of nodes).
      * @param nsText Is a String containing all the data readed of a NS file.
      * @see ImportNs
      */
-    private boolean ReadNSHead(String nsText[]) throws ArrayIndexOutOfBoundsException{
+    private boolean ReadNSHead(String nsText[]) throws ArrayIndexOutOfBoundsException {
         String[] intro = null;
-        
-        try{
+
+        try {
             intro = nsText[1].split(" ");
-            try{
+            try {
                 numberNodes = Integer.parseInt(intro[2].split(",")[0]);
                 pause = Float.parseFloat(intro[4].split(",")[0]);
                 maxSpeed = Float.parseFloat(intro[7].split(",")[0]);
                 x = Float.parseFloat(intro[10].split(",")[0]);
                 y = Float.parseFloat(intro[13].split(",")[0]);
-            }catch(NumberFormatException ne){
+            } catch (NumberFormatException ne) {
                 //ne.printStackTrace();
                 return false;
             }
-        }catch(ArrayIndexOutOfBoundsException oe){return false;}
+        } catch (ArrayIndexOutOfBoundsException oe) {
+            return false;
+        }
         return true;
     }
-    
+
     /**
      * Obtain data for a node from a file or set a default one.
      */
-    public String[] ObtainStoredApData(Integer node){
+    public String[] ObtainStoredApData(Integer node) {
         List lines;
         String line;
         Integer help_lines = 1;
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_APS_FILE);
         lines = ReadTextFileInLines(file);
-        if(node + 1 > lines.size() - help_lines){
-            String descomposed_line[]={DEFAULT_WIFI_MAC,DEFAULT_IP_NET+(node+1),
-            DEFAULT_WIFI_IP_NET+(node+1), DEFAULT_CHANNEL+"", DEFAULT_WIFI_DEVICE,
-            DEFAULT_RANGE+"", DEFAULT_USER, DEFAULT_PWD, DEFAULT_PROCESSOR,
-            DEFAULT_NFS_DIRECTORY};
+        if (node + 1 > lines.size() - help_lines) {
+            String descomposed_line[] = {DEFAULT_WIFI_MAC, DEFAULT_IP_NET + (node + 1),
+                DEFAULT_WIFI_IP_NET + (node + 1), DEFAULT_CHANNEL + "", DEFAULT_WIFI_DEVICE,
+                DEFAULT_RANGE + "", DEFAULT_USER, DEFAULT_PWD, DEFAULT_PROCESSOR,
+                DEFAULT_NFS_DIRECTORY
+            };
             return descomposed_line;
         } else {
-            line = (String)lines.get(node+help_lines);
+            line = (String) lines.get(node + help_lines);
             String[] descomposed_line = line.split(" ");
             return descomposed_line;
         }
     }
-    
+
     /**
      * Delte all useless lines in the NS text.
      */
-    private String[] DeleteNsBodyComments(int startingLine, String nsText[]){
+    private String[] DeleteNsBodyComments(int startingLine, String nsText[]) {
         List<String> array = new ArrayList<String>();
-        for(int j=0; j<startingLine;j++){
+        for (int j = 0; j < startingLine; j++) {
             array.add(nsText[j]);
         }
-        for(int i=startingLine;i<nsText.length;i++){
+        for (int i = startingLine; i < nsText.length; i++) {
             String line = nsText[i];
-            if(!(line.startsWith("#") || line.startsWith("\n") || line.equals(""))){
+            if (!(line.startsWith("#") || line.startsWith("\n") || line.equals(""))) {
                 array.add(line);
             }
         }
-        
+
         String newText[] = new String[array.size()];
-        for(int k=0; k<array.size();k++){
-            newText[k]=array.get(k);
+        for (int k = 0; k < array.size(); k++) {
+            newText[k] = array.get(k);
         }
-        
+
         return newText;
     }
-    
+
     /**
      * Read every node in a NS file and translate it to Castadiva AP.
      * @param lineaInicio Which line is used to start the conversion from the file.
@@ -3689,25 +3721,25 @@ public class CastadivaModel {
      * @return How many nodes have been readed.
      * @see ImportNs
      */
-    private int ReadNsNode(int startingLine, String nsText[]){
-        int i,id;
+    private int ReadNsNode(int startingLine, String nsText[]) {
+        int i, id;
         float positionX, positionY, positionZ;
         accessPoints = new APs();
-        for(i=startingLine;i<numberNodes*3+startingLine; i+=3){
-            positionX=Float.parseFloat(nsText[i].split(" ")[3]);
-            positionY=Float.parseFloat(nsText[i+1].split(" ")[3]);
-            positionZ=Float.parseFloat(nsText[i+2].split(" ")[3]);
-            id=Integer.parseInt(nsText[i].split("\\)")[0].split("\\(")[1]);
-            String[] ap = ObtainStoredApData((i/3)-1);
+        for (i = startingLine; i < numberNodes * 3 + startingLine; i += 3) {
+            positionX = Float.parseFloat(nsText[i].split(" ")[3]);
+            positionY = Float.parseFloat(nsText[i + 1].split(" ")[3]);
+            positionZ = Float.parseFloat(nsText[i + 2].split(" ")[3]);
+            id = Integer.parseInt(nsText[i].split("\\)")[0].split("\\(")[1]);
+            String[] ap = ObtainStoredApData((i / 3) - 1);
             /*AP node  = new AP(ObtainStoredApData((i/3)-1)[1], ObtainStoredApData((i/3)-1)[2],
-                    ObtainStoredApData((i/3)-1)[0],ObtainStoredApData((i/3)-1)[6],
-                    ObtainStoredApData((i/3)-1)[7], DEFAULT_ID+id, positionX,
-                    positionY, positionZ, Float.parseFloat(ObtainStoredApData((i/3)-1)[5]),
-                    ObtainStoredApData((i/3)-1)[9], ObtainStoredApData((i/3)-1)[8],
-                    Integer.parseInt(ObtainStoredApData((i/3)-1)[3]), DEFAULT_MODE,
-                    ObtainStoredApData((i/3)-1)[4]);*/
-            
-            String name="";
+            ObtainStoredApData((i/3)-1)[0],ObtainStoredApData((i/3)-1)[6],
+            ObtainStoredApData((i/3)-1)[7], DEFAULT_ID+id, positionX,
+            positionY, positionZ, Float.parseFloat(ObtainStoredApData((i/3)-1)[5]),
+            ObtainStoredApData((i/3)-1)[9], ObtainStoredApData((i/3)-1)[8],
+            Integer.parseInt(ObtainStoredApData((i/3)-1)[3]), DEFAULT_MODE,
+            ObtainStoredApData((i/3)-1)[4]);*/
+
+            String name = "";
             try {
                 name = ap[10];
             } catch (Exception e) {
@@ -3720,7 +3752,7 @@ public class CastadivaModel {
         }
         return i;
     }
-    
+
     /**
      * Read the node mobility in a NS file and translate it to Castadiva AP.
      * @param startingLine Which line is used to start the conversion from the file.
@@ -3728,24 +3760,25 @@ public class CastadivaModel {
      * @return How many nodes have been readed.
      * @see ImportNs
      */
-    private int ReadNsMobility(int startingLine, String nsText[]){
+    private int ReadNsMobility(int startingLine, String nsText[]) {
         int i;
         Integer node;
         Float xDestCoordinate, yDestCoordinate, speed, second;
         String node_str, node_substr, speed_str, node_id, node_name;
         String[] words;
-       
-        
-        allAddresses = new MobilityVectors(this, accessPoints,pause);
+
+
+        allAddresses = new MobilityVectors(this, accessPoints, pause);
         nsData = new NodePositionsFromNsMobility(accessPoints.Size());
-        
-        if(debug)
+
+        if (debug) {
             System.out.println("\nImporting NS Mobility:");
-        for(i=startingLine;i<nsText.length;i++){
+        }
+        for (i = startingLine; i < nsText.length; i++) {
             words = nsText[i].split(" ");
             //quitar las lineas god_
-            if(words[0].endsWith("$ns_") && words[1].endsWith("at") &&
-                    words [4].endsWith("setdest") && !words[0].startsWith("#")){
+            if (words[0].endsWith("$ns_") && words[1].endsWith("at") &&
+                    words[4].endsWith("setdest") && !words[0].startsWith("#")) {
                 //guardar las lineas ns_ at
                 second = Float.parseFloat(words[2]);
                 xDestCoordinate = Float.parseFloat(words[5]);
@@ -3759,138 +3792,146 @@ public class CastadivaModel {
                 node = accessPoints.SearchAP(node_name);
                 allAddresses.ChangeMobilityVector(xDestCoordinate, yDestCoordinate, speed, node);
                 nsData.AddNodeInformation(node, xDestCoordinate, yDestCoordinate, speed, second);
-                if(GetSimulationTime() < Float.parseFloat(words[2]))
-                    SetSimulationTime((int)Float.parseFloat(words[2])+1);
-            }else{
-                if(words[0].endsWith("$ns_") && words[1].endsWith("at") && words [3].endsWith("god_")){
-                    if(GetSimulationTime() < Float.parseFloat(words[2])){
-                        SetSimulationTime((int)Float.parseFloat(words[2])+1);
+                if (GetSimulationTime() < Float.parseFloat(words[2])) {
+                    SetSimulationTime((int) Float.parseFloat(words[2]) + 1);
+                }
+            } else {
+                if (words[0].endsWith("$ns_") && words[1].endsWith("at") && words[3].endsWith("god_")) {
+                    if (GetSimulationTime() < Float.parseFloat(words[2])) {
+                        SetSimulationTime((int) Float.parseFloat(words[2]) + 1);
                     }
                 }
             }
         }
         return i;
     }
-    
+
     /**
      * Store all waypoints of a node to simulate it later.
      */
-    private void StoreNewNodePosition(Float x, Float y, Integer nodeNumber, Integer second){
+    private void StoreNewNodePosition(Float x, Float y, Integer nodeNumber, Integer second) {
         NodeCheckPoint checkPoint = new NodeCheckPoint(x, y, new Float(0));
         nodePositions[nodeNumber][second] = checkPoint;
-        if(debug)
-            System.out.println("Node: "+ (nodeNumber+1) + " second: "+ second + " x/y: " + checkPoint.xCoordinate +"/"+ checkPoint.yCoordinate);
+        if (debug) {
+            System.out.println("Node: " + (nodeNumber + 1) + " second: " + second + " x/y: " + checkPoint.xCoordinate + "/" + checkPoint.yCoordinate);
+        }
     }
-    
+
     /**
      * Obtain the intermediate movement between two positions of one node.
      */
     private void ObtainNodePositionBetweenTwoMovements(NodeImportedData start, NodeImportedData end,
-            Integer nodeNumber, Integer usedSeconds){
+            Integer nodeNumber, Integer usedSeconds) {
         //Integer usedSeconds;
         Float xIncrease, yIncrease;
-        
-        if (usedSeconds < 1) usedSeconds = 1;
+
+        if (usedSeconds < 1) {
+            usedSeconds = 1;
+        }
         xIncrease = (end.xCoordinate - start.xCoordinate) / usedSeconds;
         yIncrease = (end.yCoordinate - start.yCoordinate) / usedSeconds;
-        if(debug)
-            System.out.println("Node: "+ (nodeNumber+1) + " starting second: "+ end.second + " Increasex/y: " + xIncrease + "/" +yIncrease + " startx/y: " + start.xCoordinate + "/" + start.yCoordinate + " endx/y: " + end.xCoordinate + "/" + end.yCoordinate + " Used Sec:" + usedSeconds + " Speed: " + end.speed);
-        for(int i=0; i<=usedSeconds; i++){
-            StoreNewNodePosition(start.xCoordinate + xIncrease*i,
-                    start.yCoordinate + yIncrease*i, nodeNumber, end.second+i);
+        if (debug) {
+            System.out.println("Node: " + (nodeNumber + 1) + " starting second: " + end.second + " Increasex/y: " + xIncrease + "/" + yIncrease + " startx/y: " + start.xCoordinate + "/" + start.yCoordinate + " endx/y: " + end.xCoordinate + "/" + end.yCoordinate + " Used Sec:" + usedSeconds + " Speed: " + end.speed);
+        }
+        for (int i = 0; i <= usedSeconds; i++) {
+            StoreNewNodePosition(start.xCoordinate + xIncrease * i,
+                    start.yCoordinate + yIncrease * i, nodeNumber, end.second + i);
         }
     }
-    
+
     /**
      * Calculate the last movement of a node if this movement not end in the simulation.
      */
-    private void  ObtainLastNodePositionMovement(NodeImportedData start, NodeImportedData end,
-            Integer nodeNumber){
+    private void ObtainLastNodePositionMovement(NodeImportedData start, NodeImportedData end,
+            Integer nodeNumber) {
         Float xIncrease, yIncrease;
         Float usedSeconds;
-        
-        usedSeconds = ObtainArrivingTime(start.xCoordinate,start.yCoordinate,
+
+        usedSeconds = ObtainArrivingTime(start.xCoordinate, start.yCoordinate,
                 end.xCoordinate, end.yCoordinate, end.speed);
         xIncrease = (end.xCoordinate - start.xCoordinate) / usedSeconds;
         yIncrease = (end.yCoordinate - start.yCoordinate) / usedSeconds;
-        if(debug)
-            System.out.println("Node: "+ (nodeNumber+1) + " starting second: "+ end.second + " Increasex/y: " + xIncrease + "/" +yIncrease + " startx/y: " + start.xCoordinate + "/" + start.yCoordinate + " endx/y: " + end.xCoordinate + "/" + end.yCoordinate + " Used Sec:" + usedSeconds + " Speed: " + end.speed);
-        for(int i=end.second; i<=GetSimulationTime(); i++){
-            StoreNewNodePosition(start.xCoordinate + xIncrease*(i-end.second),
-                    start.yCoordinate + yIncrease*(i-end.second), nodeNumber, i);
+        if (debug) {
+            System.out.println("Node: " + (nodeNumber + 1) + " starting second: " + end.second + " Increasex/y: " + xIncrease + "/" + yIncrease + " startx/y: " + start.xCoordinate + "/" + start.yCoordinate + " endx/y: " + end.xCoordinate + "/" + end.yCoordinate + " Used Sec:" + usedSeconds + " Speed: " + end.speed);
+        }
+        for (int i = end.second; i <= GetSimulationTime(); i++) {
+            StoreNewNodePosition(start.xCoordinate + xIncrease * (i - end.second),
+                    start.yCoordinate + yIncrease * (i - end.second), nodeNumber, i);
         }
     }
-    
+
     /**
      * Obtain the arriving time from one point ot another with a determined speed.
      */
-    private Float ObtainArrivingTime(Float x1, Float y1, Float x2, Float y2, Float speed){
+    private Float ObtainArrivingTime(Float x1, Float y1, Float x2, Float y2, Float speed) {
         Double cathetus1, cathetus2, hypotenuse;
         Float time;
-        if(speed == 0) return Float.POSITIVE_INFINITY;
-        cathetus1 = (double)Math.abs(y2-y1);
-        cathetus2 = (double)Math.abs(x2-x1);
-        hypotenuse = Math.sqrt(Math.pow(cathetus1,2) + Math.pow(cathetus2,2));
-        time = new Float(hypotenuse/speed);
+        if (speed == 0) {
+            return Float.POSITIVE_INFINITY;
+        }
+        cathetus1 = (double) Math.abs(y2 - y1);
+        cathetus2 = (double) Math.abs(x2 - x1);
+        hypotenuse = Math.sqrt(Math.pow(cathetus1, 2) + Math.pow(cathetus2, 2));
+        time = new Float(hypotenuse / speed);
         return time;
     }
-    
+
     /**
      * Transform the data readen form NS to the mobility matrix used in Castadiva for the simulation.
      */
-    private void TranslateNsDataToMobilityMatrix(){
+    private void TranslateNsDataToMobilityMatrix() {
         List<NodeImportedData> nodeMovements;
         NodeImportedData nodeVector1, nodeVector2, nodeVector3;
         Integer timeUsed;
-        
-        nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime()+1];
-        
+
+        nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
+
         //Add starting pause (NS start with pause time).
-        for(int node=0; node<accessPoints.Size();node++){
+        for (int node = 0; node < accessPoints.Size(); node++) {
             AP ap = accessPoints.Get(node);
             nodeMovements = nsData.GetNodeInformation(node);
-            try{
-                for(int j=0; j<nodeMovements.get(0).second;j++){
+            try {
+                for (int j = 0; j < nodeMovements.get(0).second; j++) {
                     StoreNewNodePosition(ap.x, ap.y, node, j);
                 }
-            }catch(IndexOutOfBoundsException iobe){
-                for(int j=0; j<GetSimulationPause();j++){
+            } catch (IndexOutOfBoundsException iobe) {
+                for (int j = 0; j < GetSimulationPause(); j++) {
                     StoreNewNodePosition(ap.x, ap.y, node, j);
                 }
             }
         }
-        for(int node=0; node<accessPoints.Size(); node++){
+        for (int node = 0; node < accessPoints.Size(); node++) {
             //Read one node movement.
             nodeMovements = nsData.GetNodeInformation(node);
             //If one node has no movement.
-            if(nodeMovements.size()==0){
+            if (nodeMovements.size() == 0) {
                 AP ap = accessPoints.Get(node);
-                for(int j=0; j<=GetSimulationTime();j++){
+                for (int j = 0; j <= GetSimulationTime(); j++) {
                     StoreNewNodePosition(ap.x, ap.y, node, j);
                 }
-            }else{
+            } else {
                 //For the movements
-                for(int i=0; i<nodeMovements.size(); i++){
+                for (int i = 0; i < nodeMovements.size(); i++) {
                     nodeVector2 = nodeMovements.get(i);
-                    if(i==nodeMovements.size()-1){
-                        if(i==0){
+                    if (i == nodeMovements.size() - 1) {
+                        if (i == 0) {
                             AP ap = accessPoints.Get(node);
-                            nodeVector1 = new NodeImportedData(node, ap.x, ap.y, (float)0, 0);
-                        }else{
-                            nodeVector1 = nodeMovements.get(i-1);
+                            nodeVector1 = new NodeImportedData(node, ap.x, ap.y, (float) 0, 0);
+                        } else {
+                            nodeVector1 = nodeMovements.get(i - 1);
                         }
                         //The last movement.
                         ObtainLastNodePositionMovement(nodeVector1,
                                 nodeVector2, node);
-                    }else{
-                        nodeVector3 = nodeMovements.get(i+1);
-                        if(i==0){
+                    } else {
+                        nodeVector3 = nodeMovements.get(i + 1);
+                        if (i == 0) {
                             AP ap = accessPoints.Get(node);
-                            nodeVector1 = new NodeImportedData(node, ap.x, ap.y, (float)0, 0);
+                            nodeVector1 = new NodeImportedData(node, ap.x, ap.y, (float) 0, 0);
                             ObtainNodePositionBetweenTwoMovements(nodeVector1,
                                     nodeVector2, node, nodeVector3.second - nodeVector2.second);
-                        }else{
-                            nodeVector1 = nodeMovements.get(i-1);
+                        } else {
+                            nodeVector1 = nodeMovements.get(i - 1);
                             ObtainNodePositionBetweenTwoMovements(nodeVector1,
                                     nodeVector2, node, nodeVector3.second - nodeVector2.second);
                         }
@@ -3899,39 +3940,39 @@ public class CastadivaModel {
             }
         }
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                          CASTADIVA RESET/LOAD/SAVE
      *
      ****************************************************************************/
-    
-    
     /**
      * Store in a file all Castadiva objects. Allow a user to load them later.
      * This function generate a file with the user given name and a folder with
      * all the objects of Castadiva saved in differents files.
      * @param folder The basic class path.
      */
-    boolean SaveCastadiva(String folder){
+    boolean SaveCastadiva(String folder) {
         JFrame frame = null;
-        
-        if(GenerateFolder(folder) && SaveCastadivaComputer(folder, FILE_COMPUTER))
-            if(SaveCastadivaAps(folder, FILE_APS))
-                if(SaveCastadivaData(folder,FILE_SCENARIO))
-                    if(SaveExternalTraffic(folder,FILE_EXTERNAL_TRAFFIC))
-                    return true;
+
+        if (GenerateFolder(folder) && SaveCastadivaComputer(folder, FILE_COMPUTER)) {
+            if (SaveCastadivaAps(folder, FILE_APS)) {
+                if (SaveCastadivaData(folder, FILE_SCENARIO)) {
+                    if (SaveExternalTraffic(folder, FILE_EXTERNAL_TRAFFIC)) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
-    
+
     /**
      * Store the computer object.
      * @param folder The path where to save the file.
      * @param file The name of the file.
      */
-    private boolean SaveCastadivaComputer(String folder, String file){
+    private boolean SaveCastadivaComputer(String folder, String file) {
         try {
             new SerialComputerStream(folder + File.separator +
                     file).save(computer);
@@ -3941,13 +3982,13 @@ public class CastadivaModel {
         }
         return true;
     }
-    
+
     /**
      * Store the APs object.
      * @param folder The path where to save the file.
      * @param file The name of the file.
      */
-    private boolean SaveCastadivaAps(String folder, String file){
+    private boolean SaveCastadivaAps(String folder, String file) {
         try {
             new SerialAPStream(folder + File.separator +
                     file).save(accessPoints);
@@ -3957,14 +3998,14 @@ public class CastadivaModel {
         }
         return true;
     }
-    
+
     /**
      * Save all data from the scenario definition in a special class.
      * @param folder The path where to save the file.
      * @param file The name of the file.
      * @see StoreData
      */
-    private boolean SaveCastadivaData(String folder, String file){
+    private boolean SaveCastadivaData(String folder, String file) {
         StoreData info = new StoreData(minSpeed, maxSpeed, pause, x, y, RTS, GetSimulationTime(),
                 allAddresses, nodePositions);
         try {
@@ -3976,34 +4017,34 @@ public class CastadivaModel {
         }
         return true;
     }
-    
+
     /**
      * Save all external traffic in a special class.
      * @param folder The path where to save the file.
      * @param file The name of the file.
      * @see StoreData
      */
-    private boolean SaveExternalTraffic(String folder, String file){
-        try{
+    private boolean SaveExternalTraffic(String folder, String file) {
+        try {
             new SerialExternalTrafficDataStream(folder + File.separator +
                     file).save(externalTrafficFlow);
-        }catch(IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
             return false;
         }
         return true;
     }
-    
+
     /**
      * Load a file in Castadiva format. Allow the user to contiuate with an
      * experiment.
      * @see LoadAP
      * @see LoadComputer
      */
-    void LoadCastadiva(String folder){
+    void LoadCastadiva(String folder) {
         String filestart = File.separator;
         String decoyFolder = null;
-        
+
         //Stop all previous simulations.
         Reset();
         //Load files.
@@ -4011,47 +4052,49 @@ public class CastadivaModel {
         LoadAP(folder);
         LoadData(folder);
         LoadExternalTraffic(folder);
-        if(debug)
+        if (debug) {
             System.out.println("    Load complete!");
+        }
     }
-    
+
     /** Load the file containing all the information about AP objects. This file must
      * be stored in Castadiva format.
      * @param folder The path where to save the file.
      * @see AP
      * @see TrafficRecord
      */
-    void LoadAP(String folder){
+    void LoadAP(String folder) {
         List l;
-        
+
         try {
             l = new SerialAPStream(folder + File.separator + FILE_APS).load();
             accessPoints = (APs) l.get(0);
-            try{
-                TrafficRecord tr = (TrafficRecord)accessPoints.GetTraffic().get(0);
-            }catch(ArrayIndexOutOfBoundsException ex){
+            try {
+                TrafficRecord tr = (TrafficRecord) accessPoints.GetTraffic().get(0);
+            } catch (ArrayIndexOutOfBoundsException ex) {
                 TrafficRecord tr = new TrafficRecord();
             }
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
-            if(debug)
-            System.out.println("File Format not valid or problem loading the AP " +
-                    "configuration.");
+            if (debug) {
+                System.out.println("File Format not valid or problem loading the AP " +
+                        "configuration.");
+            }
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "File Format not valid or problem " +
                     "loading the AP configuration.", "Load Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
      * Load the file containing all the information about the computer. This file must
      * be stored in Castadiva format.
      * @param folder The path where to save the file.
      */
-    private void LoadComputer(String folder){
+    private void LoadComputer(String folder) {
         List l;
-        
+
         try {
             l = new SerialComputerStream(folder + File.separator + FILE_COMPUTER).load();
             computer = (Computer) l.get(0);
@@ -4060,79 +4103,84 @@ public class CastadivaModel {
             ex.printStackTrace();
         } catch (IOException ex) {
             //ex.printStackTrace();
-            if(debug)
-            System.out.println("File format not valid or problem loading the " +
-                    "computer configuration.");
+            if (debug) {
+                System.out.println("File format not valid or problem loading the " +
+                        "computer configuration.");
+            }
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "File format not valid or " +
                     "problem loading the computer configuration.", "Load Error",
                     JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }
-    
+
     /**
      * Load the file containing all the information about the scenario. This file must
      * be stored in Castadiva format.
      * @param folder The path where to save the file.
      * @see StoreData
      */
-    private void LoadData(String folder){
+    private void LoadData(String folder) {
         List l;
-        
+
         try {
             l = new SerialScenarioDataStream(folder + File.separator + FILE_SCENARIO).load();
             StoreData data = (StoreData) l.get(0);
-            if(debug)
+            if (debug) {
                 System.out.println("Reading data...");
+            }
             ReadData(data);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
             //ex.printStackTrace();
-            if(debug)
-            System.out.println("File format not valid or problem loading the " +
-                    "scenario configuration.");
+            if (debug) {
+                System.out.println("File format not valid or problem loading the " +
+                        "scenario configuration.");
+            }
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "File format not valid or " +
                     "problem loading the scenario configuration.", "Load Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
      * Load the file containing all the external traffic. This file must
      * be stored in Castadiva format.
      * @param folder The path where to save the file.
      * @see StoreData
      */
-    private void LoadExternalTraffic(String folder){
+    private void LoadExternalTraffic(String folder) {
         List l;
-        
+
         try {
-            l = new SerialScenarioDataStream(folder + File.separator + 
+            l = new SerialScenarioDataStream(folder + File.separator +
                     FILE_EXTERNAL_TRAFFIC).load();
             externalTrafficFlow = (List<ExternalTraffic>) l.get(0);
-            if(debug)
+            if (debug) {
                 System.out.println("Reading data...");
+            }
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
             //ex.printStackTrace();
-            if(debug)
-               System.out.println("File format not valid or problem loading the " +
-                    "external traffic flow.");
+            if (debug) {
+                System.out.println("File format not valid or problem loading the " +
+                        "external traffic flow.");
+            }
             JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "File format not valid or " +
                     "problem loading the external traffic flow.", "Load Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
      * Read data from class StoreData and configure the scenario and mobility.
      */
-    private void ReadData(StoreData infoToBeRead){
+    private void ReadData(StoreData infoToBeRead) {
         SetSimulationPause(infoToBeRead.pauseValue);
         SetMobilityMaxSpeed(infoToBeRead.maxSpeed);
         SetMobilityMinSpeed(infoToBeRead.minSpeed);
@@ -4143,28 +4191,28 @@ public class CastadivaModel {
         EndStopwatch();
         allAddresses = infoToBeRead.allAddressesDataValue;
         nodePositions = infoToBeRead.nodePositionsValue;
-        if(MobiliyActivated()){
+        if (MobiliyActivated()) {
             PositionateNodesInDeterminedSecond(0);
         }
     }
-    
+
     /**
      * Obtain the folder where the Castadiva files would be saved.
      * @param file The path to the dummy file.
      * @see SaveCastadiva
      */
-    private String CalculateSaveFolder(String file){
+    private String CalculateSaveFolder(String file) {
         String objectDirectory = null;
-        String [] name = null;
+        String[] name = null;
         name = file.split(FILE_PREFIX);
         return objectDirectory = name[0];
     }
-    
+
     /**
      * Start a new Castadiva simulation. Delete all objects and empty the simulation
      * window.
      */
-    void Reset(){
+    void Reset() {
         computer = new Computer();
         accessPoints = new APs();
         tableModel = new TrafficTableModel(accessPoints.GetTraffic());
@@ -4172,158 +4220,150 @@ public class CastadivaModel {
         externalTrafficFlow = new ArrayList<ExternalTraffic>();
         SetStopwatch(0);
         EndStopwatch();
-        x=DEFAULT_X_BOUND;
-        y=DEFAULT_Y_BOUND;
-        pause=0;
+        x = DEFAULT_X_BOUND;
+        y = DEFAULT_Y_BOUND;
+        pause = 0;
     }
-    
-    
-    
+
     /***************************************************************************
      *
      *                               SHOW FUNCTIONS
      *
      ****************************************************************************/
-    
-    
     /**
      * Print in console the components of a list.
      * @param list The list to be printed.
      */
-    public void ShowList(List list){
-        for(int i=0;i<list.size();i++){
+    public void ShowList(List list) {
+        for (int i = 0; i < list.size(); i++) {
             String show = list.get(i).toString();
             System.out.println(show);
         }
     }
-    
+
     /**
      * Show all the instructions of a simulation.
      */
-    private void ShowInstructions(List showedInstructions){
+    private void ShowInstructions(List showedInstructions) {
         List nodo;
         System.out.println("");
         System.out.println("");
         System.out.println("****************************");
         System.out.println("        SIMULACION          ");
         System.out.println("****************************");
-        for(int i=0; i<showedInstructions.size(); i++){
+        for (int i = 0; i < showedInstructions.size(); i++) {
             System.out.println("");
-            System.out.println("NODO: "+(i+1));
+            System.out.println("NODO: " + (i + 1));
             System.out.println("--------------");
             nodo = (List) showedInstructions.get(i);
-            for(int j=0; j<nodo.size(); j++){
+            for (int j = 0; j < nodo.size(); j++) {
                 System.out.println(nodo.get(j));
             }
         }
         System.out.println("****************************");
     }
-    
+
     /**
      * Show in the System.out all traffic instructions created.
      * @see TrafficRecord
      */
-    void ShowTrafficVector(Vector vector){
-        for(int i=0; i< vector.size()-1; i++){
+    void ShowTrafficVector(Vector vector) {
+        for (int i = 0; i < vector.size() - 1; i++) {
             TrafficRecord line = (TrafficRecord) vector.get(i);
             System.out.println(line.trafficKind);
         }
         System.out.println(" VECTOR END ");
     }
-    
+
     /**
      * Show in the command console the traffic obtained.
      * @param trafficData. The traffic formatted in plain text.
      */
-    public void ShowTraffic(List trafficData){
-        for(int i=0; i<trafficData.size(); i++){
+    public void ShowTraffic(List trafficData) {
+        for (int i = 0; i < trafficData.size(); i++) {
             System.out.println(trafficData.get(i));
         }
     }
-    
+
     /**
      * Show by console a determined matrix.
      */
-    public void ShowFloatMatrix(float[][] matrix){
+    public void ShowFloatMatrix(float[][] matrix) {
         String line;
-        for(int i = 0; i < matrix.length; i++){
+        for (int i = 0; i < matrix.length; i++) {
             line = "";
-            for(int j = 0; j < matrix.length; j++){
+            for (int j = 0; j < matrix.length; j++) {
                 line = line + " " + matrix[i][j];
             }
             System.out.println(line);
         }
         System.out.println(" ");
     }
-    
-    
-    
+
     /***************************************************************************
      *
      *                              OTHERS
      *
      ****************************************************************************/
-    
-    
     /**
      * Generate a NET of type C from a IP. It means that change
      * the last value of the IP by one 0.
      * @param ip The ip to obtain the C net.
      * @return The net where the IP belong to.
      */
-    private String ObtainNetTypeC(String ip){
+    private String ObtainNetTypeC(String ip) {
         String tmp[];
         tmp = ip.split("\\.");
         return tmp[0] + "." + tmp[1] + "." + tmp[2] + ".0";
     }
-    
+
     /**
      * Check if is a valid IP.
      * @return true if is a real ip.
      */
-    public boolean CheckNetStructure(String ip){
+    public boolean CheckNetStructure(String ip) {
         String tmp[];
         tmp = ip.split("\\.");
-        try{
-            if(Integer.parseInt(tmp[0]) < 256 && Integer.parseInt(tmp[1]) < 256 &&
+        try {
+            if (Integer.parseInt(tmp[0]) < 256 && Integer.parseInt(tmp[1]) < 256 &&
                     Integer.parseInt(tmp[2]) < 256 && Integer.parseInt(tmp[3]) < 256 &&
                     Integer.parseInt(tmp[0]) >= 0 && Integer.parseInt(tmp[1]) >= 0 &&
-                    Integer.parseInt(tmp[2]) >= 0 && Integer.parseInt(tmp[3]) >= 0){
+                    Integer.parseInt(tmp[2]) >= 0 && Integer.parseInt(tmp[3]) >= 0) {
                 return true;
             }
-        }catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             return false;
         }
         return false;
     }
-    
+
     /**
      * Copy 'n' elements of one vector in other.
      * @param source The vector witch must be cloned.
      * @param destination The vector to add all elements.
      * @param n The number of elements to copy.
      */
-    void VectorCopyTo(Vector source, Vector destination, Integer n){
+    void VectorCopyTo(Vector source, Vector destination, Integer n) {
         destination.removeAllElements();
-        for(int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             destination.add(source.get(i));
         }
     }
-    
+
     /**
      * Store text in a file. The text must be written in a String list.
      * @param dataList The text to be written
      * @file the path to the file.
      */
-    private void SaveInFile(List dataList, String file){
+    private void SaveInFile(List dataList, String file) {
         File outputFile;
         byte b[];
         //Se guarda en el fichero
         outputFile = new File(file);
         try {
             FileOutputStream outputChannel = new FileOutputStream(outputFile);
-            for (int i=0; i<dataList.size();i++){
-                b = (dataList.get(i).toString()+"\n").getBytes();
+            for (int i = 0; i < dataList.size(); i++) {
+                b = (dataList.get(i).toString() + "\n").getBytes();
                 try {
                     outputChannel.write(b);
                 } catch (IOException ex) {
@@ -4337,29 +4377,30 @@ public class CastadivaModel {
                 ex.printStackTrace();
             }
         } catch (FileNotFoundException ex) {
-            String text = "Impossible to generate file:\n\t"+ file +
-                    ". \nIs the working directory created properly?\n"+
+            String text = "Impossible to generate file:\n\t" + file +
+                    ". \nIs the working directory created properly?\n" +
                     "Check into \"Configuration -> Configurate the Computer\"";
-                String title = "No such file or directory";
-                ShowSaveErrorMessage(text, title);
+            String title = "No such file or directory";
+            ShowSaveErrorMessage(text, title);
         }
     }
-    
+
     /**
      * Read the text stored in a file.
      */
-    String ReadTextFile(String file){
+    String ReadTextFile(String file) {
         File licence = new File(file);
         String text = "Error opening the file.";
         try {
             FileInputStream inputData = new FileInputStream(licence);
-            byte bt[] = new byte[(int)licence.length()];
+            byte bt[] = new byte[(int) licence.length()];
             text = new String(bt);
             inputData.close();
-        } catch (IOException ex) {}
+        } catch (IOException ex) {
+        }
         return text;
     }
-    
+
     /**
      * Fetch the entire contents of a text file, and return it in a List.
      * The returned list has a line of the file in each position.
@@ -4368,82 +4409,82 @@ public class CastadivaModel {
      */
     public List<String> ReadTextFileInLines(File file) {
         List<String> contents = new ArrayList<String>();
-        
+
         BufferedReader input = null;
         try {
-            input = new BufferedReader( new FileReader(file) );
+            input = new BufferedReader(new FileReader(file));
             String line = null;
-            while (( line = input.readLine()) != null){
+            while ((line = input.readLine()) != null) {
                 contents.add(line);
             }
         } catch (FileNotFoundException ex) {
-            //ex.printStackTrace();
-        } catch (IOException ex){
-            //ex.printStackTrace();
+        //ex.printStackTrace();
+        } catch (IOException ex) {
+        //ex.printStackTrace();
         } finally {
             try {
-                if (input!= null) {
+                if (input != null) {
                     input.close();
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            
+
         }
         return contents;
     }
-    
+
     /**
      * Set a instruction to a node, without deleting the old node instructions.
      * @param nodesInstructionList A list that contain all nodes instructions.
      * @param instruction The instruction to add.
      * @param node The namber of the node in the list.
      */
-    private void SetInstructionToNode(List<List<String>> nodesInstructionList, String instruction, int node){
+    private void SetInstructionToNode(List<List<String>> nodesInstructionList, String instruction, int node) {
         List<String> auxList;
-        try{
+        try {
             auxList = nodesInstructionList.get(node);
-        }catch(IndexOutOfBoundsException ex){
+        } catch (IndexOutOfBoundsException ex) {
             auxList = new ArrayList<String>();
         }
         auxList.add(instruction);
         nodesInstructionList.set(node, auxList);
     }
-    
+
     /**
      * Add a instruction to a node, without deleting the old node instructions.
      * @param nodesInstructionList A list that contain all nodes instructions.
      * @param instruction The instruction to add.
      * @param node The namber of the node in the list.
      */
-    private void AddInstructionToNode(List<List<String>> nodesInstructionList, String instruction, int node){
+    private void AddInstructionToNode(List<List<String>> nodesInstructionList, String instruction, int node) {
         List<String> auxList;
-        try{
+        try {
             auxList = nodesInstructionList.get(node);
-        }catch(IndexOutOfBoundsException ex){
+        } catch (IndexOutOfBoundsException ex) {
             auxList = new ArrayList<String>();
         }
         auxList.add(instruction);
         nodesInstructionList.add(node, auxList);
     }
-    
+
     /**
      * Create in the file system the desired folder.
      * @param folder The path to the desired folder.
      */
-    public boolean GenerateFolder(String folder){
+    public boolean GenerateFolder(String folder) {
         //Save the objects of Castadiva.
         File dirFileSave = new java.io.File(folder);
-        if(!dirFileSave.exists()) {
-            try{
+        if (!dirFileSave.exists()) {
+            try {
                 dirFileSave.mkdirs();
-            }catch(SecurityException se){
+            } catch (SecurityException se) {
                 return false;
             }
         }
         return true;
     }
-    
+
     /**
      * Replace one pattern with other in String.
      * @param str The string.
@@ -4454,164 +4495,170 @@ public class CastadivaModel {
         int s = 0;
         int e = 0;
         StringBuffer result = new StringBuffer();
-        
+
         while ((e = str.indexOf(pattern, s)) >= 0) {
             result.append(str.substring(s, e));
             result.append(replace);
-            s = e+pattern.length();
+            s = e + pattern.length();
         }
         result.append(str.substring(s));
         return result.toString();
     }
-    
+
     /**
      * Delete a directory in a filesystem.
      * @return <code>true</code> if the directory is deleted.
      */
-    private boolean DeleteDirectory(String directory){
+    private boolean DeleteDirectory(String directory) {
         File path = new File(directory);
         return DeletePath(path);
     }
-    
+
     /**
      * Delete all files in a Path.
      * @return <code>true</code> if all files are deleted.
      */
     private boolean DeletePath(File path) {
-        if(path.exists()) {
+        if (path.exists()) {
             File[] files = path.listFiles();
-            for(int i=0; i<files.length; i++) {
-                if(files[i].isDirectory()) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
                     DeletePath(files[i]);
                 } else {
                     //Don't delete files with string "Flow". This files are
                     //used to generate the traffic TCP
-                    if(!(files[i].toString().contains("Flow") ||
-                            files[i].toString().contains("aodv")||
-                            files[i].toString().contains("olsrd")||
-                            files[i].toString().contains(".dump")))
+                    if (!(files[i].toString().contains("Flow") ||
+                            files[i].toString().contains("aodv") ||
+                            files[i].toString().contains("olsrd") ||
+                            files[i].toString().contains(".dump"))) {
                         files[i].delete();
+                    }
                 }
             }
         }
-        return(path.delete());
+        return (path.delete());
     }
-    
+
     /**
      * Generate a n x m matrix with default value.
      */
-    private float[][] GenerateMatrix(Integer n, Integer m, Float value){
+    private float[][] GenerateMatrix(Integer n, Integer m, Float value) {
         float[][] matrix = new float[n][m];
-        for(int i=0; i<n; i++)
-            for(int j=0; j<m; j++)
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 matrix[i][j] = value;
+            }
+        }
         return matrix;
     }
-    
+
     /**
      * Generate a n x m matrix with default value.
      */
-    private Integer[][] GenerateMatrix(Integer n, Integer m, Integer value){
+    private Integer[][] GenerateMatrix(Integer n, Integer m, Integer value) {
         Integer[][] matrix = new Integer[n][m];
-        for(int i=0; i<n; i++)
-            for(int j=0; j<m; j++)
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 matrix[i][j] = value;
+            }
+        }
         return matrix;
     }
-    
+
     /**
      * Generate a n x m matrix with default value.
      */
-    private boolean[][] GenerateMatrix(Integer n, Integer m, boolean value){
+    private boolean[][] GenerateMatrix(Integer n, Integer m, boolean value) {
         boolean[][] matrix = new boolean[n][m];
-        for(int i=0; i<n; i++)
-            for(int j=0; j<m; j++)
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 matrix[i][j] = value;
+            }
+        }
         return matrix;
     }
-    
+
     /**
      * Generate a n vector with default value.
      */
-    private Integer[] GenerateVector(Integer n, Integer value){
-        Integer [] vector = new Integer[n];
-        for(int i=0; i<n; i++)
+    private Integer[] GenerateVector(Integer n, Integer value) {
+        Integer[] vector = new Integer[n];
+        for (int i = 0; i < n; i++) {
             vector[i] = value;
+        }
         return vector;
     }
-    
+
     /**
      * Show a matrix into the standar output.
      */
-    private void PrintMatrix(Object[][] matrix){
-        String line  = "";
-        for(int i=0; i<matrix.length; i++){
-            for(int j=0; j<matrix[0].length; j++){
+    private void PrintMatrix(Object[][] matrix) {
+        String line = "";
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
                 line = line + matrix[i][j] + "\t";
             }
             System.out.println(line);
             line = "";
         }
     }
-    
+
     /**
      * Show a matrix into the standar output.
      */
-    private void PrintMatrix(float[][] matrix){
-        String line  = "";
-        for(int i=0; i<matrix.length; i++){
-            for(int j=0; j<matrix[0].length; j++){
+    private void PrintMatrix(float[][] matrix) {
+        String line = "";
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
                 line = line + matrix[i][j] + "\t";
             }
             System.out.println(line);
             line = "";
         }
     }
-    
+
     /**
      * Show a list in one line on the standar output.
      */
-    private void PrintList(List list){
-        String print ="l: ";
-        for(int i=0; i<list.size(); i++){
+    private void PrintList(List list) {
+        String print = "l: ";
+        for (int i = 0; i < list.size(); i++) {
             print = print + " " + list.get(i);
         }
         System.out.println(print + " s: " + list.size());
     }
-    
+
     /**
      * Show a vector on the standar output.
      */
-    private void PrintStringVector(String[] vector){
-        for(int i=0; i<vector.length; i++){
+    private void PrintStringVector(String[] vector) {
+        for (int i = 0; i < vector.length; i++) {
             System.out.println(vector[i]);
         }
     }
-    
+
     /**
      * Show an error.
      */
-     void ShowSaveErrorMessage(String text, String title){
+    void ShowSaveErrorMessage(String text, String title) {
         JFrame frame = null;
-        if (debug)
+        if (debug) {
             System.out.println(text);
+        }
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
-    
-    
-    
+
     /****************************************************************************
      *
      *                              SECONDARY CLASSES
      *
      ****************************************************************************/
-    
-    
     /**
      * This abstract class generate the standar methods to connect by SSH.
      * Based on the JCraft tools.
      */
-    private abstract class SSH extends Thread{
+    private abstract class SSH extends Thread {
+
         Channel channel;
         Session session;
         String answer;
@@ -4619,24 +4666,25 @@ public class CastadivaModel {
         List commands;
         List number;
         String sourceDirectory;
-        
+
         @Override
-        public void run(){
-            if(Connect()){
-                for(int i=0; i<commands.size(); i++){
-                    if (i<number.size()){
-                        RunCommand((String)commands.get(i), sourceDirectory,
+        public void run() {
+            if (Connect()) {
+                for (int i = 0; i < commands.size(); i++) {
+                    if (i < number.size()) {
+                        RunCommand((String) commands.get(i), sourceDirectory,
                                 "CastadivaTTCP" + number.get(i));
-                    } else
-                        RunCommand((String)commands.get(i), sourceDirectory,
+                    } else {
+                        RunCommand((String) commands.get(i), sourceDirectory,
                                 "CastadivaTTCPnone");
+                    }
                 }
             }
         }
-        
-        private void SaveExitInDirectory(String text, String directory, String file){
+
+        private void SaveExitInDirectory(String text, String directory, String file) {
             File exitDirectory;
-            
+
             byte b[] = text.getBytes();
             exitDirectory = new File(directory + File.separator + file);
             FileOutputStream exitChannel = null;
@@ -4652,62 +4700,71 @@ public class CastadivaModel {
                 ex.printStackTrace();
             }
         }
-        
-        public void RunCommand(String command, String directory, String file){
-            try{
-                channel=session.openChannel("exec");
-                ((ChannelExec)channel).setCommand(command);
+
+        public void RunCommand(String command, String directory, String file) {
+            try {
+                channel = session.openChannel("exec");
+                ((ChannelExec) channel).setCommand(command);
                 channel.setXForwarding(true);
                 channel.setInputStream(null);
-                ((ChannelExec)channel).setErrStream(System.err);
-                InputStream in=channel.getInputStream();
+                ((ChannelExec) channel).setErrStream(System.err);
+                InputStream in = channel.getInputStream();
                 channel.connect();
-                
-                byte[] tmp=new byte[1024];
-                while(true){
-                    while(in.available()>0){
-                        int i=in.read(tmp, 0, 1024);
-                        if(i<0){break;}
-                        if(print){
+
+                byte[] tmp = new byte[1024];
+                while (true) {
+                    while (in.available() > 0) {
+                        int i = in.read(tmp, 0, 1024);
+                        if (i < 0) {
+                            break;
+                        }
+                        if (print) {
                             answer = (new String(tmp, 0, i));
                             SaveExitInDirectory(answer, directory, file);
                         }
                     }
-                    if(channel.isClosed()){
-                        if(debug)
-                        System.out.println("exit-status: "+channel.getExitStatus());
+                    if (channel.isClosed()) {
+                        if (debug) {
+                            System.out.println("exit-status: " + channel.getExitStatus());
+                        }
                         break;
                     }
-                    try{Thread.sleep(10);}catch(Exception ee){}
+                    try {
+                        Thread.sleep(10);
+                    } catch (Exception ee) {
+                    }
                 }
-                //Disconnect();
-            } catch(Exception e){
-                if(debug) System.out.println(e);
+            //Disconnect();
+            } catch (Exception e) {
+                if (debug) {
+                    System.out.println(e);
+                }
             }
         }
-        
-        public void Disconnect(){
-            try{
+
+        public void Disconnect() {
+            try {
                 channel.disconnect();
-            }catch(NullPointerException npe){
-                if(debug)
+            } catch (NullPointerException npe) {
+                if (debug) {
                     System.out.println(npe);
+                }
             }
-            try{
+            try {
                 session.disconnect();
-            }catch(NullPointerException npe){
-                if (debug)
+            } catch (NullPointerException npe) {
+                if (debug) {
                     System.out.println(npe);
+                }
             }
         }
-        
+
         abstract boolean Connect();
-        
-        abstract class MyUserInfo implements UserInfo{
-            
+
+        abstract class MyUserInfo implements UserInfo {
         }
     }
-    
+
     /**
      * This class allow the connection to one AP by SSH. Make a connection
      * and send an instruction to the AP.
@@ -4715,8 +4772,10 @@ public class CastadivaModel {
      * @version %I%, %G%
      * @since 1.4
      */
-    private class SshNode extends SSH{
+    private class SshNode extends SSH {
+
         AP node;
+
         /**
          * Creates a new instance of SshNode.
          * @param accessPoint The AP  where the instructions must be exectued.
@@ -4736,10 +4795,10 @@ public class CastadivaModel {
             number = numInst;
             sourceDirectory = directoryAddress;
         }
-        
-        public boolean Connect(){
+
+        public boolean Connect() {
             boolean ok = true;
-            try{
+            try {
                 JSch jsch = new JSch();
                 String host = node.WhatEthIP();
                 String user = node.WhatUser();
@@ -4747,7 +4806,7 @@ public class CastadivaModel {
                 UserInfo ui = new MyUserInfo(node);
                 session.setUserInfo(ui);
                 session.connect();
-            } catch(Exception e){
+            } catch (Exception e) {
                 String text = e.getMessage() + " in AP " + node.WhatAP();
                 String title = "Conexion status";
                 ShowSaveErrorMessage(text, title);
@@ -4755,20 +4814,40 @@ public class CastadivaModel {
             }
             return ok;
         }
-        
-        public class MyUserInfo implements UserInfo{
+
+        public class MyUserInfo implements UserInfo {
+
             AP node;
-            public MyUserInfo(AP accessPoint){node=accessPoint;}
-            public String getPassword(){ return node.WhatPwd(); }
-            public boolean promptYesNo(String str){ return true;}
-            public String getPassphrase(){ return null; }
-            public boolean promptPassphrase(String message){ return true; }
-            public boolean promptPassword(String message){ return true; }
-            public void showMessage(String message){}
+
+            public MyUserInfo(AP accessPoint) {
+                node = accessPoint;
+            }
+
+            public String getPassword() {
+                return node.WhatPwd();
+            }
+
+            public boolean promptYesNo(String str) {
+                return true;
+            }
+
+            public String getPassphrase() {
+                return null;
+            }
+
+            public boolean promptPassphrase(String message) {
+                return true;
+            }
+
+            public boolean promptPassword(String message) {
+                return true;
+            }
+
+            public void showMessage(String message) {
+            }
         }
-        
     }
-    
+
     /**
      * This class allow the connection to an IP by SSH.
      * Useful to connect to the AP when are not installed in CASTADIVA.
@@ -4776,11 +4855,12 @@ public class CastadivaModel {
      * @version %I%, %G%
      * @since 1.4
      */
-    private class SshHost extends SSH{
+    private class SshHost extends SSH {
+
         String sshIp;
         String sshUser;
         String sshPwd;
-        
+
         /**
          * Creates a new instance of SshNode.
          * @param ip The IP where do you want to connect.
@@ -4795,7 +4875,7 @@ public class CastadivaModel {
          * Can be a local directory in the AP or a NFS directory.
          */
         public SshHost(String ip, String user, String pwd, List instructions,
-                boolean printExit, List numInst, String directoryAddress){
+                boolean printExit, List numInst, String directoryAddress) {
             sshIp = ip;
             sshUser = user;
             sshPwd = pwd;
@@ -4804,18 +4884,19 @@ public class CastadivaModel {
             number = numInst;
             sourceDirectory = directoryAddress;
         }
-        
-        public boolean Connect(){
+
+        public boolean Connect() {
             boolean ok = true;
-            try{
+            try {
                 JSch jsch = new JSch();
                 session = jsch.getSession(sshUser, sshIp, 22);
                 UserInfo ui = new MyUserInfo(sshPwd);
                 session.setUserInfo(ui);
                 session.connect();
-            } catch(Exception e){
-                if (debug)
+            } catch (Exception e) {
+                if (debug) {
                     System.out.println(e.getMessage() + " in connection to " + sshIp);
+                }
                 JFrame frame = new JFrame();
                 JOptionPane.showMessageDialog(frame, e.getMessage() + " in " +
                         sshIp, "Conexion status", JOptionPane.ERROR_MESSAGE);
@@ -4823,22 +4904,40 @@ public class CastadivaModel {
             }
             return ok;
         }
-        
-        public class MyUserInfo implements UserInfo{
-            
+
+        public class MyUserInfo implements UserInfo {
+
             String password;
-            public MyUserInfo(String password){
-                this.password = password;}
-            public String getPassword(){ return password; }
-            public boolean promptYesNo(String str){ return true;}
-            public String getPassphrase(){ return null; }
-            public boolean promptPassphrase(String message){ return true; }
-            public boolean promptPassword(String message){ return true; }
-            public void showMessage(String message){}
+
+            public MyUserInfo(String password) {
+                this.password = password;
+            }
+
+            public String getPassword() {
+                return password;
+            }
+
+            public boolean promptYesNo(String str) {
+                return true;
+            }
+
+            public String getPassphrase() {
+                return null;
+            }
+
+            public boolean promptPassphrase(String message) {
+                return true;
+            }
+
+            public boolean promptPassword(String message) {
+                return true;
+            }
+
+            public void showMessage(String message) {
+            }
         }
-        
     }
-    
+
     /**
      * This is the abstract class where all Serializable objects inherit the Load
      * Write functions. Allow to save the simulation in Castadiva format.
@@ -4847,37 +4946,38 @@ public class CastadivaModel {
      * @since 1.4
      */
     private class SerialParent {
+
         protected String FILENAME;
-        
-        public void write(Object objectToSave) throws IOException{
+
+        public void write(Object objectToSave) throws IOException {
             ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(
                     new FileOutputStream(FILENAME)));
             os.writeObject(objectToSave);
             os.close();
         }
-        
-        public void save(Object o) throws IOException{
+
+        public void save(Object o) throws IOException {
             List<Object> l = new ArrayList<Object>();
             l.add(o);
             write(l);
         }
-        
+
         public List load() throws IOException, ClassNotFoundException,
-                FileNotFoundException{
+                FileNotFoundException {
             List l;
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
             l = (List) is.readObject();
             is.close();
             return l;
         }
-        
-        public void dump() throws IOException, ClassNotFoundException{
+
+        public void dump() throws IOException, ClassNotFoundException {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
             System.out.println(is.readObject());
             is.close();
         }
     }
-    
+
     /**
      * Inherit from SerialParent this class allow to save the AP structure in a
      * file.
@@ -4886,11 +4986,12 @@ public class CastadivaModel {
      * @see SerialComputerStream
      */
     private class SerialAPStream extends SerialParent {
+
         public SerialAPStream(String file) {
             FILENAME = file;
         }
-        
-        public APs loadAP() throws IOException, ClassNotFoundException{
+
+        public APs loadAP() throws IOException, ClassNotFoundException {
             APs tmp_accessPoints;
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
             tmp_accessPoints = (APs) is.readObject();
@@ -4898,7 +4999,7 @@ public class CastadivaModel {
             return tmp_accessPoints;
         }
     }
-    
+
     /**
      * Inherit from SerialParent this class allow to save the Computer structure in a
      * file.
@@ -4907,12 +5008,12 @@ public class CastadivaModel {
      * @see SerialScenarioData
      */
     private class SerialComputerStream extends SerialParent {
+
         public SerialComputerStream(String file) {
             FILENAME = file;
         }
-
     }
-    
+
     /**
      * Inherit from SerialParent this class allow to save the scenario structure in a
      * file.
@@ -4921,11 +5022,12 @@ public class CastadivaModel {
      * @see SerialComputerStream
      */
     private class SerialScenarioDataStream extends SerialParent {
-        public SerialScenarioDataStream(String file){
+
+        public SerialScenarioDataStream(String file) {
             FILENAME = file;
         }
-        
-        public StoreData loadScenario() throws IOException, ClassNotFoundException{
+
+        public StoreData loadScenario() throws IOException, ClassNotFoundException {
             StoreData info;
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
             info = (StoreData) is.readObject();
@@ -4933,7 +5035,7 @@ public class CastadivaModel {
             return info;
         }
     }
-    
+
     /**
      * Inherit from SerialParent this class allow to save the external traffic in a
      * file.
@@ -4942,11 +5044,12 @@ public class CastadivaModel {
      * @see SerialComputerStream
      */
     private class SerialExternalTrafficDataStream extends SerialParent {
-        public SerialExternalTrafficDataStream(String file){
+
+        public SerialExternalTrafficDataStream(String file) {
             FILENAME = file;
         }
-        
-        public List<ExternalTraffic> loadExternalTraffic() throws IOException, ClassNotFoundException{
+
+        public List<ExternalTraffic> loadExternalTraffic() throws IOException, ClassNotFoundException {
             List<ExternalTraffic> extTraffic;
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
             extTraffic = (List<ExternalTraffic>) is.readObject();
@@ -4954,83 +5057,97 @@ public class CastadivaModel {
             return extTraffic;
         }
     }
-    
+
     /**
      * This class generate a time counter to control the simulation steps and
      * wait for the AP response when a Simulation begin.
      */
-    private class CastadivaMainTimerTask extends TimerTask{
-        
+    private class CastadivaMainTimerTask extends TimerTask {
+
         public void run() {
             stopwatch++;
-            
+
             //When all is ended...
-            if (stopwatch == GetRealSimulationTime()){
+            if (stopwatch == GetRealSimulationTime()) {
                 LaunchStatisticRecovery(statisticsControl);
             }
-            
+
             //Seek for the statistics when the time is over.
-            if (stopwatch > GetRealSimulationTime()){
+            if (stopwatch > GetRealSimulationTime()) {
                 simulating = false;
                 EndStatisticsSeeker();
             }
         }
-    };
+    }
+
     
-    /**
-     * This class is useful to control when all traffic instructions are ended.
-     * @see ObtainStatisticsThread
-     */
-    class StatisticExchangeBuffer{
+    
+
+      
+
+          ;
+        /**
+         * This class is useful to control when all traffic instructions are ended.
+         * @see ObtainStatisticsThread
+         */
+          
+
+          
+               class StatisticExchangeBuffer{
         private int buffer[];
         private int size;
         
         StatisticExchangeBuffer(int length){
-            if(length > 0){
+            if(length > 0) {
                 buffer = new int[length];
                 size = length;
-            }else {
+            } else {
                 buffer = new int[0];
                 size = 0;
             }
         }
-        
-        public synchronized void ShowBufferValue(){
-            for(int i=0; i<size; i++)
+
+        public synchronized void ShowBufferValue() {
+            for (int i = 0; i < size; i++) {
                 System.out.print(buffer[i]);
+            }
             System.out.println("");
         }
-        
-        public synchronized String ReturnBufferValue(){
-            String value="";
-            for(int i=0; i<size; i++)
-                value=value+buffer[i];
+
+        public synchronized String ReturnBufferValue() {
+            String value = "";
+            for (int i = 0; i < size; i++) {
+                value = value + buffer[i];
+            }
             return value;
         }
-        
-        public synchronized void ChangeBufferValue(int position, int value){
-            buffer[position]=value;
+
+        public synchronized void ChangeBufferValue(int position, int value) {
+            buffer[position] = value;
         }
-        
-        private synchronized boolean IsEndOfStatistics(){
-            for(int i=0; i<size; i++){
-                if(buffer[i]==0) return false;
+
+        private synchronized boolean IsEndOfStatistics() {
+            for (int i = 0; i < size; i++) {
+                if (buffer[i] == 0) {
+                    return false;
+                }
             }
             return true;
         }
     }
-    
+
     /**
      * One thread for each traffic instruction to check when the TTCP tool has ended.
      * @see TrafficRecord
      */
-    private class ObtainStatisticsThread extends Thread{
+    private class ObtainStatisticsThread extends Thread {
+
         private String file;
         private Vector<TrafficRecord> trafficData;
         private StatisticExchangeBuffer statisticVector;
         private int fileSize;
         private int line;
-        
+
         /** Creates a new instance of ObtainStatisticsThread */
         public ObtainStatisticsThread(String inputFile, int inputFileSize,
                 Vector<TrafficRecord> traffic, int where,
@@ -5041,61 +5158,58 @@ public class CastadivaModel {
             line = where;
             statisticVector = statisticExchange;
         }
-        
+
         @Override
-        public void run(){
+        public void run() {
             ReadTrafficStatistic();
         }
-        
-        private void ReadUdpTrafficLine(String text, int line, TrafficRecord traffic){
+
+        private void ReadUdpTrafficLine(String text, int line, TrafficRecord traffic) {
             String tmp;
             Integer numPackets;
             Float speed;
-            
+
             //Calculating transmission speed.
-            try{
-                speed = Float.parseFloat(text.substring(text.indexOf("Throughput: ")
-                + 12, text.indexOf(" Kb/s")));
+            try {
+                speed = Float.parseFloat(text.substring(text.indexOf("Throughput: ") + 12, text.indexOf(" Kb/s")));
                 traffic.setLastSpeed(speed);
-            }catch(StringIndexOutOfBoundsException sob){
+            } catch (StringIndexOutOfBoundsException sob) {
                 traffic.setLastSpeed(Float.parseFloat("0"));
             }
             //Calculating received data.
-            try{
-                numPackets = Integer.parseInt(text.substring(text.indexOf("Received: ")
-                + 10, text.indexOf(" packets.")));
+            try {
+                numPackets = Integer.parseInt(text.substring(text.indexOf("Received: ") + 10, text.indexOf(" packets.")));
                 traffic.setPacketsReceived(numPackets);
-            }catch(StringIndexOutOfBoundsException sob){
+            } catch (StringIndexOutOfBoundsException sob) {
                 traffic.setPacketsReceived(Integer.parseInt("0"));
             }
-            
-            trafficData.setElementAt(traffic,line);
+
+            trafficData.setElementAt(traffic, line);
         }
-        
-        private void ReadTcpTrafficLine(String text, int line, TrafficRecord traffic){
+
+        private void ReadTcpTrafficLine(String text, int line, TrafficRecord traffic) {
             String tmp;
             Integer numPackets;
             Float speed;
-            
+
             //Calculating transmission speed.
-            try{
-                speed = Float.parseFloat(text.substring(text.indexOf("Throughput: ")
-                + 12, text.indexOf(" Kb/s")));
+            try {
+                speed = Float.parseFloat(text.substring(text.indexOf("Throughput: ") + 12, text.indexOf(" Kb/s")));
                 traffic.setLastSpeed(speed);
-            }catch(StringIndexOutOfBoundsException sob){
+            } catch (StringIndexOutOfBoundsException sob) {
                 traffic.setLastSpeed(Float.parseFloat("0"));
             }
         }
-        
-        public void ReadTrafficStatistic(){
+
+        public void ReadTrafficStatistic() {
             File statistics = new File(file);
             String text = "Error opening the file.";
-            
-            
-            
+
+
+
             //When the file is too short to be an ended file...
             try {
-                while(statistics.length() < fileSize){
+                while (statistics.length() < fileSize) {
                     statistics = new File(file);
                     try {
                         sleep(2000);
@@ -5104,7 +5218,7 @@ public class CastadivaModel {
                     }
                 }
                 FileInputStream inputData = new FileInputStream(statistics);
-                byte bt[] = new byte[(int)statistics.length()];
+                byte bt[] = new byte[(int) statistics.length()];
                 text = new String(bt);
                 inputData.close();
                 inputData = null;
@@ -5112,40 +5226,45 @@ public class CastadivaModel {
                 ex.printStackTrace();
             }
             //Search the desired data.
-            if (!text.trim().equals("")){
+            if (!text.trim().equals("")) {
                 //Mark this traffic line as is ended.
                 statisticVector.ChangeBufferValue(line, 1);
                 TrafficRecord traffic = (TrafficRecord) trafficData.get(line);
-                if(traffic.getTCPUDP().equals("UDP"))ReadUdpTrafficLine(text, line, traffic);
-                if(traffic.getTCPUDP().equals("TCP"))ReadTcpTrafficLine(text, line, traffic);
+                if (traffic.getTCPUDP().equals("UDP")) {
+                    ReadUdpTrafficLine(text, line, traffic);
+                }
+                if (traffic.getTCPUDP().equals("TCP")) {
+                    ReadTcpTrafficLine(text, line, traffic);
+                }
             }
         }
     }
-    
+
     /**
      * This abstract class is a schema to generate a table to define the traffic
      * between the nodes for the application.
      */
-    private abstract class CastadivaTableModel extends AbstractTableModel{
+    private abstract class CastadivaTableModel extends AbstractTableModel {
+
         public static final int NUMBER_INDEX = 0;
         public static final int START_INDEX = 1;
         public static final int STOP_INDEX = 2;
         protected Vector datosTrafico;
         boolean enable = true;
-        
+
         public int getRowCount() {
             return datosTrafico.size();
         }
-        
-        public void UpdateData(Vector dataVector){
+
+        public void UpdateData(Vector dataVector) {
             datosTrafico = dataVector;
         }
-        
-        public void SetEnable(boolean value){
+
+        public void SetEnable(boolean value) {
             enable = value;
         }
     }
-    
+
     /**
      * This model control the traffic data insertion into Castadiva. Generate a table
      * where an user can fill all the columns to declare a new flow of traffic.
@@ -5153,6 +5272,7 @@ public class CastadivaModel {
      * @see TrafficRecord
      */
     class TrafficTableModel extends CastadivaTableModel {
+
         public static final int SOURCE_INDEX = 3;
         public static final int ADDRESS_INDEX = 4;
         public static final int TCPUDP_INDEX = 5;
@@ -5164,38 +5284,50 @@ public class CastadivaModel {
         public static final int RECEIVED_INDEX = 11;
         public static final int HIDDEN_INDEX = 12;
         public final String[] columnNames = {
-            "#", "Start (s)", "Stop (s)", "Source", "Address",  "Traffic",
-            "Transfer Size (B)", "Size of packet","Pkts/Second",
+            "#", "Start (s)", "Stop (s)", "Source", "Address", "Traffic",
+            "Transfer Size (B)", "Size of packet", "Pkts/Second",
             "Max Packets", "Throughput (Kb/s)", "Pkts Received (%)", ""
         };
-        
-        
+
         public TrafficTableModel(Vector dataVector) {
             datosTrafico = dataVector;
         }
-        
+
         @Override
         public String getColumnName(int column) {
             return columnNames[column];
         }
-        
+
         @Override
         public boolean isCellEditable(int row, int column) {
-            if (!enable) return false;
-            if (column == NUMBER_INDEX) return false;
-            if (column == HIDDEN_INDEX) return false;
-            if (column == RECEIVED_INDEX) return false;
-            if (column == SPEED_INDEX) return false;
-            //if (column == MAX_INDEX) return false;
-            if (getValueAt(row,TCPUDP_INDEX) == "UDP" &&
-                    (column == TRANSFERSIZE_INDEX))
+            if (!enable) {
                 return false;
-            if (getValueAt(row,TCPUDP_INDEX) == "TCP" &&
+            }
+            if (column == NUMBER_INDEX) {
+                return false;
+            }
+            if (column == HIDDEN_INDEX) {
+                return false;
+            }
+            if (column == RECEIVED_INDEX) {
+                return false;
+            }
+            if (column == SPEED_INDEX) {
+                return false;
+            }
+            //if (column == MAX_INDEX) return false;
+            if (getValueAt(row, TCPUDP_INDEX) == "UDP" &&
+                    (column == TRANSFERSIZE_INDEX)) {
+                return false;
+            }
+            if (getValueAt(row, TCPUDP_INDEX) == "TCP" &&
                     (column == SIZE_INDEX || column == SEC_INDEX ||
-                    column == MAX_INDEX)) return false;
+                    column == MAX_INDEX)) {
+                return false;
+            }
             return true;
         }
-        
+
         @Override
         public Class getColumnClass(int column) {
             switch (column) {
@@ -5217,9 +5349,9 @@ public class CastadivaModel {
                     return Object.class;
             }
         }
-        
+
         public Object getValueAt(int row, int column) {
-            TrafficRecord record = (TrafficRecord)datosTrafico.get(row);
+            TrafficRecord record = (TrafficRecord) datosTrafico.get(row);
             switch (column) {
                 case NUMBER_INDEX:
                     return row + 1;
@@ -5230,50 +5362,61 @@ public class CastadivaModel {
                 case TCPUDP_INDEX:
                     return record.getTCPUDP();
                 case TRANSFERSIZE_INDEX:
-                    try{
-                        if(record.getTransferSize() > 0)
+                    try {
+                        if (record.getTransferSize() > 0) {
                             return record.getTransferSize();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case SIZE_INDEX:
-                    try{
-                        if(record.getSize() > 0)
+                    try {
+                        if (record.getSize() > 0) {
                             return record.getSize();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case SEC_INDEX:
-                    try{
-                        if(record.getPacketsSeconds() > 0)
+                    try {
+                        if (record.getPacketsSeconds() > 0) {
                             return record.getPacketsSeconds();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case START_INDEX:
-                    try{
-                        if(record.getStart() > 0)
+                    try {
+                        if (record.getStart() > 0) {
                             return record.getStart();
-                        else return 0;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 0;
+                        }
+                    } catch (NullPointerException ex) {
                         return 0;
                     }
                 case STOP_INDEX:
-                    try{
-                        if(record.getStop() > 1)
+                    try {
+                        if (record.getStop() > 1) {
                             return record.getStop();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case MAX_INDEX:
-                    try{
-                        if(record.getMaxPackets() > 0)
+                    try {
+                        if (record.getMaxPackets() > 0) {
                             return record.getMaxPackets();
-                    }catch(NullPointerException ex){
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case SPEED_INDEX:
@@ -5284,86 +5427,86 @@ public class CastadivaModel {
                     return new Object();
             }
         }
-        
+
         @Override
         public void setValueAt(Object value, int row, int column) {
             TrafficRecord record;
-            try{
-                record = (TrafficRecord)datosTrafico.get(row);
-            }catch(ArrayIndexOutOfBoundsException ex){
+            try {
+                record = (TrafficRecord) datosTrafico.get(row);
+            } catch (ArrayIndexOutOfBoundsException ex) {
                 record = null;
             }
             switch (column) {
                 case NUMBER_INDEX:
                     break;
                 case SOURCE_INDEX:
-                    try{
-                        record.setSource((String)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setSource((String) value);
+                    } catch (ClassCastException ex) {
                         record.setSource("");
                     }
                     break;
                 case ADDRESS_INDEX:
-                    try{
-                        record.setAddress((String)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setAddress((String) value);
+                    } catch (ClassCastException ex) {
                         record.setAddress("");
                     }
                     break;
                 case TCPUDP_INDEX:
-                    try{
-                        record.setTCPUDP((String)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setTCPUDP((String) value);
+                    } catch (ClassCastException ex) {
                         record.setTCPUDP("");
                     }
                     break;
                 case TRANSFERSIZE_INDEX:
-                    try{
-                        record.setTransferSize((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setTransferSize((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setTransferSize(10000);
                     }
                     break;
                 case SIZE_INDEX:
-                    try{
-                        record.setSize((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setSize((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setSize(64);
                     }
                     break;
                 case SEC_INDEX:
-                    try{
-                        record.setPacketsSeconds((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setPacketsSeconds((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setPacketsSeconds(0);
                     }
                     break;
                 case START_INDEX:
-                    try{
-                        record.setStart((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setStart((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setStart(0);
                     }
                     break;
                 case STOP_INDEX:
-                    try{
-                        record.setStop((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setStop((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setStop(10);
                     }
                     break;
                 case MAX_INDEX:
-                    try{
-                        if((Integer)value > 0){
-                            record.setMaxPackets((Integer)value);
-                        }else {
-                            record.setMaxPackets((int)0);
+                    try {
+                        if ((Integer) value > 0) {
+                            record.setMaxPackets((Integer) value);
+                        } else {
+                            record.setMaxPackets((int) 0);
                         }
-                    }catch(ClassCastException ex){
-                        record.setMaxPackets((int)0);
+                    } catch (ClassCastException ex) {
+                        record.setMaxPackets((int) 0);
                     }
                     break;
-                    //En estos casos no se pueden editar a mano.
+                //En estos casos no se pueden editar a mano.
                 case SPEED_INDEX:
                 case RECEIVED_INDEX:
                     break;
@@ -5372,17 +5515,19 @@ public class CastadivaModel {
             }
             fireTableCellUpdated(row, column);
         }
-        
+
         public int getColumnCount() {
             return columnNames.length;
         }
-        
+
         public boolean hasEmptyRow() {
-            try{
-                if (datosTrafico.size() == 0) return false;
-                TrafficRecord record = (TrafficRecord)datosTrafico.get(
+            try {
+                if (datosTrafico.size() == 0) {
+                    return false;
+                }
+                TrafficRecord record = (TrafficRecord) datosTrafico.get(
                         datosTrafico.size() - 1);
-                try{
+                try {
                     if (record.getSource().trim().equals("") ||
                             record.getAddress().trim().equals("") ||
                             record.getTCPUDP().trim().equals("") ||
@@ -5398,38 +5543,39 @@ public class CastadivaModel {
                     } else {
                         return false;
                     }
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     return true;
                 }
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 return true;
             }
         }
-        
+
         public void addEmptyRow() {
             datosTrafico.add(new TrafficRecord());
             fireTableRowsInserted(
                     datosTrafico.size() - 1,
                     datosTrafico.size() - 1);
-            
+
         }
-        
-        public void delRow(int row){
-            if(row < datosTrafico.size())
+
+        public void delRow(int row) {
+            if (row < datosTrafico.size()) {
                 datosTrafico.remove(row);
-            if(datosTrafico.size() < 1){
+            }
+            if (datosTrafico.size() < 1) {
                 addEmptyRow();
             }
         }
-        
     }
-    
+
     /**
      * This model control the random traffic data insertion into Castadiva. The user
      * define the partial structure and Castadiva randomize it.
      * @see TrafficRecord
      */
     class RandomTrafficTableModel extends CastadivaTableModel {
+
         public static final int TCPUDP_INDEX = 3;
         public static final int TRANSFERSIZE_INDEX = 4;
         public static final int SIZE_INDEX = 5;
@@ -5440,32 +5586,40 @@ public class CastadivaModel {
         public final String[] columnNames = {
             "#", "Start (s)", "Stop (s)", "Traffic",
             "Transfer Size (B)", "Size of packet", "Pkts/Second",
-            "Flows",""
+            "Flows", ""
         };
-        
+
         public RandomTrafficTableModel(Vector dataVector) {
             datosTrafico = dataVector;
         }
-        
+
         @Override
         public String getColumnName(int column) {
             return columnNames[column];
         }
-        
+
         @Override
         public boolean isCellEditable(int row, int column) {
-            if (!enable) return false;
-            if (column == NUMBER_INDEX) return false;
-            if (column == HIDDEN_INDEX) return false;
-            if (getValueAt(row,TCPUDP_INDEX) == "UDP" &&
-                    (column == TRANSFERSIZE_INDEX))
+            if (!enable) {
                 return false;
-            if (getValueAt(row,TCPUDP_INDEX) == "TCP" &&
-                    (column == SIZE_INDEX || column == SEC_INDEX))
+            }
+            if (column == NUMBER_INDEX) {
                 return false;
+            }
+            if (column == HIDDEN_INDEX) {
+                return false;
+            }
+            if (getValueAt(row, TCPUDP_INDEX) == "UDP" &&
+                    (column == TRANSFERSIZE_INDEX)) {
+                return false;
+            }
+            if (getValueAt(row, TCPUDP_INDEX) == "TCP" &&
+                    (column == SIZE_INDEX || column == SEC_INDEX)) {
+                return false;
+            }
             return true;
         }
-        
+
         @Override
         public Class getColumnClass(int column) {
             switch (column) {
@@ -5473,7 +5627,7 @@ public class CastadivaModel {
                 case SEC_INDEX:
                 case START_INDEX:
                 case STOP_INDEX:
-                    //case MAX_INDEX:
+                //case MAX_INDEX:
                 case TRANSFERSIZE_INDEX:
                 case FLOWS_INDEX:
                     return Integer.class;
@@ -5483,145 +5637,154 @@ public class CastadivaModel {
                     return Object.class;
             }
         }
-        
+
         public Object getValueAt(int row, int column) {
-            RandomTrafficRecord record = (RandomTrafficRecord)datosTrafico.get(row);
+            RandomTrafficRecord record = (RandomTrafficRecord) datosTrafico.get(row);
             switch (column) {
                 case NUMBER_INDEX:
                     return row + 1;
                 case TCPUDP_INDEX:
                     return record.getTCPUDP();
                 case TRANSFERSIZE_INDEX:
-                    try{
-                        if(record.getTransferSize() > 0)
+                    try {
+                        if (record.getTransferSize() > 0) {
                             return record.getTransferSize();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case SIZE_INDEX:
-                    try{
-                        if(record.getSize() > 0)
+                    try {
+                        if (record.getSize() > 0) {
                             return record.getSize();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case SEC_INDEX:
-                    try{
-                        if(record.getPacketsSeconds() > 0)
+                    try {
+                        if (record.getPacketsSeconds() > 0) {
                             return record.getPacketsSeconds();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 case START_INDEX:
-                    try{
-                        if(record.getStart() > 0)
+                    try {
+                        if (record.getStart() > 0) {
                             return record.getStart();
-                        else return 0;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 0;
+                        }
+                    } catch (NullPointerException ex) {
                         return 0;
                     }
                 case STOP_INDEX:
-                    try{
-                        if(record.getStop() > 0)
+                    try {
+                        if (record.getStop() > 0) {
                             return record.getStop();
-                        else return 0;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 0;
+                        }
+                    } catch (NullPointerException ex) {
                         return 0;
                     }
                 /*case MAX_INDEX:
-                    try{
-                        if(record.getMaxPackets() > 0)
-                            return record.getMaxPackets();
-                        else return 1;
-                    }catch(NullPointerException ex){
-                        return 1;
-                    }*/
+                try{
+                if(record.getMaxPackets() > 0)
+                return record.getMaxPackets();
+                else return 1;
+                }catch(NullPointerException ex){
+                return 1;
+                }*/
                 case FLOWS_INDEX:
-                    try{
-                        if(record.getFlows() > 0)
+                    try {
+                        if (record.getFlows() > 0) {
                             return record.getFlows();
-                        else return 1;
-                    }catch(NullPointerException ex){
+                        } else {
+                            return 1;
+                        }
+                    } catch (NullPointerException ex) {
                         return 1;
                     }
                 default:
                     return new Object();
             }
         }
-        
+
         @Override
         public void setValueAt(Object value, int row, int column) {
             RandomTrafficRecord record;
-            try{
-                record = (RandomTrafficRecord)datosTrafico.get(row);
-            }catch(ArrayIndexOutOfBoundsException ex){
+            try {
+                record = (RandomTrafficRecord) datosTrafico.get(row);
+            } catch (ArrayIndexOutOfBoundsException ex) {
                 record = null;
             }
             switch (column) {
                 case NUMBER_INDEX:
                     break;
                 case TCPUDP_INDEX:
-                    try{
-                        record.setTCPUDP((String)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setTCPUDP((String) value);
+                    } catch (ClassCastException ex) {
                         record.setTCPUDP("");
                     }
                     break;
                 case TRANSFERSIZE_INDEX:
-                    try{
-                        record.setTransferSize((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setTransferSize((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setTransferSize(10000);
                     }
                     break;
                 case SIZE_INDEX:
-                    try{
-                        record.setSize((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setSize((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setSize(64);
                     }
                     break;
                 case SEC_INDEX:
-                    try{
-                        record.setPacketsSeconds((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setPacketsSeconds((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setPacketsSeconds(0);
                     }
-                    record.setMaxPackets((record.getStop()-record.getStart())
-                    *record.getPacketsSeconds());
+                    record.setMaxPackets((record.getStop() - record.getStart()) * record.getPacketsSeconds());
                     break;
                 case START_INDEX:
-                    try{
-                        record.setStart((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setStart((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setStart(0);
                     }
-                    record.setMaxPackets((record.getStop()-record.getStart())
-                    *record.getPacketsSeconds());
+                    record.setMaxPackets((record.getStop() - record.getStart()) * record.getPacketsSeconds());
                     break;
                 case STOP_INDEX:
-                    try{
-                        record.setStop((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setStop((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setStop(10);
                     }
-                    record.setMaxPackets((record.getStop()-record.getStart())
-                    *record.getPacketsSeconds());
+                    record.setMaxPackets((record.getStop() - record.getStart()) * record.getPacketsSeconds());
                     break;
                 /*case MAX_INDEX:
-                    try{
-                        record.setMaxPackets((Integer)value);
-                    }catch(ClassCastException ex){
-                        record.setMaxPackets(0);
-                    }
-                    break;*/
+                try{
+                record.setMaxPackets((Integer)value);
+                }catch(ClassCastException ex){
+                record.setMaxPackets(0);
+                }
+                break;*/
                 case FLOWS_INDEX:
-                    try{
-                        record.setFlows((Integer)value);
-                    }catch(ClassCastException ex){
+                    try {
+                        record.setFlows((Integer) value);
+                    } catch (ClassCastException ex) {
                         record.setFlows(1);
                     }
                     break;
@@ -5630,18 +5793,20 @@ public class CastadivaModel {
             }
             fireTableCellUpdated(row, column);
         }
-        
+
         public int getColumnCount() {
             return columnNames.length;
         }
-        
+
         public boolean hasEmptyRow() {
-            try{
-                if (datosTrafico.size() == 0) return false;
-                RandomTrafficRecord record = (RandomTrafficRecord)datosTrafico.get(
+            try {
+                if (datosTrafico.size() == 0) {
+                    return false;
+                }
+                RandomTrafficRecord record = (RandomTrafficRecord) datosTrafico.get(
                         datosTrafico.size() - 1);
-                try{
-                    if (    record.getStop() == 0 ||
+                try {
+                    if (record.getStop() == 0 ||
                             record.getTCPUDP().trim().equals("") ||
                             record.getSize().toString().trim().equals("null") ||
                             record.getPacketsSeconds().toString().trim().equals("null") ||
@@ -5653,43 +5818,45 @@ public class CastadivaModel {
                     } else {
                         return false;
                     }
-                }catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     return true;
                 }
-            }catch(NullPointerException e){
+            } catch (NullPointerException e) {
                 return true;
             }
         }
-        
+
         public void addEmptyRow() {
             datosTrafico.add(new RandomTrafficRecord());
             fireTableRowsInserted(
                     datosTrafico.size() - 1,
                     datosTrafico.size() - 1);
-            
+
         }
-        
-        public void delRow(int row){
-            if(row < datosTrafico.size())
+
+        public void delRow(int row) {
+            if (row < datosTrafico.size()) {
                 datosTrafico.remove(row);
-            if(datosTrafico.size() < 1){
+            }
+            if (datosTrafico.size() < 1) {
                 addEmptyRow();
             }
         }
     }
-    
+
     /**
      * Store the characteristics of one node imported from NS in a determined second.
      */
-    private class NodeImportedData{
+    private class NodeImportedData {
+
         public Float xCoordinate;
         public Float yCoordinate;
-        public Float zCoordinate = (float)0;
+        public Float zCoordinate = (float) 0;
         public Integer second;
         public Float speed;
         public int nodeNumber;
-        
-        NodeImportedData(int node, Float newX, Float newY, Float determinedSpeed, Integer time){
+
+        NodeImportedData(int node, Float newX, Float newY, Float determinedSpeed, Integer time) {
             xCoordinate = newX;
             yCoordinate = newY;
             speed = determinedSpeed;
@@ -5697,23 +5864,24 @@ public class CastadivaModel {
             nodeNumber = node;
         }
     }
-    
+
     /**
      * Store the entire information of the mobility from NS.
      */
-    private class NodePositionsFromNsMobility{
+    private class NodePositionsFromNsMobility {
+
         List<NodeImportedData>[] PositionOfEachNode;
-        
-        NodePositionsFromNsMobility(Integer nodes){
+
+        NodePositionsFromNsMobility(Integer nodes) {
             PositionOfEachNode = new List[nodes];
-            for(int i=0; i<nodes; i++){
+            for (int i = 0; i < nodes; i++) {
                 List<NodeImportedData> l = new ArrayList<NodeImportedData>();
                 PositionOfEachNode[i] = l;
             }
         }
-        
+
         public void AddNodeInformation(Integer node, Float xPosition, Float yPosition,
-                Float speed, Float second){
+                Float speed, Float second) {
             List<NodeImportedData> l;
             NodeImportedData nodeData = new NodeImportedData(node, xPosition, yPosition,
                     speed, Math.round(second));
@@ -5721,17 +5889,15 @@ public class CastadivaModel {
             l.add(nodeData);
             PositionOfEachNode[node] = l;
         }
-        
-        public List<NodeImportedData> GetNodeInformation(Integer node){
+
+        public List<NodeImportedData> GetNodeInformation(Integer node) {
             return PositionOfEachNode[node];
         }
-        
-        public Integer Size(){
+
+        public Integer Size() {
             return PositionOfEachNode.length;
         }
     }
-    
-    
 }
 
 

@@ -3,7 +3,6 @@
  *
  * Created on 17 de mayo de 2006, 14:17
  */
-
 package castadiva;
 
 import java.awt.Dimension;
@@ -16,181 +15,180 @@ import java.awt.event.ActionListener;
  * @author  jorge
  */
 public class SimulationGUI extends javax.swing.JFrame {
+
     CastadivaModel m_model;
     Map blackBoard;
     private Graphics g;
     private boolean tags = true;
     private boolean grid = true;
     private boolean speedLine = false;
-    
-    
-    public SimulationGUI(CastadivaModel model){
+
+    public SimulationGUI(CastadivaModel model) {
         m_model = model;
         initComponents();
         EnableReplay(false);
-        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
+        setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - (int) (this.getWidth() / 2), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (this.getHeight() / 2));
         FillFields();
         ActivateButtons(true);
         CreateBlackBoard();
     }
-    
-    
+
     /*********************************************************************
      *
      *                         INQUERY METHODS
      *
      *********************************************************************/
-    
-    
-    void GetNewSize(){
+    void GetNewSize() {
         DrawNewSize(Integer.parseInt(SizeTextField.getText()));
     }
-    
-    void GetNewSizeAreaSlider(){
+
+    void GetNewSizeAreaSlider() {
         DrawNewSize(AreaSlider.getValue());
     }
-    
-    Float ReturnXTextField(){
-        try{
+
+    Float ReturnXTextField() {
+        try {
             return Float.parseFloat(XTextField.getText());
-        }catch(NumberFormatException nfe){
-            return (float)200;
+        } catch (NumberFormatException nfe) {
+            return (float) 200;
         }
     }
-    
-    Float ReturnYTextField(){
-         try{
+
+    Float ReturnYTextField() {
+        try {
             return Float.parseFloat(YTextField.getText());
-        }catch(NumberFormatException nfe){
-            return (float)200;
+        } catch (NumberFormatException nfe) {
+            return (float) 200;
         }
     }
-    
-    Float ReturnZTextField(){
-        try{
+
+    Float ReturnZTextField() {
+        try {
             return Float.parseFloat(ZTextField.getText());
-        }catch(NumberFormatException nfe){
-            return (float)200;
+        } catch (NumberFormatException nfe) {
+            return (float) 200;
         }
     }
-    
-    Float ReturnXBoundField(){
-        try{
+
+    Float ReturnXBoundField() {
+        try {
             return Float.parseFloat(SimXTextField.getText());
-        }catch(NumberFormatException nfe){
-            return (float)200;
+        } catch (NumberFormatException nfe) {
+            return (float) 200;
         }
-    }        
-    
-    Float ReturnYBoundField(){
-         try{
+    }
+
+    Float ReturnYBoundField() {
+        try {
             return Float.parseFloat(SimYTextField.getText());
-        }catch(NumberFormatException nfe){
-            return (float)200;
+        } catch (NumberFormatException nfe) {
+            return (float) 200;
         }
     }
-    
-    Float ReturnATextField(){
-        try{
+
+    Float ReturnATextField() {
+        try {
             return Float.parseFloat(ATextField.getText());
-        }catch(NumberFormatException nfe){
-            return (float)250;
+        } catch (NumberFormatException nfe) {
+            return (float) 250;
         }
     }
-    
-    Integer ReturnSimulationTime(){
-         int st;
-            try{
-                st =Integer.parseInt(SimTimeTextField.getText());
-            }catch(NumberFormatException nfe){
-                st = 0;
+
+    Integer ReturnSimulationTime() {
+        int st;
+        try {
+            st = Integer.parseInt(SimTimeTextField.getText());
+        } catch (NumberFormatException nfe) {
+            st = 0;
         }
-        
+
         return st;
     }
-    
-    void SetSimulationTime(Object value){
+
+    void SetSimulationTime(Object value) {
         SimTimeTextField.setText(value.toString());
     }
-    
-    Integer ReturnMobilityPauseTextField(){
-            try{
-               return Integer.parseInt(SimPauseTextField.getText());
-            }catch(NumberFormatException nfe){
-                return 0;
-            }
+
+    Integer ReturnMobilityPauseTextField() {
+        try {
+            return Integer.parseInt(SimPauseTextField.getText());
+        } catch (NumberFormatException nfe) {
+            return 0;
+        }
     }
-    
-    Float ReturnMobilityMaxSpeed(){
+
+    Float ReturnMobilityMaxSpeed() {
         return Float.parseFloat(MaxSpeedTextField.getText());
     }
-    
-    Float ReturnMobilityMinSpeed(){
+
+    Float ReturnMobilityMinSpeed() {
         return Float.parseFloat(MinSpeedTextField.getText());
     }
-    
-    Integer WhatSelectedAP(){
+
+    Integer WhatSelectedAP() {
         return APComboBox.getSelectedIndex();
     }
-    
-    float ReturnBorderX(){
+
+    float ReturnBorderX() {
         return m_model.WhatBoundX();
     }
-    
-    float ReturnBorderY(){
+
+    float ReturnBorderY() {
         return m_model.WhatBoundY();
     }
-    
-    Integer ReturnReplayTime(){
+
+    Integer ReturnReplayTime() {
         Integer value;
-        try{
+        try {
             value = Integer.parseInt(ReplayTimeTextField.getText());
-        }catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             value = 0;
         }
         return value;
     }
-    
-    void ChangeReplayTime(Integer value){
+
+    void ChangeReplayTime(Integer value) {
         ReplayTimeTextField.setText(value.toString());
     }
-    
-    
+
     /*********************************************************************
      *
      *                         GUI CONTROL
      *
      *********************************************************************/
-    
     /**
      * Update the frame with all node represented.
      */
-    void Repaint(){
+    void Repaint() {
         Frame.repaint();
     }
-    
-    private void CreateBlackBoard(){
+
+    private void CreateBlackBoard() {
         //Adding the drawing area.
-        blackBoard = new Map(m_model, RangeRadioButton.isSelected(), grid, 
+        blackBoard = new Map(m_model, RangeRadioButton.isSelected(), grid,
                 m_model.WhatBoundX(), m_model.WhatBoundY());
-        blackBoard.setPreferredSize(new Dimension(Frame.getWidth(),Frame.getHeight()));
-        Frame.add(blackBoard,0);
+        blackBoard.setPreferredSize(new Dimension(Frame.getWidth(), Frame.getHeight()));
+        Frame.add(blackBoard, 0);
     }
-    
-    void ModifyBlackBoard(){
+
+    void ModifyBlackBoard() {
         //Change the map.
-        blackBoard.MapChange(RangeRadioButton.isSelected(), tags, grid, m_model.WhatBoundX(), 
+        blackBoard.MapChange(RangeRadioButton.isSelected(), tags, grid, m_model.WhatBoundX(),
                 m_model.WhatBoundY(), speedLine);
         Frame.repaint();
     }
-    
-    void ActivateButtons(boolean activation){
-        if (m_model.HowManyAP() == 0) activation = false;
+
+    void ActivateButtons(boolean activation) {
+        if (m_model.HowManyAP() == 0) {
+            activation = false;
+        }
         XTextField.setEnabled(activation);
         YTextField.setEnabled(activation);
         ZTextField.setEnabled(activation);
         ATextField.setEnabled(activation);
         APComboBox.setEnabled(activation);
+        //ShowCheckBox.setEnabled(activation);
+        RtsCheckBox.setEnabled(activation);
         Frame.setEnabled(activation);
         StopSimulationButton.setEnabled(activation);
         ResetButton.setEnabled(activation);
@@ -198,8 +196,8 @@ public class SimulationGUI extends javax.swing.JFrame {
         SimulateButton.setEnabled(activation);
         RandomSceneryButton.setEnabled(activation);
     }
-    
-    void FillFields(){
+
+    void FillFields() {
         SimXTextField.setText(m_model.WhatBoundX().toString());
         SimYTextField.setText(m_model.WhatBoundY().toString());
         SimPauseTextField.setText(m_model.WhatTimePause().toString());
@@ -207,96 +205,118 @@ public class SimulationGUI extends javax.swing.JFrame {
         MinSpeedTextField.setText(m_model.WhatMinSpeed().toString());
         SimTimeTextField.setText(m_model.GetSimulationTime().toString());
     }
-    
-    void FillAPComboBox(){
+
+    void FillAPComboBox() {
         APComboBox.removeAllItems();
         //Preconfiguration of the AP elements.
-        for(int i=0;i<m_model.HowManyAP();i++){
+        for (int i = 0; i < m_model.HowManyAP(); i++) {
             APComboBox.addItem(m_model.GetAP(i).WhatAP());
         }
     }
-    
-    public String ProtocolSelected(){
-        if(AodvRadioButton.isSelected()) return "AODV";
-        if(OptimumRadioButton.isSelected()) return "Optimum";
-        if(OlsrRadioButton.isSelected()) return "OLSR";
+
+    public String ProtocolSelected() {
+        if (AodvRadioButton.isSelected()) {
+            return "AODV";
+        }
+        if (OptimumRadioButton.isSelected()) {
+            return "Optimum";
+        }
+        if (OlsrRadioButton.isSelected()) {
+            return "OLSR";
+        }
         return "none";
     }
-    
-    void ConsoleText(){
-        if (m_model.WhatStopwatch() == 0 )
-            if(APComboBox.getItemCount() == 0)ConsoleTextField.setText("No access points defined.");
-            else ConsoleTextField.setText("Ready.");
-        if (m_model.WhatStopwatch() > 0 &&  m_model.WhatStopwatch() < m_model.GetProtocolLoadingTimeWaiting()) 
+
+    void ConsoleText() {
+        if (m_model.WhatStopwatch() == 0) {
+            if (APComboBox.getItemCount() == 0) {
+                ConsoleTextField.setText("No access points defined.");
+            } else {
+                ConsoleTextField.setText("Ready.");
+            }
+        }
+        if (m_model.WhatStopwatch() > 0 && m_model.WhatStopwatch() < m_model.GetProtocolLoadingTimeWaiting()) {
             ConsoleTextField.setText("Loading the protocol...");
-        if (m_model.WhatStopwatch() > 0 &&  m_model.WhatStopwatch() == m_model.GetProtocolLoadingTimeWaiting() ) 
+        }
+        if (m_model.WhatStopwatch() > 0 && m_model.WhatStopwatch() == m_model.GetProtocolLoadingTimeWaiting()) {
             ConsoleTextField.setText("Waiting for the AP...");
-        if (m_model.WhatStopwatch() == m_model.GetApTimeWaiting()) 
-            ConsoleTextField.setText("Starting simulation...");        
-        if (m_model.WhatStopwatch() == (m_model.GetApTimeWaiting() + 1)) 
+        }
+        if (m_model.WhatStopwatch() == m_model.GetApTimeWaiting()) {
+            ConsoleTextField.setText("Starting simulation...");
+        }
+        if (m_model.WhatStopwatch() == (m_model.GetApTimeWaiting() + 1)) {
             ConsoleTextField.setText("Simulation in process...  ");
-        if (m_model.WhatStopwatch() > m_model.GetRealSimulationTime() && !m_model.IsStatisticsEnded()) 
-            ConsoleTextField.setText("Retrieving data from AP. Traffic flow Finished: " + 
-                    m_model.statisticsControl.ReturnBufferValue());
+        }
+        if (m_model.WhatStopwatch() > m_model.GetRealSimulationTime() && !m_model.IsStatisticsEnded()) {
+            ConsoleTextField.setText("Retrieving data from AP.");
+        }
     }
-    
-    void StopwatchText(){
-        if (m_model.WhatStopwatch() >= m_model.GetWaitingSimulationTime()  &&
-                m_model.WhatStopwatch() < m_model.GetRealSimulationTime()){
-            CurrentTimeTextField.setText((m_model.WhatStopwatch() - m_model.GetWaitingSimulationTime() + 1)+"");
-        }else{
-            if (m_model.WhatStopwatch() <= m_model.GetWaitingSimulationTime()){
+
+    void StopwatchText() {
+        if (m_model.WhatStopwatch() >= m_model.GetWaitingSimulationTime() &&
+                m_model.WhatStopwatch() < m_model.GetRealSimulationTime()) {
+            CurrentTimeTextField.setText((m_model.WhatStopwatch() - m_model.GetWaitingSimulationTime() + 1) + "");
+        } else {
+            if (m_model.WhatStopwatch() <= m_model.GetWaitingSimulationTime()) {
                 CurrentTimeTextField.setText("Waiting.");
-            }else{
+            } else {
                 CurrentTimeTextField.setText(m_model.GetSimulationTime().toString());
             }
         }
     }
-    
-    void ShowEndSimulation(){
+
+    void ShowEndSimulation() {
         ConsoleTextField.setText("Simulation finished!");
         SimulateButton.setEnabled(true);
         StopSimulationButton.setEnabled(false);
         RandomSceneryButton.setEnabled(true);
         EnableReplay(true);
-        if(m_model.WhatMaxSpeed() > 0){
+        if (m_model.WhatMaxSpeed() > 0) {
             ReplaySimulationButton.setEnabled(true);
         }
         SimulateButton.setText("New Simulation");
         ReplaySimulationButton.setText("Replay Simulation");
     }
-    
-    void UpdatePositionPanel(){
-        XTextField.setText(m_model.selectionedAP1.x+"");
-        YTextField.setText(m_model.selectionedAP1.y+"");
-        ZTextField.setText(m_model.selectionedAP1.z+"");
-        ATextField.setText(m_model.selectionedAP1.range+"");
+
+    void UpdatePositionPanel() {
+        XTextField.setText(m_model.selectionedAP1.x + "");
+        YTextField.setText(m_model.selectionedAP1.y + "");
+        ZTextField.setText(m_model.selectionedAP1.z + "");
+        ATextField.setText(m_model.selectionedAP1.range + "");
     }
     
-    void DisableSimulation(){
+    void UpdateShowNodeRange(){
+        ShowCheckBox.setSelected(m_model.selectionedAP1.showRange);
+    }
+
+    void DisableSimulation() {
         SimulateButton.setEnabled(false);
         ReplaySimulationButton.setEnabled(false);
         StopSimulationButton.setEnabled(false);
     }
-    
-    void ReplaySimulationView(){
+
+    void ReplaySimulationView() {
         SimulateButton.setEnabled(false);
         ReplaySimulationButton.setEnabled(false);
         StopSimulationButton.setEnabled(true);
         ReplaySimulationButton.setText("Replaying!!");
     }
-    
-    void RunningSimulationView(){
+
+    void RunningSimulationView() {
         SimulateButton.setEnabled(false);
         StopSimulationButton.setEnabled(true);
         ReplaySimulationButton.setEnabled(false);
         SimulateButton.setText("Simulating!!");
         RandomSceneryButton.setEnabled(false);
     }
-    
-    void DrawNewSize(Integer boardSize){
-        if (boardSize < 500) boardSize = 500;
-        if (boardSize > 10000) boardSize = 10000;
+
+    void DrawNewSize(Integer boardSize) {
+        if (boardSize < 500) {
+            boardSize = 500;
+        }
+        if (boardSize > 10000) {
+            boardSize = 10000;
+        }
         AreaSlider.setValue(boardSize);
         SizeTextField.setText(boardSize.toString());
         m_model.ChangeBoardSize(boardSize);
@@ -304,125 +324,120 @@ public class SimulationGUI extends javax.swing.JFrame {
                 m_model.WhatBoundY(), speedLine);
         Frame.repaint();
     }
-    
-    public void ChangeSimulationTime(Integer value){
+
+    public void ChangeSimulationTime(Integer value) {
         SimTimeTextField.setText(value.toString());
     }
-    
+
     /**
      * habilite the replay option in the GUI
      */
-    public void EnableReplay(boolean value){
+    public void EnableReplay(boolean value) {
         ReplayCheckBox.setEnabled(value);
         ReplayTimeTextField.setEnabled(value);
-        if(m_model.WhatMaxSpeed() > 0){
+        if (m_model.WhatMaxSpeed() > 0) {
             ReplaySimulationButton.setEnabled(value);
         }
     }
-    
-    public void MarkReplayCheck(boolean value){
+
+    public void MarkReplayCheck(boolean value) {
         ReplayCheckBox.setSelected(value);
     }
-    
+
     /*********************************************************************
      *
      *                             LISTENERS
      *
      *********************************************************************/
-    
-    
-    void addStopSimulationListener(ActionListener al){
+    void addStopSimulationListener(ActionListener al) {
         StopSimulationButton.addActionListener(al);
     }
-    
-    void addSimulateButtonListener(ActionListener al){
+
+    void addSimulateButtonListener(ActionListener al) {
         SimulateButton.addActionListener(al);
     }
-    
-    void addResetButtonListener(ActionListener al){
+
+    void addResetButtonListener(ActionListener al) {
         ResetButton.addActionListener(al);
     }
-    
-    void addCloseButtonListener(ActionListener al){
+
+    void addCloseButtonListener(ActionListener al) {
         CloseButton.addActionListener(al);
     }
-    
-    void addXTextFieldListener(ActionListener al){
+
+    void addXTextFieldListener(ActionListener al) {
         XTextField.addActionListener(al);
     }
-    
-    void addYTextFieldListener(ActionListener al){
+
+    void addYTextFieldListener(ActionListener al) {
         YTextField.addActionListener(al);
     }
-    
-    void addZTextFieldListener(ActionListener al){
+
+    void addZTextFieldListener(ActionListener al) {
         ZTextField.addActionListener(al);
     }
-    
-    void addXBoundListener(ActionListener al){
+
+    void addXBoundListener(ActionListener al) {
         SimXTextField.addActionListener(al);
     }
-    
-    void addYBoundListener(ActionListener al){
+
+    void addYBoundListener(ActionListener al) {
         SimYTextField.addActionListener(al);
     }
-    
-    void addATextFieldListener(ActionListener al){
+
+    void addATextFieldListener(ActionListener al) {
         ATextField.addActionListener(al);
     }
-    
-    void addSimTimeTextFieldListener(ActionListener al){
+
+    void addSimTimeTextFieldListener(ActionListener al) {
         SimTimeTextField.addActionListener(al);
     }
-    
-    void addSimPauseTextFieldListener(ActionListener al){
+
+    void addSimPauseTextFieldListener(ActionListener al) {
         SimPauseTextField.addActionListener(al);
     }
-    
-    void addMaxSpeedTextFieldListener(ActionListener al){
+
+    void addMaxSpeedTextFieldListener(ActionListener al) {
         MaxSpeedTextField.addActionListener(al);
     }
-    
-    void addMinSpeedTextFieldListener(ActionListener al){
+
+    void addMinSpeedTextFieldListener(ActionListener al) {
         MinSpeedTextField.addActionListener(al);
-    }            
-    
-    void addAPComboBoxListener(ActionListener al){
+    }
+
+    void addAPComboBoxListener(ActionListener al) {
         APComboBox.addActionListener(al);
     }
-    
-    void addTrafficButtonListener(ActionListener al){
+
+    void addTrafficButtonListener(ActionListener al) {
         TrafficButton.addActionListener(al);
     }
-    
-    void addRandomSceneryButtonListener(ActionListener al){
+
+    void addRandomSceneryButtonListener(ActionListener al) {
         RandomSceneryButton.addActionListener(al);
     }
-    
-    void addSizeTextFieldListener(ActionListener al){
+
+    void addSizeTextFieldListener(ActionListener al) {
         SizeTextField.addActionListener(al);
     }
-    
-    void addChangeReplayTimeListener(ActionListener al){
+
+    void addChangeReplayTimeListener(ActionListener al) {
         ReplayTimeTextField.addActionListener(al);
     }
-    
-    void addReplaySimulationListener(ActionListener al){
+
+    void addReplaySimulationListener(ActionListener al) {
         ReplaySimulationButton.addActionListener(al);
     }
-    
-    void addHelpButtonListener(ActionListener al){
+
+    void addHelpButtonListener(ActionListener al) {
         HelpButton.addActionListener(al);
     }
-    
-    
+
     /*********************************************************************
      *
      *                           AUTOGENERATED
      *
      *********************************************************************/
-    
-    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -509,6 +524,7 @@ public class SimulationGUI extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
         RtsCheckBox = new javax.swing.JCheckBox();
+        ShowCheckBox = new javax.swing.JCheckBox();
         ButtonPanel = new javax.swing.JPanel();
         CloseButton = new javax.swing.JButton();
         ResetButton = new javax.swing.JButton();
@@ -517,7 +533,6 @@ public class SimulationGUI extends javax.swing.JFrame {
         ReplaySimulationButton = new javax.swing.JButton();
         StopSimulationButton = new javax.swing.JButton();
         HelpButton = new javax.swing.JButton();
-        GraphPanel = new javax.swing.JPanel();
         RepresentationPanel = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         GraphRadioButton = new javax.swing.JRadioButton();
@@ -566,7 +581,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .add(BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel20)
                     .add(jLabel19))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
         BoundPanelLayout.setVerticalGroup(
             BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -624,7 +639,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .add(TimePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jLabel36)
                             .add(jLabel24))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         TimePanelLayout.setVerticalGroup(
             TimePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -688,7 +703,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                             .add(jLabel28)
                             .add(jLabel25)))
                     .add(jLabel26))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         SpeedPanelLayout.setVerticalGroup(
             SpeedPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -793,7 +808,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                             .add(jRadioButton2)
                             .add(OlsrRadioButton)
                             .add(jRadioButton1))))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         ProtocolPanelLayout.setVerticalGroup(
             ProtocolPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -871,7 +886,7 @@ public class SimulationGUI extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 53, Short.MAX_VALUE)
+            .add(0, 17, Short.MAX_VALUE)
         );
 
         org.jdesktop.layout.GroupLayout SimPanelLayout = new org.jdesktop.layout.GroupLayout(SimPanel);
@@ -887,13 +902,17 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .add(59, 59, 59))
                     .add(SimPanelLayout.createSequentialGroup()
                         .add(SimPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, TrafficPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, ShowPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, ProtocolPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, TimePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, SpeedPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, BoundPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, SimPanelLayout.createSequentialGroup()
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .add(SimPanelLayout.createSequentialGroup()
+                        .add(TrafficPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         SimPanelLayout.setVerticalGroup(
@@ -912,10 +931,10 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(ShowPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(TrafficPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         CenterPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -1026,7 +1045,7 @@ public class SimulationGUI extends javax.swing.JFrame {
             CenterPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, CenterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(ControlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -1082,7 +1101,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                             .add(jLabel8)
                             .add(jLabel13)))
                     .add(jLabel6))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         PositionPanelLayout.setVerticalGroup(
             PositionPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1127,6 +1146,13 @@ public class SimulationGUI extends javax.swing.JFrame {
             }
         });
 
+        ShowCheckBox.setText("Show");
+        ShowCheckBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ShowCheckBoxItemStateChanged(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout SignalPanelLayout = new org.jdesktop.layout.GroupLayout(SignalPanel);
         SignalPanel.setLayout(SignalPanelLayout);
         SignalPanelLayout.setHorizontalGroup(
@@ -1141,8 +1167,11 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jLabel9))
                     .add(jLabel30)
-                    .add(RtsCheckBox))
-                .addContainerGap(38, Short.MAX_VALUE))
+                    .add(SignalPanelLayout.createSequentialGroup()
+                        .add(RtsCheckBox)
+                        .add(18, 18, 18)
+                        .add(ShowCheckBox)))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         SignalPanelLayout.setVerticalGroup(
             SignalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1155,7 +1184,9 @@ public class SimulationGUI extends javax.swing.JFrame {
                     .add(jLabel9)
                     .add(ATextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 11, Short.MAX_VALUE)
-                .add(RtsCheckBox)
+                .add(SignalPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(RtsCheckBox)
+                    .add(ShowCheckBox))
                 .addContainerGap())
         );
 
@@ -1170,12 +1201,11 @@ public class SimulationGUI extends javax.swing.JFrame {
                         .add(APLabel))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, APPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .add(APComboBox, 0, 211, Short.MAX_VALUE))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, APPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(APPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(SignalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(PositionPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .add(APPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, APComboBox, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, PositionPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, SignalPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         APPanelLayout.setVerticalGroup(
@@ -1215,13 +1245,13 @@ public class SimulationGUI extends javax.swing.JFrame {
             .add(ButtonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(ButtonPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(CloseButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .add(ResetButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .add(RandomSceneryButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .add(StopSimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .add(ReplaySimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .add(SimulateButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .add(HelpButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                    .add(CloseButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .add(ResetButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .add(RandomSceneryButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .add(StopSimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .add(ReplaySimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .add(SimulateButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .add(HelpButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
                 .addContainerGap())
         );
         ButtonPanelLayout.setVerticalGroup(
@@ -1243,8 +1273,6 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .add(CloseButton)
                 .addContainerGap())
         );
-
-        GraphPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         RepresentationPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -1302,7 +1330,7 @@ public class SimulationGUI extends javax.swing.JFrame {
                     .add(GraphRadioButton)
                     .add(RangeRadioButton)
                     .add(jLabel14))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 33, Short.MAX_VALUE)
                 .add(RepresentationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(LabelCheckBox)
                     .add(ShowMovementCheckBox)
@@ -1327,34 +1355,17 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        org.jdesktop.layout.GroupLayout GraphPanelLayout = new org.jdesktop.layout.GroupLayout(GraphPanel);
-        GraphPanel.setLayout(GraphPanelLayout);
-        GraphPanelLayout.setHorizontalGroup(
-            GraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(GraphPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(RepresentationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
-        );
-        GraphPanelLayout.setVerticalGroup(
-            GraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, GraphPanelLayout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(RepresentationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
         org.jdesktop.layout.GroupLayout RightPanelLayout = new org.jdesktop.layout.GroupLayout(RightPanel);
         RightPanel.setLayout(RightPanelLayout);
         RightPanelLayout.setHorizontalGroup(
             RightPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, RightPanelLayout.createSequentialGroup()
+            .add(RightPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(RightPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, APPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(GraphPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(ButtonPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .add(RightPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, ButtonPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, RepresentationPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, APPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         RightPanelLayout.setVerticalGroup(
             RightPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -1362,10 +1373,10 @@ public class SimulationGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(APPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(GraphPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(RepresentationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(ButtonPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -1385,80 +1396,87 @@ public class SimulationGUI extends javax.swing.JFrame {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(RightPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, CenterPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(SimPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, RightPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, SimPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, CenterPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void GridCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_GridCheckBoxItemStateChanged
         grid = !grid;
         ModifyBlackBoard();
     }//GEN-LAST:event_GridCheckBoxItemStateChanged
 
     private void ShowMovementCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ShowMovementCheckBoxItemStateChanged
-        speedLine=!speedLine;
+        speedLine = !speedLine;
         m_model.simulationSeconds = ReturnReplayTime();
         ModifyBlackBoard();
     }//GEN-LAST:event_ShowMovementCheckBoxItemStateChanged
-    
+
     private void ReplayCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ReplayCheckBoxItemStateChanged
         m_model.replay = !m_model.replay;
         RandomSceneryButton.setEnabled(!m_model.replay);
         ResetButton.setEnabled(!m_model.replay);
-        if(m_model.replay){
-            if(m_model.WhatMaxSpeed() > 0){
+        if (m_model.replay) {
+            if (m_model.WhatMaxSpeed() > 0) {
                 m_model.PositionateNodesInDeterminedSecond(ReturnReplayTime());
                 m_model.simulationSeconds = ReturnReplayTime();
                 ModifyBlackBoard();
             }
         }
     }//GEN-LAST:event_ReplayCheckBoxItemStateChanged
-    
+
     private void RtsCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_RtsCheckBoxStateChanged
         m_model.RTS = !m_model.RTS;
     }//GEN-LAST:event_RtsCheckBoxStateChanged
-    
+
     private void LabelCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_LabelCheckBoxItemStateChanged
-        tags=!tags;
+        tags = !tags;
         ModifyBlackBoard();
     }//GEN-LAST:event_LabelCheckBoxItemStateChanged
-    
+
     private void RangeRadioButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_RangeRadioButtonItemStateChanged
         ModifyBlackBoard();
     }//GEN-LAST:event_RangeRadioButtonItemStateChanged
-    
+
     private void FrameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FrameMouseClicked
         int x = evt.getX();
         int y = evt.getY();
         float xm = x * m_model.WhatBoardSize() / Frame.getWidth();
         float ym = y * m_model.WhatBoardSize() / Frame.getHeight();
-        
-        if(APComboBox.getItemCount() > 0 && !m_model.replay && m_model.IsSimulationFinished()) {
+
+        if (APComboBox.getItemCount() > 0 && !m_model.replay && m_model.IsSimulationFinished()) {
             m_model.SetAP(APComboBox.getSelectedIndex(), m_model.selectionedAP1.WhatEthIP(),
                     m_model.selectionedAP1.WhatWifiIP(), m_model.selectionedAP1.WhatWifiMac(),
                     m_model.selectionedAP1.WhatUser(), m_model.selectionedAP1.WhatPwd(),
                     APComboBox.getSelectedItem().toString(), xm, ym, 0,
                     m_model.selectionedAP1.range, m_model.selectionedAP1.WhatWorkingDirectory(),
                     m_model.selectionedAP1.WhatProcessor(), m_model.selectionedAP1.WhatChannel(),
-                    m_model.selectionedAP1.WhatMode(), m_model.selectionedAP1.WhatWifiDevice()
-                    );
+                    m_model.selectionedAP1.WhatMode(), m_model.selectionedAP1.WhatWifiDevice());
             m_model.selectionedAP1 = m_model.GetAP(APComboBox.getSelectedIndex());
-            
+
             //Actualizamos el texto del simulador.
             UpdatePositionPanel();
             Frame.repaint();
         }
     }//GEN-LAST:event_FrameMouseClicked
-    
+
     private void AreaSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_AreaSliderStateChanged
         DrawNewSize(AreaSlider.getValue());
     }//GEN-LAST:event_AreaSliderStateChanged
-    
+
+    private void ShowCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ShowCheckBoxItemStateChanged
+        try {
+            AP ap = m_model.GetAP(WhatSelectedAP());
+            ap.showRange = ShowCheckBox.isSelected();
+        } catch (ArrayIndexOutOfBoundsException aiob) {
+        }
+        ModifyBlackBoard();
+    }//GEN-LAST:event_ShowCheckBoxItemStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox APComboBox;
     private javax.swing.JLabel APLabel;
@@ -1474,7 +1492,6 @@ public class SimulationGUI extends javax.swing.JFrame {
     private javax.swing.JPanel ControlPanel;
     private javax.swing.JTextField CurrentTimeTextField;
     private javax.swing.JPanel Frame;
-    private javax.swing.JPanel GraphPanel;
     private javax.swing.JRadioButton GraphRadioButton;
     private javax.swing.JCheckBox GridCheckBox;
     private javax.swing.JButton HelpButton;
@@ -1497,6 +1514,7 @@ public class SimulationGUI extends javax.swing.JFrame {
     private javax.swing.JPanel RightPanel;
     private javax.swing.ButtonGroup RoutingProtocolbuttonGroup;
     private javax.swing.JCheckBox RtsCheckBox;
+    private javax.swing.JCheckBox ShowCheckBox;
     private javax.swing.JCheckBox ShowMovementCheckBox;
     private javax.swing.JPanel ShowPanel;
     private javax.swing.JPanel SignalPanel;
@@ -1555,7 +1573,5 @@ public class SimulationGUI extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     // End of variables declaration//GEN-END:variables
-    
-    
 }
 

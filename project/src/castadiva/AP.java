@@ -12,7 +12,8 @@ import java.net.UnknownHostException;
  * @since 1.4
  * @version %I%, %G%
  */
-public class AP implements Serializable { 
+public class AP implements Serializable {
+
     private InetAddress ip;
     private InetAddress wifiIP;
     private String wifiMac;
@@ -30,8 +31,8 @@ public class AP implements Serializable {
     float range;
     float inputTraffic;
     float outputTraffic;
-    
-    
+    boolean showRange = true;
+
     /**
      * The constructor. Generate a new AP ready to be used in the simulation.
      *
@@ -48,9 +49,9 @@ public class AP implements Serializable {
      * @param directory the directory used to store the simulation data (can be a 
      * NFS directory).
      */
-    public AP(String address, String wifiAddress, String wifiMac, String user, String pwd, String id, 
+    public AP(String address, String wifiAddress, String wifiMac, String user, String pwd, String id,
             float x, float y, float z, float range, String directory, String processor, Integer channel,
-            String mode, String wfDevice){
+            String mode, String wfDevice) {
         this.user = user;
         this.id = id;
         password = pwd;
@@ -66,7 +67,7 @@ public class AP implements Serializable {
         this.wifiMac = wifiMac;
         this.wifiDevice = wfDevice;
         this.processor = processor;
-        
+
         try {
             ip = InetAddress.getByName(address);
             wifiIP = InetAddress.getByName(wifiAddress);
@@ -74,77 +75,76 @@ public class AP implements Serializable {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * This function return the name or tag that differenciate the AP.
      */
-    public String WhatAP(){
+    public String WhatAP() {
         return id;
     }
-    
+
     /**
      * Return the user stored to connect by SSH.
      */
-    public String WhatUser(){
+    public String WhatUser() {
         return user;
     }
-    
+
     /**
      * Return the password stored to connect by SSH.
      */
-    public String WhatPwd(){
+    public String WhatPwd() {
         return password;
     }
-    
+
     /**
      * Return the IP of the ethernet card used to connecto to the computer.
      */
-    public String WhatEthIP(){
+    public String WhatEthIP() {
         return ip.getHostAddress();
     }
-    
+
     /**
      * Return the IP of the WiFi card used to connecto to the others AP.
      */
-    public String WhatWifiIP(){
+    public String WhatWifiIP() {
         return wifiIP.getHostAddress();
     }
-  
+
     /**
      * Return the MAC of the WiFi card used to connecto to the others AP.
      */
-    public String WhatWifiMac(){
+    public String WhatWifiMac() {
         return wifiMac;
     }
-    
+
     /**
      * Return the directory where the AP store all the data generated in the simulation. 
      * Can be a NFS directory.
-     */    
-    public String WhatWorkingDirectory(){
+     */
+    public String WhatWorkingDirectory() {
         return workingDirectory;
     }
-    
+
     /**
      * Return the processor type of the router.
      */
-    public String WhatProcessor(){
+    public String WhatProcessor() {
         return processor;
     }
-    
-    public Integer WhatChannel(){
+
+    public Integer WhatChannel() {
         return channel;
     }
-    
-    public String WhatMode(){
+
+    public String WhatMode() {
         return mode;
     }
-    
+
     /**
      * Return the device used by the system "eth1, eth2..."
      */
-    public String WhatWifiDevice(){
+    public String WhatWifiDevice() {
         return wifiDevice;
     }
-    
 }

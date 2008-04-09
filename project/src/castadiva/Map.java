@@ -114,6 +114,7 @@ public class Map extends JPanel {
             if (labels) g.drawString(name, xp+4, yp-2);
             g.fillRect(xp-2, yp-2, 5, 5);
             if(graphRange){
+                if(m_model.GetAP(k).showRange)
                 g.drawArc(xp-axp,yp-ayp,axp*2,ayp*2,0,360);
             }else{
                 GraphDrawing(g,k, xp, yp);
