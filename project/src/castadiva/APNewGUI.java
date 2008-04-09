@@ -268,7 +268,7 @@ public class APNewGUI extends javax.swing.JFrame {
 
         jLabel12.setText("Gateway:");
 
-        GWTextField.setText("192.168.1.15");
+        GWTextField.setText("192.168.1.1");
 
         jCheckBox1.setText("Forward");
 
