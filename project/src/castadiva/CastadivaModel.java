@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class CastadivaModel {
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
     private final String WIFI_SSID = "CASTADIVA";
-    private final String DEFAULT_GW ="192.168.1.15";
+    private final String DEFAULT_GW = "192.168.1.15";
     private boolean statisticsShowed = true;
     private int stopwatch;
     private Timer timer;
@@ -2082,7 +2083,7 @@ public class CastadivaModel {
                 "done\n\n" +
                 "#Add default entries.\n" +
                 "route add -net " + ObtainNetTypeC(accessPoints.Get(1).WhatWifiIP()) +
-                " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + ";\n" + 
+                " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + ";\n" +
                 " route add default gw " + node.WhatGW() + ";\n";
         return script;
     }
@@ -5074,25 +5075,17 @@ public class CastadivaModel {
         }
     }
 
-    
-    
+    /**
+     * This class is useful to control when all traffic instructions are ended.
+     * @see ObtainStatisticsThread
+     */
+    class StatisticExchangeBuffer {
 
-      
-
-          ;
-        /**
-         * This class is useful to control when all traffic instructions are ended.
-         * @see ObtainStatisticsThread
-         */
-          
-
-          
-               class StatisticExchangeBuffer{
         private int buffer[];
         private int size;
-        
-        StatisticExchangeBuffer(int length){
-            if(length > 0) {
+
+        StatisticExchangeBuffer(int length) {
+            if (length > 0) {
                 buffer = new int[length];
                 size = length;
             } else {
@@ -5198,8 +5191,8 @@ public class CastadivaModel {
         public void ReadTrafficStatistic() {
             File statistics = new File(file);
             String text = "Error opening the file.";
-
-
+            List<String> contents = new ArrayList<String>();
+            BufferedReader input = null;
 
             //When the file is too short to be an ended file...
             try {
@@ -5211,15 +5204,30 @@ public class CastadivaModel {
                         ex.printStackTrace();
                     }
                 }
-                FileInputStream inputData = new FileInputStream(statistics);
+                /*FileInputStream inputData = new FileInputStream(statistics);
                 byte bt[] = new byte[(int) statistics.length()];
                 text = new String(bt);
+                System.out.println("1;"+text);
                 inputData.close();
-                inputData = null;
+                inputData = null;*/
+                input = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file))));
+                while ((text = input.readLine()) != null) {
+                    contents.add(text);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
+            } finally {
+                try {
+                    if (input != null) {
+                        input.close();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
             }
             //Search the desired data.
+            text = contents.get(0);
             if (!text.trim().equals("")) {
                 //Mark this traffic line as is ended.
                 statisticVector.ChangeBufferValue(line, 1);

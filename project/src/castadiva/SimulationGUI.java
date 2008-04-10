@@ -124,6 +124,10 @@ public class SimulationGUI extends javax.swing.JFrame {
     Float ReturnMobilityMinSpeed() {
         return Float.parseFloat(MinSpeedTextField.getText());
     }
+    
+    void SetMobilityMaxSpeed(Float value){
+        MaxSpeedTextField.setText(value.toString());
+    }
 
     Integer WhatSelectedAP() {
         return APComboBox.getSelectedIndex();
@@ -248,7 +252,7 @@ public class SimulationGUI extends javax.swing.JFrame {
             ConsoleTextField.setText("Simulation in process...  ");
         }
         if (m_model.WhatStopwatch() > m_model.GetRealSimulationTime() && !m_model.IsStatisticsEnded()) {
-            ConsoleTextField.setText("Retrieving data from AP.");
+            ConsoleTextField.setText("Retrieving data from AP. " + m_model.statisticsControl.ReturnBufferValue());
         }
     }
 

@@ -487,10 +487,9 @@ public class CastadivaController {
         public void actionPerformed(ActionEvent e) {
             if (m_simulationWindow.ReturnMobilityMinSpeed() >
                     m_simulationWindow.ReturnMobilityMaxSpeed()) {
-                m_model.SetMobilityMinSpeed(m_simulationWindow.ReturnMobilityMaxSpeed());
-            } else {
-                m_model.SetMobilityMinSpeed(m_simulationWindow.ReturnMobilityMinSpeed());
+                m_simulationWindow.SetMobilityMaxSpeed(m_simulationWindow.ReturnMobilityMinSpeed());
             }
+            m_model.SetMobilityMinSpeed(m_simulationWindow.ReturnMobilityMinSpeed());
         }
     }
 
@@ -790,7 +789,7 @@ public class CastadivaController {
                     m_newAP.GiveMeTheSshPwd(), m_newAP.GiveMeTheId(),
                     200, 200, 0, m_newAP.GiveMeTheWorkingDirectory(),
                     m_newAP.GiveMeTheProcessor(), m_newAP.GiveMeTheChannel(),
-                    m_newAP.GiveMeTheMode(), m_newAP.GiveMeWifiDevice(), 
+                    m_newAP.GiveMeTheMode(), m_newAP.GiveMeWifiDevice(),
                     m_newAP.GiveMeGW());
             m_newAP.dispose();
         }

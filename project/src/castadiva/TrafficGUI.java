@@ -3,7 +3,6 @@
  *
  * Created on 7 de junio de 2006, 10:04
  */
-
 package castadiva;
 
 import castadiva.CastadivaModel.TrafficTableModel;
@@ -31,91 +30,88 @@ import java.lang.*;
  *
  * @author  jorge
  */
-
-
-
 public class TrafficGUI extends javax.swing.JFrame {
+
     CastadivaModel m_model;
     TrafficForm trafficTable;
     JComboBox APComboBox = new JComboBox();
-    
-    
-    public TrafficGUI(CastadivaModel model){
+
+    public TrafficGUI(CastadivaModel model) {
         initComponents();
-        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2),
-                (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
+        setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - (int) (this.getWidth() / 2),
+                (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (this.getHeight() / 2));
         m_model = model;
         ChangeConsoleText("Waiting...");
     }
-    
-    public void UpdateTable(){
+
+    public void UpdateTable() {
         FillAPComboBox();
         GenerateTable(m_model.accessPoints.GetTraffic());
     }
-    
-    void FillAPComboBox(){
-        try{
+
+    void FillAPComboBox() {
+        try {
             APComboBox.removeAllItems();
-            for(int i=0;i<m_model.HowManyAP();i++){
+            for (int i = 0; i < m_model.HowManyAP(); i++) {
                 APComboBox.addItem(m_model.GetAP(i).WhatAP());
             }
-        }catch(NullPointerException npe){}
+        } catch (NullPointerException npe) {
+        }
     }
-    
-    void GenerateTable(Vector data){
+
+    void GenerateTable(Vector data) {
         JComboBox TCPUDPComboBox = new JComboBox();
         trafficTable = new TrafficForm(data);
         TableScrollPane.setViewportView(trafficTable);
         SetUpColumnAP(TrafficTableModel.SOURCE_INDEX);
         SetUpColumnAP(TrafficTableModel.ADDRESS_INDEX);
-        
+
         //Adding the UDP/TCP selection menu.
         TCPUDPComboBox.addItem("UDP");
         TCPUDPComboBox.addItem("TCP");
-        
+
         trafficTable.table.getColumnModel().getColumn(TrafficTableModel.TCPUDP_INDEX).
                 setCellEditor(new DefaultCellEditor(TCPUDPComboBox));
         trafficTable.setVisible(false);
         trafficTable.setVisible(true);
     }
-    
-    void FillAveragePanel(Float UdpText, Float TcpText){
+
+    void FillAveragePanel(Float UdpText, Float TcpText) {
         UdpAverageTextField.setText(UdpText.toString());
         ThroughputAverageTextField.setText(TcpText.toString());
     }
-    
-    private void SetUpColumnAP(int where){
+
+    private void SetUpColumnAP(int where) {
         trafficTable.table.getColumnModel().getColumn(where).setCellEditor(new DefaultCellEditor(APComboBox));
     }
-    
-    public Integer GetSelectedRow(){
+
+    public Integer GetSelectedRow() {
         return trafficTable.table.getSelectedRow();
     }
-    
-    public void ShowError(String text, String title){
+
+    public void ShowError(String text, String title) {
         JFrame frame = new JFrame();
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
-    
-    private void ChangeConsoleText(String text){
+
+    private void ChangeConsoleText(String text) {
         ConsoleTextField.setText(text);
     }
-    
-    public void ActivateWindow(){
-         ChangeConsoleText("Simulation finished!");
-         m_model.tableModel.SetEnable(true);
-         if(m_model.accessPoints.GetTrafficSize()>0){
+
+    public void ActivateWindow() {
+        ChangeConsoleText("Simulation finished!");
+        m_model.tableModel.SetEnable(true);
+        if (m_model.accessPoints.GetTrafficSize() > 0) {
             setVisible(false);
             setVisible(true);
-         }
+        }
     }
-    
-    public void DisableWindow(){
+
+    public void DisableWindow() {
         ChangeConsoleText("Simulation in process...");
         m_model.tableModel.SetEnable(false);
     }
-    
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -335,38 +331,29 @@ public class TrafficGUI extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    
-    void addDelRowButtonListener(ActionListener al){
+    void addDelRowButtonListener(ActionListener al) {
         DelRowButton.addActionListener(al);
     }
-    
-    
-    void addDuplicateActionListener(ActionListener al){
+
+    void addDuplicateActionListener(ActionListener al) {
         DuplicateButton.addActionListener(al);
     }
-    
-    
-    void addClearButtonListener(ActionListener al){
+
+    void addClearButtonListener(ActionListener al) {
         ClearButton.addActionListener(al);
     }
-    
-    
-    void addAcceptButtonListener(ActionListener al){
+
+    void addAcceptButtonListener(ActionListener al) {
         AcceptButton.addActionListener(al);
     }
-    
-    
-    void addOrderButtonListener(ActionListener al){
+
+    void addOrderButtonListener(ActionListener al) {
         OrderButton.addActionListener(al);
     }
-    
-    
-    void addSaveInTextFileButtonListener(ActionListener al){
+
+    void addSaveInTextFileButtonListener(ActionListener al) {
         SaveInTextFileButton.addActionListener(al);
     }
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AcceptButton;
     private javax.swing.JPanel AveragePanel;
@@ -389,18 +376,17 @@ public class TrafficGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     // End of variables declaration//GEN-END:variables
-    
-    
     public class TrafficForm extends JPanel {
+
         public JTable table;
         protected JScrollPane scroller;
         public int column;
         public int row;
-        
+
         public TrafficForm(Vector vectorDatos) {
             initComponent();
         }
-        
+
         public void initComponent() {
             m_model.tableModel.addTableModelListener(new TrafficForm.InteractiveTableModelListener());
             table = new JTable();
@@ -416,48 +402,48 @@ public class TrafficGUI extends javax.swing.JFrame {
             number.setMinWidth(20);
             number.setPreferredWidth(30);
             number.setMaxWidth(30);
-            
+
             TableColumn transferSize = table.getColumnModel().getColumn(TrafficTableModel.TRANSFERSIZE_INDEX);
             transferSize.setMinWidth(70);
             transferSize.setPreferredWidth(110);
             transferSize.setMaxWidth(140);
             transferSize.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn start = table.getColumnModel().getColumn(TrafficTableModel.START_INDEX);
             start.setMinWidth(20);
             start.setPreferredWidth(50);
             start.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn stop = table.getColumnModel().getColumn(TrafficTableModel.STOP_INDEX);
             stop.setMinWidth(20);
             stop.setPreferredWidth(50);
             stop.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn source = table.getColumnModel().getColumn(TrafficTableModel.SOURCE_INDEX);
             source.setMinWidth(40);
             source.setPreferredWidth(100);
-            
+
             TableColumn address = table.getColumnModel().getColumn(TrafficTableModel.ADDRESS_INDEX);
             address.setMinWidth(40);
             address.setPreferredWidth(100);
-            
+
             TableColumn speed = table.getColumnModel().getColumn(TrafficTableModel.SPEED_INDEX);
             speed.setMinWidth(70);
             speed.setPreferredWidth(100);
             speed.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn size = table.getColumnModel().getColumn(TrafficTableModel.SIZE_INDEX);
             size.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn duration = table.getColumnModel().getColumn(TrafficTableModel.SEC_INDEX);
             duration.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn total = table.getColumnModel().getColumn(TrafficTableModel.MAX_INDEX);
             total.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             TableColumn received = table.getColumnModel().getColumn(TrafficTableModel.RECEIVED_INDEX);
             received.setCellRenderer(new NotEditableTableCellRenderer());
-            
+
             scroller = new javax.swing.JScrollPane(table);
             table.setPreferredScrollableViewportSize(new java.awt.Dimension(50, 30));
             TableColumn hidden = table.getColumnModel().getColumn(TrafficTableModel.HIDDEN_INDEX);
@@ -465,11 +451,11 @@ public class TrafficGUI extends javax.swing.JFrame {
             hidden.setPreferredWidth(1);
             hidden.setMaxWidth(1);
             hidden.setCellRenderer(new InteractiveRenderer(TrafficTableModel.HIDDEN_INDEX));
-            
+
             setLayout(new BorderLayout());
             add(scroller, BorderLayout.CENTER);
         }
-        
+
         public void highlightLastRow(int row) {
             int lastrow = m_model.tableModel.getRowCount();
             if (row == lastrow - 1) {
@@ -479,20 +465,19 @@ public class TrafficGUI extends javax.swing.JFrame {
             }
             table.setColumnSelectionInterval(0, 0);
         }
-        
+
         class InteractiveRenderer extends DefaultTableCellRenderer {
+
             protected int interactiveColumn;
-            
+
             public InteractiveRenderer(int interactiveColumn) {
                 this.interactiveColumn = interactiveColumn;
             }
-            
+
             @Override
-            public Component getTableCellRendererComponent
-                    (JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row,int column) {
-                Component c = super.getTableCellRendererComponent
-                        (table, value, isSelected, hasFocus, row, column);
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 if (column == interactiveColumn && hasFocus) {
                     if ((m_model.tableModel.getRowCount() - 1) == row &&
                             !m_model.tableModel.hasEmptyRow()) {
@@ -503,61 +488,61 @@ public class TrafficGUI extends javax.swing.JFrame {
                 return c;
             }
         }
-        
+
         public class NotEditableTableCellRenderer extends DefaultTableCellRenderer {
+
             @Override
-            public Component getTableCellRendererComponent
-                    (JTable table, Object value, boolean isSelected,
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                     boolean hasFocus, int row, int column) {
-                    Component cell = super.getTableCellRendererComponent
-                            (table, value, isSelected, hasFocus, row, column);
-                  try{
-                    if(!table.isCellEditable(row,column)) {
+                Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                try {
+                    if (!table.isCellEditable(row, column)) {
                         cell.setForeground(Color.lightGray);
-                    }else{
+                    } else {
                         cell.setForeground(Color.black);
                     }
-                    
-                    if(column == TrafficTableModel.SPEED_INDEX ||
+
+                    if (column == TrafficTableModel.SPEED_INDEX ||
                             (column == TrafficTableModel.RECEIVED_INDEX &&
-                            table.getValueAt(row,TrafficTableModel.TCPUDP_INDEX)=="UDP")){
+                            table.getValueAt(row, TrafficTableModel.TCPUDP_INDEX) == "UDP")) {
                         cell.setForeground(Color.BLUE);
                     }
-                    
-                    if((column == TrafficTableModel.START_INDEX ||
+
+                    if ((column == TrafficTableModel.START_INDEX ||
                             column == TrafficTableModel.STOP_INDEX) &&
-                            (Integer)table.getValueAt(row,TrafficTableModel.START_INDEX) >=
-                            (Integer)table.getValueAt(row,TrafficTableModel.STOP_INDEX)){
+                            (Integer) table.getValueAt(row, TrafficTableModel.START_INDEX) >=
+                            (Integer) table.getValueAt(row, TrafficTableModel.STOP_INDEX)) {
                         cell.setForeground(Color.RED);
-                        table.setValueAt(0,row,TrafficTableModel.START_INDEX);
+                        table.setValueAt(0, row, TrafficTableModel.START_INDEX);
                     }
-                    
-                    if(column == TrafficTableModel.MAX_INDEX &&
-                            (Integer)table.getValueAt(row,TrafficTableModel.MAX_INDEX) <
-                            (Integer)table.getValueAt(row,TrafficTableModel.SEC_INDEX)){
+
+                    if (column == TrafficTableModel.MAX_INDEX &&
+                            (Integer) table.getValueAt(row, TrafficTableModel.MAX_INDEX) <
+                            (Integer) table.getValueAt(row, TrafficTableModel.SEC_INDEX)) {
                         cell.setForeground(Color.RED);
                     }
-                    
+
                     //Max Packets are equal a time per packets/second.
-                    if(((((Integer)table.getValueAt(row,TrafficTableModel.STOP_INDEX)) -
-                            ((Integer)table.getValueAt(row,TrafficTableModel.START_INDEX))) *
-                            ((Integer)table.getValueAt(row,TrafficTableModel.SEC_INDEX)) !=
-                            ((Integer)table.getValueAt(row,TrafficTableModel.MAX_INDEX)))){
-                        Integer maxPackets = ((Integer)table.getValueAt(row,TrafficTableModel.STOP_INDEX) -
-                                (Integer)table.getValueAt(row,TrafficTableModel.START_INDEX)) *
-                                (Integer)table.getValueAt(row,TrafficTableModel.SEC_INDEX);
-                        table.setValueAt((int)maxPackets,row,TrafficTableModel.MAX_INDEX);
+                    if (((((Integer) table.getValueAt(row, TrafficTableModel.STOP_INDEX)) -
+                            ((Integer) table.getValueAt(row, TrafficTableModel.START_INDEX))) *
+                            ((Integer) table.getValueAt(row, TrafficTableModel.SEC_INDEX)) !=
+                            ((Integer) table.getValueAt(row, TrafficTableModel.MAX_INDEX)))) {
+                        Integer maxPackets = ((Integer) table.getValueAt(row, TrafficTableModel.STOP_INDEX) -
+                                (Integer) table.getValueAt(row, TrafficTableModel.START_INDEX)) *
+                                (Integer) table.getValueAt(row, TrafficTableModel.SEC_INDEX);
+                        table.setValueAt((int) maxPackets, row, TrafficTableModel.MAX_INDEX);
                     }
-                    
-                    table.setColumnSelectionInterval(0,table.getColumnCount()-1);
+
+                    table.setColumnSelectionInterval(0, table.getColumnCount() - 1);
                     return cell;
-                }catch(ClassCastException cce){
+                } catch (ClassCastException cce) {
                     return cell;
                 }
             }
         }
-        
+
         public class InteractiveTableModelListener implements TableModelListener {
+
             public void tableChanged(TableModelEvent evt) {
                 column = evt.getColumn();
                 row = evt.getFirstRow();
@@ -571,8 +556,8 @@ public class TrafficGUI extends javax.swing.JFrame {
                 }
             }
         }
-        
-        public void delRow(){
+
+        public void delRow() {
             m_model.tableModel.delRow(row);
             if (!m_model.tableModel.hasEmptyRow()) {
                 m_model.tableModel.addEmptyRow();
