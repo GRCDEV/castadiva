@@ -1003,7 +1003,7 @@ public class CastadivaModel {
      * Start a new simulation, storing first the instructions in a file.
      */
     private void StartFileSimulation() {
-        List startingInstructions;
+        List<List<String>> startingInstructions;
 
         statisticsShowed = false;
         simulating = true;
@@ -3683,7 +3683,7 @@ public class CastadivaModel {
             String descomposed_line[] = {DEFAULT_WIFI_MAC, DEFAULT_IP_NET + (node + 1),
                 DEFAULT_WIFI_IP_NET + (node + 1), DEFAULT_CHANNEL + "", DEFAULT_WIFI_DEVICE,
                 DEFAULT_RANGE + "", DEFAULT_USER, DEFAULT_PWD, DEFAULT_PROCESSOR,
-                DEFAULT_NFS_DIRECTORY
+                DEFAULT_NFS_DIRECTORY, DEFAULT_GW
             };
             return descomposed_line;
         } else {

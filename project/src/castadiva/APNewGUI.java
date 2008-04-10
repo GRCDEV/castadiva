@@ -48,7 +48,7 @@ public class APNewGUI extends javax.swing.JFrame {
     void FillDataText(Integer node){
         String apData[] = m_model.ObtainStoredApData(node);
         try{
-            IdText.setText(apData[10]);
+            IdText.setText(apData[11]);
         }catch(Exception e){
             IdText.setText("AP" + (m_model.HowManyAP() + 1) );
         }
@@ -60,8 +60,8 @@ public class APNewGUI extends javax.swing.JFrame {
         UsuarioText.setText(apData[6]);
         PasswordField.setText(apData[7]);
         ProcessorComboBox.setSelectedItem(apData[8]);
-        GWTextField.setText(apData[9]);
-        WorkingDirectoryTextField.setText(apData[10]);
+        GWTextField.setText(apData[10]);
+        WorkingDirectoryTextField.setText(apData[9]);
     }
     
     String GiveMeTheIp(){
