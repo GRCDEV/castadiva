@@ -422,9 +422,12 @@ public class CastadivaController {
     class ResetSimulationListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            String instruction = "reboot";
+            String instruction = "/sbin/reboot";
             m_model.InstructionForAll(instruction, false);
             m_model.EndStopwatch();
+            if(m_model.externalTrafficFlow.size() <1){
+                m_simulationWindow.ActivateButtons(true);
+            }
         }
     }
 
