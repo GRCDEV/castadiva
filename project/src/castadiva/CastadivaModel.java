@@ -3064,12 +3064,9 @@ public class CastadivaModel {
         String packetInstallation = "";
         for (int i = 0; i < packets.size(); i++) {
             installInstruction = "ipkg install " + packets.get(i);
-            packetInstallation = packetInstallation + installInstruction;
-            if (i < packets.size() - 1) {
-                packetInstallation = packetInstallation + " && ";
-            }
+            packetInstallation = packetInstallation + installInstruction + "; ";
         }
-        packetInstallation = "ipkg update && " + packetInstallation;
+        packetInstallation = "ipkg update; " + packetInstallation;
         return packetInstallation;
     }
 
@@ -3146,18 +3143,8 @@ public class CastadivaModel {
      * @param folder. The folder to be created.
      */
     private String GenerateScriptsFolders(String folder) {
-        String path[];
-        String way = File.separator;
         String folderInstallation = "";
-        /*path = folder.split(File.separator);
-        for(int i=1; i<path.length; i++){
-        way = way + path[i] + File.separator;
-        folderInstallation = folderInstallation + "mkdir " + way + " && chown nobody " + way + " ";
-        if(i < path.length - 1){
-        folderInstallation = folderInstallation +  " && ";
-        }
-        }*/
-        folderInstallation = "/bin/mkdir -p " + folder + " & chown nobody " + folder + "; ";
+        folderInstallation = "/bin/mkdir -p " + folder + "; chown nobody " + folder + "; ";
         return folderInstallation;
     }
 
@@ -3266,7 +3253,7 @@ public class CastadivaModel {
         nvram = SetNvramVariables(scriptsApFolder + File.separator + scriptName,
                 ethDevice, switchDevice);
 
-        createFolders = folderScriptInstallation + " & " + folderNfs;
+        createFolders = folderScriptInstallation + " " + folderNfs;
         instructionList.add(packetInstallation);
         instructionList.add(createFolders);
         instructionList.add(scriptInstruction);
