@@ -4184,10 +4184,9 @@ public class CastadivaModel {
      * @see SaveCastadiva
      */
     private String CalculateSaveFolder(String file) {
-        String objectDirectory = null;
         String[] name = null;
         name = file.split(FILE_PREFIX);
-        return objectDirectory = name[0];
+        return name[0];
     }
 
     /**
@@ -4505,7 +4504,10 @@ public class CastadivaModel {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isDirectory()) {
-                    DeletePath(files[i]);
+                    if (!files[i].toString().contains("notDelete") || 
+                            !files[i].toString().equals("bin")) {
+                        DeletePath(files[i]);
+                    }
                 } else {
                     //Don't delete files with string "Flow". This files are
                     //used to generate the traffic TCP
