@@ -17,13 +17,14 @@ public class AboutBox extends javax.swing.JFrame {
     /**
      * Creates new form AboutBox
      */
-    public AboutBox() {
+    public AboutBox(CastadivaModel model) {
         initComponents();
         setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
+        VersionLabel.setText(model.VERSION);
     }
     
-    public void UpdateText(String texto){
-        Pizarra.setText(texto);
+    public void UpdateText(String text){
+        Pizarra.setText(text);
     }
     
     
@@ -41,7 +42,7 @@ public class AboutBox extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         Pizarra = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        VersionLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("About...");
@@ -61,9 +62,9 @@ public class AboutBox extends javax.swing.JFrame {
         Pizarra.setToolTipText("My last words...");
         jScrollPane1.setViewportView(Pizarra);
 
-        jLabel2.setText("By Jorge Hortleano");
+        jLabel2.setText("By Jorge Hortelano");
 
-        jLabel3.setText("v 1.6");
+        VersionLabel.setText("v 1");
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,7 +80,7 @@ public class AboutBox extends javax.swing.JFrame {
                         .addContainerGap()
                         .add(BotonCerrar)
                         .add(79, 79, 79)
-                        .add(jLabel3))
+                        .add(VersionLabel))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
                             .add(73, 73, 73)
@@ -104,7 +105,7 @@ public class AboutBox extends javax.swing.JFrame {
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 124, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel3)
+                    .add(VersionLabel)
                     .add(BotonCerrar))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -120,9 +121,9 @@ public class AboutBox extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonCerrar;
     private javax.swing.JTextPane Pizarra;
+    private javax.swing.JLabel VersionLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables

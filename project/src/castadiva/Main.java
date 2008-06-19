@@ -21,7 +21,7 @@ public class Main {
         // TODO code application logic here
         CastadivaModel model = new CastadivaModel();
         MainMenuGUI view = new MainMenuGUI(model);
-        AboutBox about = new AboutBox();
+        AboutBox about = new AboutBox(model);
         SimulationGUI  simulationWindow = new SimulationGUI(model);
         TrafficGUI traffic = new TrafficGUI(model);
         APNewGUI newAPWindow = new APNewGUI(model);
