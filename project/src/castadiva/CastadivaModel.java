@@ -52,7 +52,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class CastadivaModel {
 
-    final String VERSION = "1.61";
+    final String VERSION = "0.92";
     Computer computer;
     public APs accessPoints = new APs();
     //Node connection
