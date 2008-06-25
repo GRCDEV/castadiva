@@ -4505,8 +4505,8 @@ public class CastadivaModel {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isDirectory()) {
-                    if (!files[i].toString().contains("notDelete") || 
-                            !files[i].toString().contains("bin")) {
+                    if (!(files[i].toString().contains("notDelete") || 
+                            files[i].toString().contains("bin"))) {
                         DeletePath(files[i]);
                     }
                 } else {
