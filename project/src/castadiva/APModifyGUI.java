@@ -262,7 +262,6 @@ public class APModifyGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Change AP");
         setResizable(false);
 

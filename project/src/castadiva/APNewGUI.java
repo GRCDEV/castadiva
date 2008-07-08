@@ -186,7 +186,6 @@ public class APNewGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         InstallButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Add new AP");
         setResizable(false);
 
