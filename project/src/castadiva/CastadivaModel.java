@@ -1393,30 +1393,14 @@ public class CastadivaModel {
         String sourceInstruction;
         Integer startNode, endNode;
         AP sourceNode, destinationNode;
-        Integer burst = 100;
-        Integer realSendedPackets;
-        Integer sendedPackets;
-        File file = null;
 
         startNode = accessPoints.SearchAP(record.getSource());
         endNode = accessPoints.SearchAP(record.getAddress());
         sourceNode = accessPoints.Get(startNode);
         destinationNode = accessPoints.Get(endNode);
 
-        int segundosEsperaServidor = ((record.getMaxPackets() /
-                record.getPacketsSeconds()) - record.getStart() +
-                TRAFFIC_SERVER_TIME_WAIT + PROTOCOL_TIME_WAIT) * 1000;
-
-        //Obtain the packets thar really will be sended in the simulation.
-        sendedPackets = record.getPacketsSeconds() * (record.getStop() -
-                record.getStart());
-        if (record.getMaxPackets() > sendedPackets) {
-            realSendedPackets = sendedPackets;
-        } else {
-            realSendedPackets = record.getMaxPackets();
-        }
-
         sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
+                "bin" + File.separator + 
                 "UdpFlowClient" + sourceNode.WhatProcessor() + " " +
                 destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
                 record.getSize() + " " + record.getPacketsSeconds() + " " +
@@ -1434,7 +1418,6 @@ public class CastadivaModel {
         String sourceInstruction;
         Integer startNode, endNode;
         AP sourceNode, destinationNode;
-        File file = null;
 
         startNode = accessPoints.SearchAP(record.getSource());
         endNode = accessPoints.SearchAP(record.getAddress());
@@ -1442,6 +1425,7 @@ public class CastadivaModel {
         destinationNode = accessPoints.Get(endNode);
 
         sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
+                "bin" + File.separator + 
                 "TcpFlowClient" + sourceNode.WhatProcessor() + " " +
                 destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
                 record.getTransferSize() + " " + (record.getStop() - record.getStart()) + " ";
@@ -1527,6 +1511,7 @@ public class CastadivaModel {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
+                "bin" + File.separator + 
                 "UdpFlowServer" + router.WhatProcessor() + " " +
                 (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " +
                 seconds + " " + WRITE_TIME_IN_FILE + " > " +
@@ -1545,6 +1530,7 @@ public class CastadivaModel {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
+                "bin" + File.separator + 
                 "TcpFlowServer" + router.WhatProcessor() + " " +
                 (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " + WRITE_TIME_IN_FILE + " > " + router.WhatWorkingDirectory() +
                 File.separator + STATISTICS_TCP_DESTINATION_FILE + (number + 1);
