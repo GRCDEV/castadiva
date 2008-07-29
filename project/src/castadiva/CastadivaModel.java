@@ -84,6 +84,7 @@ public class CastadivaModel {
     private final int TRAFFIC_PORT = 23000;
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
+    private final int MAX_SLEEP = 2000;
     private final String WIFI_SSID = "CASTADIVA";
     private final String DEFAULT_GW = "192.168.1.15";
     private boolean statisticsShowed = true;
@@ -1400,7 +1401,7 @@ public class CastadivaModel {
         destinationNode = accessPoints.Get(endNode);
 
         sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator + 
+                "bin" + File.separator +
                 "UdpFlowClient" + sourceNode.WhatProcessor() + " " +
                 destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
                 record.getSize() + " " + record.getPacketsSeconds() + " " +
@@ -1425,7 +1426,7 @@ public class CastadivaModel {
         destinationNode = accessPoints.Get(endNode);
 
         sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator + 
+                "bin" + File.separator +
                 "TcpFlowClient" + sourceNode.WhatProcessor() + " " +
                 destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
                 record.getTransferSize() + " " + (record.getStop() - record.getStart()) + " ";
@@ -1511,7 +1512,7 @@ public class CastadivaModel {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator + 
+                "bin" + File.separator +
                 "UdpFlowServer" + router.WhatProcessor() + " " +
                 (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " +
                 seconds + " " + WRITE_TIME_IN_FILE + " > " +
@@ -1530,7 +1531,7 @@ public class CastadivaModel {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator + 
+                "bin" + File.separator +
                 "TcpFlowServer" + router.WhatProcessor() + " " +
                 (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " + WRITE_TIME_IN_FILE + " > " + router.WhatWorkingDirectory() +
                 File.separator + STATISTICS_TCP_DESTINATION_FILE + (number + 1);
@@ -2499,8 +2500,6 @@ public class CastadivaModel {
             visibilityMatrix = GenerateMobilityVisibilityMatrix(k);
 
             for (int i = 0; i < accessPoints.Size(); i++) {
-                //Create the instruction list for one node.
-                AP nodo1 = accessPoints.Get(i);
                 nodeInstructions = (String) temporalInstructions.get(i);
 
                 //Adding the visibility rules.
@@ -4491,7 +4490,7 @@ public class CastadivaModel {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isDirectory()) {
-                    if (!(files[i].toString().contains("notDelete") || 
+                    if (!(files[i].toString().contains("notDelete") ||
                             files[i].toString().contains("bin"))) {
                         DeletePath(files[i]);
                     }
@@ -4618,7 +4617,7 @@ public class CastadivaModel {
         }
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
-
+    
     /****************************************************************************
      *
      *                              SECONDARY CLASSES
