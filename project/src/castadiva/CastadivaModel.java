@@ -84,7 +84,6 @@ public class CastadivaModel {
     private final int TRAFFIC_PORT = 23000;
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
-    private final int MAX_SLEEP = 2000;
     private final String WIFI_SSID = "CASTADIVA";
     private final String DEFAULT_GW = "192.168.1.15";
     private boolean statisticsShowed = true;
