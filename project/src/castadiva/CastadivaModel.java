@@ -52,7 +52,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class CastadivaModel {
 
-    final String VERSION = "0.92";
+    final String VERSION = "0.94";
     Computer computer;
     public APs accessPoints = new APs();
     //Node connection
@@ -947,7 +947,6 @@ public class CastadivaModel {
      */
     private void PrepareSimulation() {
         EndStopwatch();
-        NewStopwatch();
         NodeDisconnect();
         ObtainNewVisibilityTime();
         PrepareComputerDirectory();
@@ -961,7 +960,6 @@ public class CastadivaModel {
      */
     void AllSimulationSteaps() {
         PrepareSimulation();
-        //StartSimulation();
         StartFileSimulation();
     }
 
@@ -971,23 +969,6 @@ public class CastadivaModel {
     void ReplaySimulationSteaps() {
         PrepareSimulation();
         ReplayFileSimulation();
-    }
-
-    /**
-     * Start a new simulation with all defined datas (traffic, APs, ...).
-     */
-    private void StartSimulation() {
-        instructions = MergeInstructionsList(removeInstruction, addInstruction);
-        //statisticsControl mark if all traffic lines are ended.
-        statisticsControl = new StatisticExchangeBuffer(accessPoints.GetTrafficSize());
-        statisticsShowed = false;
-        GenerateRoutingInstructions();
-        ShowInstructions(routingInstruction);
-        RunSimulation(SSHThread, routingInstruction, true);
-        CreateTraffic();
-        RunSimulation(SSHThread, instructions, false);
-        RunSimulation(SSHServerThread, serverInstructions, false);
-        RunSimulation(SSHClientThread, clientInstructions, false);
     }
 
     /**
@@ -1018,6 +999,7 @@ public class CastadivaModel {
         }
         GenerateFileInstructionsForAllNodes();
         startingInstructions = GenerateStartingInstructionsForSSH();
+        NewStopwatch();
         RunSimulation(SSHThread, startingInstructions, false);
     }
 
@@ -1440,7 +1422,6 @@ public class CastadivaModel {
     private void GenerateClientTrafficInstructions() {
         TrafficRecord record = null;
         Integer startNode;
-        AP router;
         String sourceInstruction;
         String deleteInstruction;
         List<String> nodeInstructions;
@@ -1476,7 +1457,7 @@ public class CastadivaModel {
                 deleteInstruction = deleteInstruction + CreateDeletingTcpInstructions(record, i);
             }
             //Write the instrucciont to the client instructions list
-            router = accessPoints.Get(startNode);
+            AP router = accessPoints.Get(startNode);
             sourceInstruction = nodeInstructions.get(startNode) + "& \n" + sourceInstruction;
             deleteInstruction = nodeDeleteInstructions.get(startNode) + "& \n" + deleteInstruction;
             nodeInstructions.set(startNode, sourceInstruction);
