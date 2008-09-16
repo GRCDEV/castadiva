@@ -20,7 +20,7 @@ public class AboutBox extends javax.swing.JFrame {
     public AboutBox(CastadivaModel model) {
         initComponents();
         setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
-        VersionLabel.setText(model.VERSION);
+        VersionLabel.setText("v"+model.VERSION);
     }
     
     public void UpdateText(String text){
@@ -64,7 +64,7 @@ public class AboutBox extends javax.swing.JFrame {
 
         jLabel2.setText("By Jorge Hortelano");
 
-        VersionLabel.setText("v 1");
+        VersionLabel.setText("version");
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
