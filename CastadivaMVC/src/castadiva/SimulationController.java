@@ -33,7 +33,7 @@ public class SimulationController {
     private ProtocolsGUI m_protocol;
     private MobilityDesignerGUI mobDes;
 
-    SimulationController(SimulationGUI sim_window,ExecutionPlanner exe, CastadivaModel model, TrafficGUI traffic,
+    SimulationController(SimulationGUI sim_window, ExecutionPlanner exe, CastadivaModel model, TrafficGUI traffic,
                          RandomSimulationGUI random, CheckSimulationThread checkSim,
                          CastadivaController control, ProtocolsGUI proto,
                          MobilityDesignerGUI mobilityDesigner, MainMenuGUI view){
@@ -48,8 +48,6 @@ public class SimulationController {
         executionPlanner = exe;
         m_view = view;
         
-        executionPlanner = null;
-
     }
 
     public void SetExecutionPlanner(ExecutionPlanner execution) {

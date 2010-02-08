@@ -35,6 +35,7 @@ public class ExecutionPlanner {
         m_model=model;
         m_attachTraffic = attach;
         m_control = control;
+        m_view = main;
     }
 
 
