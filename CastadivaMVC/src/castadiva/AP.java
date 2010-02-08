@@ -15,8 +15,7 @@ import java.net.UnknownHostException;
 public class AP implements Serializable {
 
     private InetAddress ip;
-    private InetAddress wifiIP;
-    
+    private InetAddress wifiIP;    
     private InetAddress gateway;
     private String wifiMac;
     private String user;
