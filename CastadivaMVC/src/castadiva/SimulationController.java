@@ -162,7 +162,11 @@ public class SimulationController {
 
         public void actionPerformed(ActionEvent e) {
             m_model.StopSimulation();
-            m_view.setVisible(true);
+            if(m_simulationWindow.isExecutionPlanner()) {
+              m_simulationWindow.setExecutionPlanner(false);
+            } else {
+                m_view.setVisible(true);
+            }
             m_simulationWindow.setVisible(false);
         }
     }

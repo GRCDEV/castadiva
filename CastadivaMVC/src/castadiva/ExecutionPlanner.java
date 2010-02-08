@@ -134,6 +134,7 @@ public class ExecutionPlanner {
             String file;
             if (!(file = m_control.ExplorationWindow("Load",
                     JFileChooser.FILES_AND_DIRECTORIES)).equals("")) {
+                
                 m_model.Reset();
                 m_model.LoadAP(file);
                 m_simulationWindow.setVisible(true);
@@ -168,6 +169,7 @@ public class ExecutionPlanner {
     class newSimulationExecutionPlanner implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
+            m_simulationWindow.setExecutionPlanner(true);
             m_simulationWindow.setVisible(true);
             m_simulationWindow.FillFields();
             m_simulationWindow.FillAPComboBox();

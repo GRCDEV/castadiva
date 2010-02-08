@@ -53,6 +53,14 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
      *                         INQUERY METHODS
      *
      *********************************************************************/
+    public boolean isExecutionPlanner() {
+        return executionPlanner;
+    }
+
+    public void setExecutionPlanner(boolean executionPlanner) {
+        this.executionPlanner = executionPlanner;
+    }
+
     public void GetNewSize() {
         DrawNewSize(Integer.parseInt(SizeTextField.getText()));
     }
@@ -74,16 +82,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             return Float.parseFloat(YTextField.getText());
         } catch (NumberFormatException nfe) {
             return (float) 200;
-        }
-    }
-
-    public Integer ReturnRepetitionsTextField() {
-        try {
-            return Integer.parseInt(SimRepTextField.getText());
-        }catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-            return new Integer(10);
         }
     }
 
@@ -516,8 +514,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
         SimXTextField = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        SimRepTextField = new javax.swing.JTextField();
         TimePanel = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -617,12 +613,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
         jLabel19.setText("m");
 
-        jLabel34.setFont(new java.awt.Font("Dialog", 1, 16));
-        jLabel34.setText("Repetitions");
-
-        SimRepTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        SimRepTextField.setText("10");
-
         org.jdesktop.layout.GroupLayout BoundPanelLayout = new org.jdesktop.layout.GroupLayout(BoundPanel);
         BoundPanel.setLayout(BoundPanelLayout);
         BoundPanelLayout.setHorizontalGroup(
@@ -639,14 +629,12 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
                             .add(jLabel17)
                             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                             .add(SimXTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 81, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                    .add(jLabel16)
-                    .add(jLabel34))
+                    .add(jLabel16))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(SimRepTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 48, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel20)
                     .add(jLabel19))
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
         BoundPanelLayout.setVerticalGroup(
             BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -663,11 +651,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
                     .add(jLabel18)
                     .add(SimYTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel20))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(BoundPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel34)
-                    .add(SimRepTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         TimePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -875,7 +859,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
                 .add(jLabel15)
                 .add(17, 17, 17)
                 .add(jComboBox1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         ShowPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -916,7 +900,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, ShowPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jLabel7)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 62, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 64, Short.MAX_VALUE)
                 .add(ShowPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(ReplayCheckBox)
                     .add(jLabel31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1575,7 +1559,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
     private javax.swing.JPanel SignalPanel;
     private javax.swing.JLabel SimLabel;
     private javax.swing.JTextField SimPauseTextField;
-    private javax.swing.JTextField SimRepTextField;
     private javax.swing.JTextField SimTimeTextField;
     private javax.swing.JTextField SimXTextField;
     private javax.swing.JTextField SimYTextField;
@@ -1618,7 +1601,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel4;
