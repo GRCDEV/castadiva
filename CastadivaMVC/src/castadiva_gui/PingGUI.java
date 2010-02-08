@@ -90,7 +90,6 @@ public class PingGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonCerrarActionPerformed
-// TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_BotonCerrarActionPerformed
 

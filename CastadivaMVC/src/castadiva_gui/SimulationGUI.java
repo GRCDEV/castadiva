@@ -223,11 +223,20 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
         //ShowCheckBox.setEnabled(activation);
         RtsCheckBox.setEnabled(activation);
         Frame.setEnabled(activation);
-        StopSimulationButton.setEnabled(activation);
-        ResetButton.setEnabled(activation);
         TrafficButton.setEnabled(activation);
-        SimulateButton.setEnabled(activation);
+        if(this.executionPlanner) {
+            SimulateButton.setEnabled(false);
+            ReplaySimulationButton.setEnabled(false);
+            StopSimulationButton.setEnabled(false);
+            ResetButton.setEnabled(false);
+        }else {
+            SimulateButton.setEnabled(activation);
+            ReplaySimulationButton.setEnabled(activation);
+            StopSimulationButton.setEnabled(activation);
+            ResetButton.setEnabled(activation);
+        }
         RandomSceneryButton.setEnabled(activation);
+
     }
 
     public void FillFields() {

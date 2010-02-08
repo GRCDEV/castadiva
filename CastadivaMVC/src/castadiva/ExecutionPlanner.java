@@ -133,8 +133,12 @@ public class ExecutionPlanner {
              */
             String file;
             if (!(file = m_control.ExplorationWindow("Load",
-                    JFileChooser.FILES_AND_DIRECTORIES)).equals("")) {
-                
+                    JFileChooser.DIRECTORIES_ONLY)).equals("")) {
+                /*TODO Cargar correctamente escenario
+                 alksjhdflkjahsd lkfh
+                 * alsjkdhf lkahs dlfha lsdhf lnxcv ob
+                 * 
+                 */
                 m_model.Reset();
                 m_model.LoadAP(file);
                 m_simulationWindow.setVisible(true);

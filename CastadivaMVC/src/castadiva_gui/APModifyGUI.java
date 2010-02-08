@@ -547,7 +547,6 @@ public class APModifyGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_AceptarButtonActionPerformed
 
     private void APComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_APComboBoxActionPerformed
-// TODO add your handling code here:
         if (APComboBox.getItemCount() > 0) {
             m_model.selectionedAP1 = m_model.GetAP(APComboBox.getSelectedIndex());
             IPtext.setText(m_model.selectionedAP1.WhatEthIP());
@@ -565,7 +564,6 @@ public class APModifyGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_APComboBoxActionPerformed
 
     private void CloseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloseButtonActionPerformed
-// TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_CloseButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
