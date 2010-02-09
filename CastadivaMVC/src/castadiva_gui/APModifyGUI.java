@@ -41,8 +41,8 @@ public class APModifyGUI extends javax.swing.JFrame {
         ProcessorComboBox.removeAllItems();
         File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator +
                 m_model.DEFAULT_PROCESSOR_FILE);
-        System.out.println(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator +
-                m_model.DEFAULT_PROCESSOR_FILE);
+        //System.out.println(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator +
+        //        m_model.DEFAULT_PROCESSOR_FILE);
         processor = m_model.ReadTextFileInLines(file);
         if (processor.size() == 0) {
             processor.add("none");
