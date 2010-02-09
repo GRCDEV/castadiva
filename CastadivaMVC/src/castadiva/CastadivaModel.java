@@ -1113,7 +1113,9 @@ public class CastadivaModel {
         //String deletingUdpFile = folder + file.separator + FINISH_UDP_INSTRUCTIONS_FILE;
 
         startingInstructions.addAll(KillAllOldInstructions());
-        startingInstructions.addAll(SynchronizeTime());
+        if(accessPoints.Get(node).WhatProcessor().equals("X86")) {
+            startingInstructions.addAll(SynchronizeTime());
+        }
         //startingInstructions.add("ifconfig wl0 down");
         //startingInstructions.add(SetWifiConfiguration(node));
         //startingInstructions.add("ifconfig wl0 up");
@@ -3996,7 +3998,7 @@ public class CastadivaModel {
             ap = line.split(" ");
             if(ap.length == nparams) {
                 System.out.println(line);
-                AP node = new AP(ap[0], ap[1], ap[2], ap[3], ap[4], ap[5],
+               AP node = new AP(ap[0], ap[1], ap[2], ap[3], ap[4], ap[5],
                         Float.parseFloat(ap[6]), Float.parseFloat(ap[7]),
                         Float.parseFloat(ap[8]), Float.parseFloat(ap[9]),
                         ap[10], ap[11], Integer.parseInt(ap[12]),

@@ -137,7 +137,7 @@
                   </Group>
                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="PasswordField" pref="131" max="32767" attributes="1"/>
+                      <Component id="PasswordField" pref="134" max="32767" attributes="1"/>
                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -196,7 +196,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="ModifyButton" min="-2" pref="104" max="-2" attributes="1"/>
-                  <EmptySpace pref="59" max="32767" attributes="0"/>
+                  <EmptySpace pref="62" max="32767" attributes="0"/>
                   <Component id="CloseButton" min="-2" pref="104" max="-2" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -252,33 +252,30 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="1"/>
-                                      <Component id="IPtext" alignment="0" pref="129" max="32767" attributes="1"/>
-                                      <Component id="WifiIPtext" alignment="0" pref="129" max="32767" attributes="1"/>
+                                      <Component id="IPtext" alignment="0" pref="130" max="32767" attributes="1"/>
+                                      <Component id="WifiIPtext" alignment="0" pref="130" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="PingButton" alignment="1" pref="121" max="32767" attributes="1"/>
+                                      <Component id="PingButton" alignment="1" pref="123" max="32767" attributes="1"/>
                                       <Component id="jLabel8" alignment="0" min="-2" pref="110" max="-2" attributes="1"/>
-                                      <Component id="WorkingDirectoryTextField" alignment="0" pref="121" max="32767" attributes="0"/>
+                                      <Component id="WorkingDirectoryTextField" alignment="0" pref="123" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="ModeComboBox" pref="129" max="32767" attributes="0"/>
+                                          <Component id="ModeComboBox" pref="130" max="32767" attributes="0"/>
                                           <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="WifiDeviceTextField" min="-2" pref="54" max="-2" attributes="0"/>
                                       <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="13" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="ChannelSpinner" alignment="1" max="32767" attributes="1"/>
                                       <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="1"/>
@@ -287,7 +284,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="WifiMacTextField" pref="129" max="32767" attributes="1"/>
+                                          <Component id="WifiMacTextField" pref="132" max="32767" attributes="1"/>
                                           <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
@@ -307,7 +304,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="GWTextField" pref="138" max="32767" attributes="1"/>
+                                  <Component id="GWTextField" pref="139" max="32767" attributes="1"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jCheckBox1" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -489,7 +486,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="APComboBox" pref="139" max="32767" attributes="0"/>
+                          <Component id="APComboBox" pref="142" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           <Component id="DeleteButton" min="-2" pref="114" max="-2" attributes="0"/>
                       </Group>
