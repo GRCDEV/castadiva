@@ -559,6 +559,7 @@ public class APModifyGUI extends javax.swing.JFrame {
             WorkingDirectoryTextField.setText(m_model.selectionedAP1.WhatWorkingDirectory());
             ChannelSpinner.setValue(m_model.selectionedAP1.WhatChannel());
             WifiDeviceTextField.setText(m_model.selectionedAP1.WhatWifiDevice());
+            GWTextField.setText(m_model.selectionedAP1.WhatGW());
             SelectAdecuatedMode();
             FillProcessorComboBox();
         }
