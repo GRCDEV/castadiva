@@ -6,6 +6,8 @@
 package castadiva_gui;
 
 import castadiva.*;
+import castadiva.TableModels.ExecutionPlannerTableModel;
+import castadiva.TrafficRecords.ExecutionRecord;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -25,7 +27,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     public Vector<String>paths = new Vector<String>();
     int numSim = 0;
     public int scenario = 0;
-    MyTableModel tableModel = new MyTableModel();
+    ExecutionPlannerTableModel tableModel = new ExecutionPlannerTableModel();
 
     /** Creates new form executionPlannerGUI */
     public ExecutionPlannerGUI(CastadivaModel model) {
@@ -35,12 +37,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                 (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (this.getHeight() / 2));
         this.model = model;
         
-        Vector row = new java.util.Vector();
-        row.add("Source folder");
-        row.add("Results folder");
-        row.add("Runs");
-        tableModel.setColumnIdentifiers(row);
-                JTplanner.setModel(tableModel);
+        JTplanner.setModel(tableModel);
 
 
         JViewport scroll = (JViewport) JTplanner.getParent();
@@ -66,12 +63,13 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     }
 
     public void newRow(String name) {                
-        Vector row = new Vector();
-        row.add(name);
-        row.add(model.pathScenario);
-        row.add("1");
+        ExecutionRecord exe = new ExecutionRecord();
+
+        exe.setSourceFolder(name);
+        exe.setResultsFolder(name);
+        exe.setRuns(1);
         
-        tableModel.addRow(row);
+        tableModel.addRow(exe);
         JTplanner.setModel(tableModel);
     }
     
@@ -111,7 +109,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     }
     
     public void deleteRow(int row) {
-        tableModel.removeRow(row);
+        tableModel.delRow(row);
         JTplanner.setModel(tableModel);
     }
     /** This method is called from within the constructor to
@@ -271,13 +269,4 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     private javax.swing.JTable JTplanner;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-}
-class MyTableModel extends DefaultTableModel {
-
-    public boolean isCellEditable(int row, int column) {
-        if (column == 0 || column == 1) {
-            return false;
-        }
-        return true;
-    }
 }

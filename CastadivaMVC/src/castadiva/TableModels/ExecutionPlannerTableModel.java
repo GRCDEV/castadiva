@@ -5,6 +5,7 @@
 
 package castadiva.TableModels;
 
+import castadiva.TrafficRecords.ExecutionRecord;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
@@ -19,7 +20,7 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
 
     private String[] columnNames = {"Source folder", "Results folder", "Runs"};
 
-    protected Vector rows;
+    protected Vector rows = new Vector();
 
     public int getRowCount() {
         return rows.size();
@@ -27,10 +28,6 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
 
     public int getColumnCount() {
         return columnNames.length;
-    }
-
-    public Object getValueAt(int row, int column) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -51,4 +48,71 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
         }
     }
 
+    public Object getValueAt(int row, int column) {
+        ExecutionRecord exe = (ExecutionRecord) rows.get(row);
+        switch(column) {
+            case SOURCE_FOLDER_INDEX:
+                return exe.getSourceFolder();
+            case RESULTS_FOLDER_INDEX:
+                return exe.getResultsFolder();
+            case RUNS_INDEX:
+                return exe.getRuns();
+            default:
+                return new Object();
+        }
+    }
+
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        ExecutionRecord exe;
+        try {
+            exe = (ExecutionRecord) rows.get(row);
+        }catch(ArrayIndexOutOfBoundsException ex){
+            ex.printStackTrace();
+            exe = null;
+        }
+        if(exe != null) {
+           switch(column) {
+                case SOURCE_FOLDER_INDEX:
+                    try {
+                        exe.setSourceFolder((String)value);
+                        break;
+                    }catch(ClassCastException ex) {
+                        ex.printStackTrace();
+                        exe.setSourceFolder("");
+                    }
+                case RESULTS_FOLDER_INDEX:
+                    try{
+                        exe.setResultsFolder((String)value);
+                        break;
+                    }catch(ClassCastException ex) {
+                        ex.printStackTrace();
+                        exe.setResultsFolder("");
+                    }
+                case RUNS_INDEX:
+                    try{
+                        exe.setRuns((Integer)value);
+                        break;
+                    }catch(ClassCastException ex) {
+                        ex.printStackTrace();
+                        exe.setRuns(1);
+                    }
+                default:
+                    System.err.println("setValueAt - ExecutionPlannerTableModel\n" +
+                                       "---- Invalid Column Index ----");
+            }
+        }
+    }
+
+
+    public void delRow(int row) {
+        if(row < rows.size()) {
+            rows.remove(row);
+        }
+    }
+
+    public void addRow(ExecutionRecord exe) {
+        rows.add(exe);
+        this.fireTableDataChanged();
+    }
 }
