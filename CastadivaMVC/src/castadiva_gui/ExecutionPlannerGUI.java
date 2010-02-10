@@ -36,8 +36,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.model = model;
         
         Vector row = new java.util.Vector();
-        row.add("Name");
-        row.add("Target Folder");
+        row.add("Source folder");
+        row.add("Results folder");
         row.add("Runs");
         tableModel.setColumnIdentifiers(row);
                 JTplanner.setModel(tableModel);

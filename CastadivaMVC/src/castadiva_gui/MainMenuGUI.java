@@ -175,16 +175,24 @@ public class MainMenuGUI extends javax.swing.JFrame {
 
         ApplicationMenu.setText("Application");
 
+        NewMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         NewMenuItem.setText("New");
         ApplicationMenu.add(NewMenuItem);
 
+        LoadMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         LoadMenuItem.setText("Load");
         ApplicationMenu.add(LoadMenuItem);
 
         LoadScenarioMenuItem.setText("Load Scenario");
         LoadScenarioMenuItem.setToolTipText("Only load a scenario");
+        LoadScenarioMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoadScenarioMenuItemActionPerformed(evt);
+            }
+        });
         ApplicationMenu.add(LoadScenarioMenuItem);
 
+        SaveMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         SaveMenuItem.setText("Save");
         ApplicationMenu.add(SaveMenuItem);
 
@@ -208,6 +216,7 @@ public class MainMenuGUI extends javax.swing.JFrame {
 
         ApplicationMenu.add(ExportMenu);
 
+        ExitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         ExitMenuItem.setText("Exit");
         ExitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,12 +229,14 @@ public class MainMenuGUI extends javax.swing.JFrame {
 
         SimulationMenu.setText("Simulation");
 
+        SimulationMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
         SimulationMenuItem.setText("Generate Simulation");
         SimulationMenu.add(SimulationMenuItem);
 
         RandomSimulationMenuItem.setText("Random Simulation");
         SimulationMenu.add(RandomSimulationMenuItem);
 
+        ExecutionPlannerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         ExecutionPlannerMenuItem.setText("Execution Planner");
         SimulationMenu.add(ExecutionPlannerMenuItem);
 
@@ -310,6 +321,10 @@ public class MainMenuGUI extends javax.swing.JFrame {
 private void ProtocolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProtocolMenuItemActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_ProtocolMenuItemActionPerformed
+
+private void LoadScenarioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadScenarioMenuItemActionPerformed
+    // TODO add your handling code here:
+}//GEN-LAST:event_LoadScenarioMenuItemActionPerformed
     
 
     //CityMob
