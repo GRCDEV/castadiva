@@ -14,9 +14,9 @@ import javax.swing.table.AbstractTableModel;
  * @author alvaro
  */
 public class ExecutionPlannerTableModel extends AbstractTableModel{
-    public static final int SOURCE_FOLDER_INDEX = 1;
-    public static final int RESULTS_FOLDER_INDEX = 2;
-    public static final int RUNS_INDEX = 3;
+    public static final int SOURCE_FOLDER_INDEX = 0;
+    public static final int RESULTS_FOLDER_INDEX = 1;
+    public static final int RUNS_INDEX = 2;
 
     private String[] columnNames = {"Source folder", "Results folder", "Runs"};
 
@@ -28,6 +28,11 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
 
     public int getColumnCount() {
         return columnNames.length;
+    }
+
+            @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
     }
 
     @Override
@@ -114,5 +119,12 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
     public void addRow(ExecutionRecord exe) {
         rows.add(exe);
         this.fireTableDataChanged();
+    }
+
+    public ExecutionRecord getRow(int row) {
+        if(row < rows.size()) {
+            return (ExecutionRecord) rows.get(row);
+        }
+        return new ExecutionRecord();
     }
 }

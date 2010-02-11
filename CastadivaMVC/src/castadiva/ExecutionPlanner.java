@@ -6,7 +6,9 @@
 package castadiva;
 
 import castadiva.CastadivaController.ImportNsListener;
+import castadiva.TrafficRecords.ExecutionRecord;
 import castadiva_gui.ExecutionPlannerGUI;
+import castadiva_gui.ExecutionPropiertiesDialog;
 import castadiva_gui.MainMenuGUI;
 import castadiva_gui.NewExternalTrafficGUI;
 import castadiva_gui.SimulationGUI;
@@ -27,6 +29,7 @@ public class ExecutionPlanner {
     private NewExternalTrafficGUI m_attachTraffic;
     private MainMenuGUI m_view;
     private CastadivaController m_control;
+    private ExecutionPropiertiesDialog prop;
 
     ExecutionPlanner(SimulationGUI sim, ExecutionPlannerGUI exec, CastadivaModel model,
                      NewExternalTrafficGUI attach, MainMenuGUI main, CastadivaController control) {
@@ -38,6 +41,12 @@ public class ExecutionPlanner {
         m_view = main;
     }
 
+    void setPropListeners() {
+        prop.addCancelButtonListener(new editExecutionPlannerCancel());
+        prop.addAcceptButtonListener(new editExecutionPlannerAccept());
+        prop.addSourceFolderButton(new editExecutionPlannerSource());
+        prop.addResultsFolderButton(new editExecutionPlannerResults());
+    }
 
     void executionPlannerListenersReady() {
         m_exec.addNewSimulationListener(new newSimulationExecutionPlanner());
@@ -188,7 +197,10 @@ public class ExecutionPlanner {
             if (selected == -1) {
                 JOptionPane.showMessageDialog(null, "You must select a row first.");
             } else {
-                m_model.LoadCastadiva(m_exec.paths.get(selected));
+                prop = new ExecutionPropiertiesDialog(m_exec, true, selected);
+                setPropListeners();
+                prop.setVisible(true);
+/*              m_model.LoadCastadiva(m_exec.paths.get(selected));
                 if(!m_model.mobilityModel.equals("RANDOM WAY POINT")) {
                     m_simulationWindow.ChangeMobilityModel(m_model.mobilityModel);
                 }
@@ -204,7 +216,7 @@ public class ExecutionPlanner {
                 size = (int) Math.max(m_model.GetBoundX(), m_model.GetBoundY());
                 m_simulationWindow.DrawNewSize(size);
                 m_attachTraffic.UpdateWindow();
-                m_simulationWindow.setVisible(true);
+                m_simulationWindow.setVisible(true);*/
             }
         }
     }
@@ -223,6 +235,45 @@ public class ExecutionPlanner {
             } else {
                 JOptionPane.showMessageDialog(null, "You must select a row first");
             }
+        }
+    }
+
+    class editExecutionPlannerCancel implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            prop.dispose();
+        }
+    }
+
+    class editExecutionPlannerAccept implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            Integer selected = prop.getSelectedRow();
+
+            ExecutionRecord exe = m_exec.getRow(selected);
+
+            /*TODO Error checking*/
+            exe.setSourceFolder(prop.getSourceText());
+            exe.setResultsFolder(prop.getResultsText());
+            exe.setRuns(prop.getRuns());
+
+            
+
+            prop.dispose();
+        }
+    }
+
+    class editExecutionPlannerSource implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            prop.dispose();
+        }
+    }
+
+    class editExecutionPlannerResults implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            prop.dispose();
         }
     }
 

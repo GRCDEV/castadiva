@@ -327,8 +327,7 @@ public class SimulationController {
                 finalFile.mkdir();
                 m_model.routingProtocol = m_simulationWindow.ProtocolSelected();
                 m_model.SaveCastadiva(finalFile.getAbsolutePath());
-                executionPlanner.newRow(file.getName());
-                executionPlanner.addPath(finalFile.getAbsolutePath());
+                executionPlanner.newRow(file.getAbsolutePath());
             }
         }
     }

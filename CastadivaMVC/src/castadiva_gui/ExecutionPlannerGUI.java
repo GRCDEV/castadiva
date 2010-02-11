@@ -108,6 +108,10 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             return target;
     }
     
+    public ExecutionRecord getRow(int row) {
+        return tableModel.getRow(row);
+    }
+
     public void deleteRow(int row) {
         tableModel.delRow(row);
         JTplanner.setModel(tableModel);

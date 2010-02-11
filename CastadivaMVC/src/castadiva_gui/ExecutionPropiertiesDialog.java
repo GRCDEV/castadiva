@@ -4,24 +4,56 @@
  */
 
 /*
- * ExecutionPropiertiesGUI.java
+ * ExecutionPropiertiesDialog.java
  *
- * Created on 09-feb-2010, 12:14:35
+ * Created on 11-feb-2010, 12:02:14
  */
 
 package castadiva_gui;
+
+import castadiva.TrafficRecords.ExecutionRecord;
+import java.awt.event.ActionListener;
 
 /**
  *
  * @author alvaro
  */
-public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
+public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
+    int selected;
 
-    /** Creates new form ExecutionPropiertiesGUI */
-    public ExecutionPropiertiesGUI() {
+    /** Creates new form ExecutionPropiertiesDialog */
+    public ExecutionPropiertiesDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
     }
 
+    public ExecutionPropiertiesDialog(java.awt.Frame parent, boolean modal, Integer selected) {
+        super(parent, modal);
+        initComponents();
+        ExecutionPlannerGUI m_exec = (ExecutionPlannerGUI) parent;
+        ExecutionRecord exe = m_exec.getRow(selected);
+        this.selected = selected;
+        this.SourceFoldetText.setText(exe.getSourceFolder());
+        this.ResultsFolderText.setText(exe.getResultsFolder());
+        this.RepetitionsSpinner.setValue(exe.getRuns());
+
+    }
+
+    public Integer getSelectedRow() {
+        return selected;
+    }
+
+    public String getSourceText() {
+        return this.SourceFoldetText.getText();
+    }
+
+    public String getResultsText() {
+        return this.ResultsFolderText.getText();
+    }
+
+    public Integer getRuns() {
+        return (Integer) this.RepetitionsSpinner.getValue();
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -31,25 +63,26 @@ public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        SourceFolderLabel = new javax.swing.JLabel();
         ResultsFolderLabel = new javax.swing.JLabel();
-        RepetitionsLabel = new javax.swing.JLabel();
-        SourceFoldetText = new javax.swing.JTextField();
-        SourceFolderButton = new javax.swing.JButton();
-        ResultsFolderText = new javax.swing.JTextField();
-        ResultsFolderButton = new javax.swing.JButton();
-        RepetitionsSpinner = new javax.swing.JSpinner();
+        SourceFolderLabel = new javax.swing.JLabel();
         AcceptButton = new javax.swing.JButton();
+        ResultsFolderText = new javax.swing.JTextField();
+        SourceFolderButton = new javax.swing.JButton();
+        SourceFoldetText = new javax.swing.JTextField();
+        RepetitionsLabel = new javax.swing.JLabel();
+        RepetitionsSpinner = new javax.swing.JSpinner();
+        ResultsFolderButton = new javax.swing.JButton();
         CancelButton = new javax.swing.JButton();
 
         setTitle("Edit propierties");
-        setAlwaysOnTop(true);
-
-        SourceFolderLabel.setText("Source Folder");
 
         ResultsFolderLabel.setText("Results Folder");
 
-        RepetitionsLabel.setText("Repetitions");
+        SourceFolderLabel.setText("Source Folder");
+
+        AcceptButton.setText("Accept");
+
+        SourceFolderButton.setText("Search...");
 
         SourceFoldetText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -57,11 +90,9 @@ public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
             }
         });
 
-        SourceFolderButton.setText("Search...");
+        RepetitionsLabel.setText("Repetitions");
 
         ResultsFolderButton.setText("Search...");
-
-        AcceptButton.setText("Accept");
 
         CancelButton.setText("Cancel");
 
@@ -69,6 +100,7 @@ public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 499, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -90,10 +122,11 @@ public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
                             .addComponent(ResultsFolderButton)
                             .addComponent(SourceFolderButton)))
                     .addComponent(RepetitionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 201, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -121,8 +154,11 @@ public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
 
     private void SourceFoldetTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SourceFoldetTextActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SourceFoldetTextActionPerformed
+}//GEN-LAST:event_SourceFoldetTextActionPerformed
 
+    /**
+    * @param args the command line arguments
+    */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AcceptButton;
     private javax.swing.JButton CancelButton;
@@ -136,4 +172,23 @@ public class ExecutionPropiertiesGUI extends javax.swing.JFrame {
     private javax.swing.JTextField SourceFoldetText;
     // End of variables declaration//GEN-END:variables
 
+
+    /*************************************
+     *              LISTENERS            *
+     *************************************/
+    public void addCancelButtonListener(ActionListener a) {
+        CancelButton.addActionListener(a);
+    }
+
+    public void addAcceptButtonListener(ActionListener a) {
+        AcceptButton.addActionListener(a);
+    }
+
+    public void addSourceFolderButton(ActionListener a){
+        SourceFolderButton.addActionListener(a);
+    }
+
+    public void addResultsFolderButton(ActionListener a) {
+        ResultsFolderButton.addActionListener(a);
+    }
 }
