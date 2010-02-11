@@ -114,7 +114,11 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
     public void deleteRow(int row) {
         tableModel.delRow(row);
-        JTplanner.setModel(tableModel);
+        tableModel.fireTableDataChanged();
+    }
+
+     public void updateTable() {
+        tableModel.fireTableDataChanged();
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -273,4 +277,5 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     private javax.swing.JTable JTplanner;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
 }

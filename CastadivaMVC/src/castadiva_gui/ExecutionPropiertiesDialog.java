@@ -51,6 +51,14 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
         return this.ResultsFolderText.getText();
     }
 
+    public void setSourceText(String text){
+        this.SourceFoldetText.setText(text);
+    }
+
+    public void setResultsText(String text) {
+        this.ResultsFolderText.setText(text);
+    }
+
     public Integer getRuns() {
         return (Integer) this.RepetitionsSpinner.getValue();
     }

@@ -257,7 +257,7 @@ public class ExecutionPlanner {
             exe.setResultsFolder(prop.getResultsText());
             exe.setRuns(prop.getRuns());
 
-            
+            m_exec.updateTable();
 
             prop.dispose();
         }
@@ -266,7 +266,18 @@ public class ExecutionPlanner {
     class editExecutionPlannerSource implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
-            prop.dispose();
+            File f = new File(m_model.pathScenario);
+            JFileChooser select = new JFileChooser(f);
+            int selection = select.showDialog(prop, "Select");
+            if (selection == JFileChooser.APPROVE_OPTION) {
+                File file = select.getSelectedFile();
+                String fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
+                File finalFile = new File(fileTemp);
+                finalFile.mkdir();
+                m_model.routingProtocol = m_simulationWindow.ProtocolSelected();
+                m_model.SaveCastadiva(finalFile.getAbsolutePath());
+                prop.setSourceText(finalFile.getAbsolutePath());
+            }
         }
     }
 
