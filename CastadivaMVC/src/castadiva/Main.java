@@ -14,7 +14,8 @@ import castadiva_gui.SimulationGUI;
 import castadiva_gui.MobilityDesignerGUI;
 import castadiva_gui.InstallApGUI;
 import castadiva_gui.ExecutionPlannerGUI;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -29,7 +30,7 @@ public class Main {
 
     /** Creates a new instance of Main */
     public Main() {
-        try {
+        /*try {
             // Set cross-platform Java L&F (also called "Metal")
             UIManager.setLookAndFeel(
                     UIManager.getCrossPlatformLookAndFeelClassName());
@@ -41,13 +42,36 @@ public class Main {
         // handle exception
         } catch (IllegalAccessException e) {
         // handle exception
-        }
+        }*/
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+                try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            } catch (ClassNotFoundException ex1) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (InstantiationException ex1) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (IllegalAccessException ex1) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (UnsupportedLookAndFeelException ex1) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        
         CastadivaModel model = new CastadivaModel();
         MainMenuGUI view = new MainMenuGUI(model);
         AboutBox about = new AboutBox(model);
