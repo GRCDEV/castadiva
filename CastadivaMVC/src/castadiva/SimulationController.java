@@ -15,7 +15,9 @@ import castadiva_gui.TrafficGUI;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FilenameFilter;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -319,15 +321,40 @@ public class SimulationController {
         public void actionPerformed(ActionEvent arg0) {
             File f = new File(m_model.pathScenario);
             JFileChooser save = new JFileChooser(f);
+            save.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int selection = save.showSaveDialog(save);
             if (selection == JFileChooser.APPROVE_OPTION) {
                 File file = save.getSelectedFile();
-                String fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
-                File finalFile = new File(fileTemp);
-                finalFile.mkdir();
+                String fileTemp;
+                File finalFile;
+
+                String [] list = file.list(new ScenarioFilenameFilter());
+                if(file.getName().equals("Scenario") || list.length > 0) {
+                    int select = JOptionPane.showConfirmDialog(m_simulationWindow, "Are you sure to overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION);
+                    if(select == JOptionPane.CANCEL_OPTION) {
+                        return;
+                    }
+                    if(file.getName().equals("Scenario")) {
+                        fileTemp = file.getAbsolutePath();
+                        file = file.getParentFile();
+                        finalFile = new File(fileTemp);
+                    }else{
+                        fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
+                        finalFile = new File(fileTemp);
+                        finalFile.mkdir();
+                    }
+                    
+                }else{
+                    fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
+                    finalFile = new File(fileTemp);
+                    finalFile.mkdir();
+                }
+                m_model.pathScenario = finalFile.getAbsolutePath();
                 m_model.routingProtocol = m_simulationWindow.ProtocolSelected();
                 m_model.SaveCastadiva(finalFile.getAbsolutePath());
-                executionPlanner.newRow(file.getAbsolutePath());
+                if(m_simulationWindow.isExecutionPlanner()) {
+                    executionPlanner.newRow(file.getAbsolutePath());
+                }
             }
         }
     }
@@ -355,5 +382,12 @@ public class SimulationController {
         }
     }
 
+    public class ScenarioFilenameFilter implements FilenameFilter{
+
+        public boolean accept(File dir, String name) {
+            return name.equals("Scenario");
+        }
+
+    }
 
 }

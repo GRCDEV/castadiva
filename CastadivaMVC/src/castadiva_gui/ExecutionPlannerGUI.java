@@ -70,7 +70,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         exe.setRuns(1);
         
         tableModel.addRow(exe);
-        JTplanner.setModel(tableModel);
+        updateTable();
     }
     
     public int getNumberSelectedRow() {
@@ -114,7 +114,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
     public void deleteRow(int row) {
         tableModel.delRow(row);
-        tableModel.fireTableDataChanged();
+        updateTable();
     }
 
      public void updateTable() {

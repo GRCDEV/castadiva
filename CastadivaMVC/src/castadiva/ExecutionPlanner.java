@@ -6,6 +6,7 @@
 package castadiva;
 
 import castadiva.CastadivaController.ImportNsListener;
+import castadiva.SimulationController.SimulateListener;
 import castadiva.TrafficRecords.ExecutionRecord;
 import castadiva_gui.ExecutionPlannerGUI;
 import castadiva_gui.ExecutionPropiertiesDialog;
@@ -15,6 +16,8 @@ import castadiva_gui.SimulationGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -144,18 +147,28 @@ public class ExecutionPlanner {
             if (!(file = m_control.ExplorationWindow("Load",
                     JFileChooser.DIRECTORIES_ONLY)).equals("")) {
                 /*TODO Cargar correctamente escenario
-                 alksjhdflkjahsd lkfh
-                 * alsjkdhf lkahs dlfha lsdhf lnxcv ob
-                 * 
                  */
                 m_model.Reset();
                 m_model.LoadAP(file);
-                m_simulationWindow.setVisible(true);
+                
+                m_simulationWindow.setExecutionPlanner(true);
+                m_simulationWindow.addSimulateButtonListener(new executionPlannerLoadScenarySimulationButton());
                 m_simulationWindow.FillFields();
                 m_simulationWindow.FillAPComboBox();
                 m_simulationWindow.ActivateButtons(true);
+                m_simulationWindow.setVisible(true);
+                
             }
         }
+    }
+
+    class executionPlannerLoadScenarySimulationButton implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+           //TODO finish simulationlistener
+            //m_simulationWindow.addSimulateButtonListener(new SimulateListener());
+        }
+
     }
 
     class generateSimulationsExecutionPlanner implements ActionListener {
@@ -230,7 +243,7 @@ public class ExecutionPlanner {
                         "You are going to delete a simulation, are you sure?", "WARNING",
                         JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    deleteSimulation();
+                    m_exec.deleteRow(m_exec.getNumberSelectedRow());
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You must select a row first");
@@ -252,7 +265,7 @@ public class ExecutionPlanner {
 
             ExecutionRecord exe = m_exec.getRow(selected);
 
-            /*TODO Error checking*/
+            //TODO Error checking
             exe.setSourceFolder(prop.getSourceText());
             exe.setResultsFolder(prop.getResultsText());
             exe.setRuns(prop.getRuns());
@@ -268,15 +281,19 @@ public class ExecutionPlanner {
         public void actionPerformed(ActionEvent arg0) {
             File f = new File(m_model.pathScenario);
             JFileChooser select = new JFileChooser(f);
+            select.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int selection = select.showDialog(prop, "Select");
             if (selection == JFileChooser.APPROVE_OPTION) {
                 File file = select.getSelectedFile();
-                String fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
-                File finalFile = new File(fileTemp);
-                finalFile.mkdir();
-                m_model.routingProtocol = m_simulationWindow.ProtocolSelected();
-                m_model.SaveCastadiva(finalFile.getAbsolutePath());
-                prop.setSourceText(finalFile.getAbsolutePath());
+                if(file.getName().equals("")) {
+                   JOptionPane.showMessageDialog(prop, "File not valid");
+                }else{
+                    if(file.getName().equals("Scenario")) {
+                        file = file.getParentFile();
+                    }
+                    prop.setSourceText(file.getAbsolutePath());
+                    m_model.pathScenario = file.getAbsolutePath();
+                }
             }
         }
     }
@@ -284,8 +301,22 @@ public class ExecutionPlanner {
     class editExecutionPlannerResults implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
-            prop.dispose();
+            File f = new File(m_model.pathScenario);
+            JFileChooser select = new JFileChooser(f);
+            select.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int selection = select.showDialog(prop, "Select");
+            if (selection == JFileChooser.APPROVE_OPTION) {
+                File file = select.getSelectedFile();
+                if(file.getName().equals("")) {
+                   JOptionPane.showMessageDialog(prop, "File not valid");
+                }else{
+                    if(file.getName().equals("Scenario") || file.getName().equals("Results")) {
+                        file = file.getParentFile();
+                    }
+                    m_model.pathScenario = file.getAbsolutePath();
+                    prop.setResultsText(file.getAbsolutePath());
+                }
+            }
         }
     }
-
 }

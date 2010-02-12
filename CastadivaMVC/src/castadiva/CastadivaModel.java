@@ -215,7 +215,7 @@ public class CastadivaModel {
     public IMobilityPluginCastadiva[] mob_plugins = new IMobilityPluginCastadiva[]{};
     public String mobilityModel = "RANDOM WAY POINT";
     //Ruta por defecto del planificador de ejecucioens
-    public String pathScenario = "/home/nacho/Documentos/Castadiva/NetbeansProject/Scenarios/";
+    public String pathScenario = "/Castadiva/Scenarios/";
     public boolean executionPlannerSimulating = false;
     public String pathTarget = "";
     public int plannerLoops = 0;

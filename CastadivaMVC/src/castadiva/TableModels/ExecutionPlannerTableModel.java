@@ -118,7 +118,6 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
 
     public void addRow(ExecutionRecord exe) {
         rows.add(exe);
-        this.fireTableDataChanged();
     }
 
     public ExecutionRecord getRow(int row) {
