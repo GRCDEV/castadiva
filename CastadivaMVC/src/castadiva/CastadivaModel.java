@@ -84,7 +84,7 @@ public class CastadivaModel {
     private final String DEFAULT_SHELL_LAUNCHER_X86 = "bash";
     private final String DEFAULT_SHELL_LAUNCHER_MIPS = "sh";
     private final String FILE_COMPUTER = "Computer.dat";
-    private final String FILE_APS = "APs.dat";
+    public final String FILE_APS = "APs.dat";
     private final String FILE_SCENARIO = "Scenario.dat";
     private final String FILE_EXTERNAL_TRAFFIC = "ExternalTraffic.dat";
     private String STARTING_FOLDER = "/";
@@ -4499,9 +4499,6 @@ public class CastadivaModel {
      * @see LoadComputer
      */
     void LoadCastadiva(String folder) {
-        String filestart = File.separator;
-        String decoyFolder = null;
-
         //Stop all previous simulations.
         Reset();
         //Load files.

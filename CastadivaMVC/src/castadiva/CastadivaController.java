@@ -192,6 +192,10 @@ public class CastadivaController {
         m_view.addImportNsCitymob(new ImportCitymobListener());
     }
 
+    void setDefaultSimulationControllers() {
+        simulationControl.SimulationAllListenersReady();
+    }
+
     class ImportNsListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
@@ -1319,6 +1323,32 @@ public class CastadivaController {
                 t.printStackTrace();
             }
         }
+    }
+    
+    public class ScenarioFilenameFilter implements FilenameFilter{
+
+        public boolean accept(File dir, String name) {
+            return name.equals("Scenario");
+        }
+
+    }
+
+    public Boolean isScenarioDir(File f) {
+        if(f.exists()) {
+            if(f.getName().equals("Scenario")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Boolean hasScenarioDir(File f) {
+        if(f.exists()) {
+            if(f.listFiles(new ScenarioFilenameFilter()).length > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

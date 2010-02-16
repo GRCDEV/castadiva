@@ -26,6 +26,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
     private boolean grid = true;
     private boolean speedLine = false;
     private boolean executionPlanner = false;
+    private boolean added = false;
 
     public SimulationGUI(CastadivaModel model) {
         m_model = model;
@@ -59,6 +60,14 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
     public void setExecutionPlanner(boolean executionPlanner) {
         this.executionPlanner = executionPlanner;
+    }
+
+    public boolean isAdded() {
+        return this.added;
+    }
+
+    public void setAdded(boolean added) {
+        this.added = added;
     }
 
     public void GetNewSize() {
@@ -1626,6 +1635,10 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
     public void updateRout(String news) {
         jComboBox1.addItem(news);
+    }
+
+    public void changeSimulateButtonText(String string) {
+        this.SimulateButton.setText(string);
     }
 }
 

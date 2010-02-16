@@ -85,26 +85,25 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     }
     
     public int getRuns(int n) {
-         String temp = tableModel.getValueAt(n, 2).toString();
-         Integer i = Integer.parseInt(temp);
+         Integer i = getRow(n).getRuns();
          return i;
     }
     
     public String getSimulationName() {
             if(this.getNumberSelectedRow() != -1) {
-                return JTplanner.getValueAt(this.getNumberSelectedRow(), 0).toString();
+                return getRow(getNumberSelectedRow()).getSourceFolder();
             }
             else return "";
     }
     
     public String getSimulationName(int n) {
-         String temp = tableModel.getValueAt(n, 0).toString();
+         String temp = getRow(n).getSourceFolder();
          return temp;
     }
     
     public String getTargetFolder(int n) {
             String target = "";
-            target = tableModel.getValueAt(n, 1).toString();
+            target = getRow(n).getResultsFolder();
             return target;
     }
     

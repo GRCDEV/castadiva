@@ -6,7 +6,6 @@
 package castadiva;
 
 import castadiva.CastadivaController.ImportNsListener;
-import castadiva.SimulationController.SimulateListener;
 import castadiva.TrafficRecords.ExecutionRecord;
 import castadiva_gui.ExecutionPlannerGUI;
 import castadiva_gui.ExecutionPropiertiesDialog;
@@ -16,8 +15,6 @@ import castadiva_gui.SimulationGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -121,7 +118,6 @@ public class ExecutionPlanner {
         m_exec.deleteRow(selected);
     }
 
-
     /****************************************************************\
      *                         LISTENERS                            *
     \****************************************************************/
@@ -136,37 +132,58 @@ public class ExecutionPlanner {
 
     class LoadScenaryExecutionPlanner implements ActionListener {
 
-        public void actionPerformed(ActionEvent e) {/*
-            String name = "";
-            do {
-            name = JOptionPane.showInputDialog(null,
-            "Insert a name for the simulation");
-            }while(name.equals(""));
-             */
+        public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = m_control.ExplorationWindow("Load",
                     JFileChooser.DIRECTORIES_ONLY)).equals("")) {
                 /*TODO Cargar correctamente escenario
                  */
-                m_model.Reset();
-                m_model.LoadAP(file);
-                
-                m_simulationWindow.setExecutionPlanner(true);
-                m_simulationWindow.addSimulateButtonListener(new executionPlannerLoadScenarySimulationButton());
-                m_simulationWindow.FillFields();
-                m_simulationWindow.FillAPComboBox();
-                m_simulationWindow.ActivateButtons(true);
-                m_simulationWindow.setVisible(true);
-                
+                File f1 = new File(file);
+
+                if (m_control.hasScenarioDir(f1)) {
+                    f1 = new File(f1.getAbsolutePath() + File.separator + "Scenario");
+                }
+                if (m_control.isScenarioDir(f1)) {
+                    File APfile = new File(f1.getAbsolutePath() + File.separator + m_model.FILE_APS);
+                    m_model.Reset();
+                    m_model.LoadAP(APfile.getAbsolutePath());
+
+                    m_simulationWindow.setExecutionPlanner(true);
+                    m_simulationWindow.changeSimulateButtonText("Accept");
+                    executionPlannerLoadScenarySimulationButton eplsb = new executionPlannerLoadScenarySimulationButton();
+                    eplsb.setName(f1.getAbsolutePath());
+                    m_simulationWindow.addSimulateButtonListener(eplsb);
+                    m_simulationWindow.FillFields();
+                    m_simulationWindow.FillAPComboBox();
+                    m_simulationWindow.ActivateButtons(true);
+                    m_exec.setVisible(false);
+                    m_simulationWindow.setVisible(true);
+
+                }else{
+                     JOptionPane.showMessageDialog(m_exec,"This directory does not seem to contain a castadiva simulation.");
+                }
             }
         }
     }
 
     class executionPlannerLoadScenarySimulationButton implements ActionListener {
-
+        String name;
         public void actionPerformed(ActionEvent e) {
            //TODO finish simulationlistener
-            //m_simulationWindow.addSimulateButtonListener(new SimulateListener());
+           m_simulationWindow.setExecutionPlanner(false);
+           if(!m_simulationWindow.isAdded()) {
+               m_exec.newRow(name);
+           }else{
+               m_simulationWindow.setAdded(false);
+           }
+           m_simulationWindow.setExecutionPlanner(false);
+           m_control.setDefaultSimulationControllers();
+           m_simulationWindow.setVisible(false);
+           m_exec.setVisible(true);
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
     }
@@ -175,7 +192,7 @@ public class ExecutionPlanner {
 
         public void actionPerformed(ActionEvent arg0) {
             if (m_exec.getNumberOfRows() != -1) {
-                m_model.LoadCastadiva(m_exec.paths.get(0).toString());
+                m_model.LoadCastadiva(m_exec.getTargetFolder(0));
                 if(!m_model.mobilityModel.equals("RANDOM WAY POINT")) {
                     m_simulationWindow.ChangeMobilityModel(m_model.mobilityModel);
                 }

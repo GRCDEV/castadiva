@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package castadiva;
 
 import castadiva.CastadivaController.CheckSimulationThread;
@@ -24,6 +23,7 @@ import javax.swing.JOptionPane;
  * @author alvaro
  */
 public class SimulationController {
+
     private SimulationGUI m_simulationWindow;
     private ExecutionPlanner executionPlanner;
     private CastadivaModel m_model;
@@ -36,9 +36,9 @@ public class SimulationController {
     private MobilityDesignerGUI mobDes;
 
     SimulationController(SimulationGUI sim_window, ExecutionPlanner exe, CastadivaModel model, TrafficGUI traffic,
-                         RandomSimulationGUI random, CheckSimulationThread checkSim,
-                         CastadivaController control, ProtocolsGUI proto,
-                         MobilityDesignerGUI mobilityDesigner, MainMenuGUI view){
+            RandomSimulationGUI random, CheckSimulationThread checkSim,
+            CastadivaController control, ProtocolsGUI proto,
+            MobilityDesignerGUI mobilityDesigner, MainMenuGUI view) {
         m_simulationWindow = sim_window;
         m_model = model;
         m_trafficGUI = traffic;
@@ -49,12 +49,13 @@ public class SimulationController {
         mobDes = mobilityDesigner;
         executionPlanner = exe;
         m_view = view;
-        
+
     }
 
     public void SetExecutionPlanner(ExecutionPlanner execution) {
         executionPlanner = execution;
     }
+
     /**
      *  Insert the listeners of this window
      */
@@ -164,8 +165,9 @@ public class SimulationController {
 
         public void actionPerformed(ActionEvent e) {
             m_model.StopSimulation();
-            if(m_simulationWindow.isExecutionPlanner()) {
-              m_simulationWindow.setExecutionPlanner(false);
+            if (m_simulationWindow.isExecutionPlanner()) {
+                m_simulationWindow.setAdded(false);
+                m_simulationWindow.setExecutionPlanner(false);
             } else {
                 m_view.setVisible(true);
             }
@@ -328,23 +330,22 @@ public class SimulationController {
                 String fileTemp;
                 File finalFile;
 
-                String [] list = file.list(new ScenarioFilenameFilter());
-                if(file.getName().equals("Scenario") || list.length > 0) {
+                if (controller.hasScenarioDir(file) || controller.isScenarioDir(file)) {
                     int select = JOptionPane.showConfirmDialog(m_simulationWindow, "Are you sure to overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION);
-                    if(select == JOptionPane.CANCEL_OPTION) {
+                    if (select == JOptionPane.CANCEL_OPTION) {
                         return;
                     }
-                    if(file.getName().equals("Scenario")) {
+                    if (controller.isScenarioDir(file)) {
                         fileTemp = file.getAbsolutePath();
                         file = file.getParentFile();
                         finalFile = new File(fileTemp);
-                    }else{
+                    } else {
                         fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
                         finalFile = new File(fileTemp);
                         finalFile.mkdir();
                     }
-                    
-                }else{
+
+                } else {
                     fileTemp = file.getAbsolutePath() + File.separator + "Scenario";
                     finalFile = new File(fileTemp);
                     finalFile.mkdir();
@@ -352,7 +353,8 @@ public class SimulationController {
                 m_model.pathScenario = finalFile.getAbsolutePath();
                 m_model.routingProtocol = m_simulationWindow.ProtocolSelected();
                 m_model.SaveCastadiva(finalFile.getAbsolutePath());
-                if(m_simulationWindow.isExecutionPlanner()) {
+                if (m_simulationWindow.isExecutionPlanner()) {
+                    m_simulationWindow.setAdded(true);
                     executionPlanner.newRow(file.getAbsolutePath());
                 }
             }
@@ -381,13 +383,4 @@ public class SimulationController {
             m_view.setVisible(false);
         }
     }
-
-    public class ScenarioFilenameFilter implements FilenameFilter{
-
-        public boolean accept(File dir, String name) {
-            return name.equals("Scenario");
-        }
-
-    }
-
 }
