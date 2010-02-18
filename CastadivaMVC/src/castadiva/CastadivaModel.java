@@ -70,6 +70,7 @@ public class CastadivaModel {
     float visibilityMatrix[][];
     Integer gatewayMatrix[][];
     //Default folders variables
+
     private final String STATISTICS_UDP_DESTINATION_FILE = "CastadivaUdpDestino";
     private final String STATISTICS_TCP_DESTINATION_FILE = "CastadivaTcpDestino";
     private final String INSTRUCTIONS_SERVER_FILE = "serverForNode.sh";
@@ -4500,6 +4501,10 @@ public class CastadivaModel {
      */
     void LoadCastadiva(String folder) {
         //Stop all previous simulations.
+        File f = new File(folder);
+        if(!f.getName().equals("Scenario")) {
+            folder = folder + File.separator + "Scenario";
+        }
         Reset();
         //Load files.
         LoadComputer(folder);

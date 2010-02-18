@@ -122,10 +122,24 @@ public class SimulationController {
     class SimulateListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            PreviousSimulationSteaps();
-            m_model.isRandomTraffic = false;
-            m_model.AllSimulationSteaps();
-            m_simulationWindow.RunningSimulationView();
+            if (m_simulationWindow.isExecutionPlanner()) {
+                m_simulationWindow.setExecutionPlanner(false);
+                if (m_simulationWindow.getLoadPath() != null) {
+                    executionPlanner.newRow(m_simulationWindow.getLoadPath());
+                    m_simulationWindow.setLoadPath(null);
+                } else {
+                    JOptionPane.showMessageDialog(m_simulationWindow, "Unable to add Scenario.");
+                }
+                m_simulationWindow.setExecutionPlanner(false);
+                m_simulationWindow.setVisible(false);
+                m_simulationWindow.changeSimulateButtonText("New Simulation");
+                executionPlanner.setVisible(true);
+            } else {
+                PreviousSimulationSteaps();
+                m_model.isRandomTraffic = false;
+                m_model.AllSimulationSteaps();
+                m_simulationWindow.RunningSimulationView();
+            }
         }
     }
 
@@ -165,13 +179,13 @@ public class SimulationController {
 
         public void actionPerformed(ActionEvent e) {
             m_model.StopSimulation();
+            m_simulationWindow.setVisible(false);
             if (m_simulationWindow.isExecutionPlanner()) {
-                m_simulationWindow.setAdded(false);
                 m_simulationWindow.setExecutionPlanner(false);
+                executionPlanner.setVisible(true);
             } else {
                 m_view.setVisible(true);
-            }
-            m_simulationWindow.setVisible(false);
+            }            
         }
     }
 
@@ -354,8 +368,9 @@ public class SimulationController {
                 m_model.routingProtocol = m_simulationWindow.ProtocolSelected();
                 m_model.SaveCastadiva(finalFile.getAbsolutePath());
                 if (m_simulationWindow.isExecutionPlanner()) {
-                    m_simulationWindow.setAdded(true);
-                    executionPlanner.newRow(file.getAbsolutePath());
+                    m_simulationWindow.setLoadPath(file.getAbsolutePath());
+                    /*m_simulationWindow.setAdded(true);
+                    executionPlanner.newRow(file.getAbsolutePath());*/
                 }
             }
         }

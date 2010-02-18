@@ -234,16 +234,15 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
         Frame.setEnabled(activation);
         TrafficButton.setEnabled(activation);
         if(this.executionPlanner) {
-            SimulateButton.setEnabled(false);
             ReplaySimulationButton.setEnabled(false);
             StopSimulationButton.setEnabled(false);
             ResetButton.setEnabled(false);
         }else {
-            SimulateButton.setEnabled(activation);
             ReplaySimulationButton.setEnabled(activation);
             StopSimulationButton.setEnabled(activation);
             ResetButton.setEnabled(activation);
         }
+        SimulateButton.setEnabled(activation);
         RandomSceneryButton.setEnabled(activation);
 
     }
@@ -1639,6 +1638,16 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
     public void changeSimulateButtonText(String string) {
         this.SimulateButton.setText(string);
+    }
+
+    private String loadPath;
+
+    public String getLoadPath() {
+        return loadPath;
+    }
+
+    public void setLoadPath(String path) {
+        loadPath = path;
     }
 }
 

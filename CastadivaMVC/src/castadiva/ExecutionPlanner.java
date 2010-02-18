@@ -150,9 +150,7 @@ public class ExecutionPlanner {
 
                     m_simulationWindow.setExecutionPlanner(true);
                     m_simulationWindow.changeSimulateButtonText("Accept");
-                    executionPlannerLoadScenarySimulationButton eplsb = new executionPlannerLoadScenarySimulationButton();
-                    eplsb.setName(f1.getAbsolutePath());
-                    m_simulationWindow.addSimulateButtonListener(eplsb);
+                    m_simulationWindow.setLoadPath(f1.getAbsolutePath());
                     m_simulationWindow.FillFields();
                     m_simulationWindow.FillAPComboBox();
                     m_simulationWindow.ActivateButtons(true);
@@ -164,28 +162,6 @@ public class ExecutionPlanner {
                 }
             }
         }
-    }
-
-    class executionPlannerLoadScenarySimulationButton implements ActionListener {
-        String name;
-        public void actionPerformed(ActionEvent e) {
-           //TODO finish simulationlistener
-           m_simulationWindow.setExecutionPlanner(false);
-           if(!m_simulationWindow.isAdded()) {
-               m_exec.newRow(name);
-           }else{
-               m_simulationWindow.setAdded(false);
-           }
-           m_simulationWindow.setExecutionPlanner(false);
-           m_control.setDefaultSimulationControllers();
-           m_simulationWindow.setVisible(false);
-           m_exec.setVisible(true);
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
     }
 
     class generateSimulationsExecutionPlanner implements ActionListener {

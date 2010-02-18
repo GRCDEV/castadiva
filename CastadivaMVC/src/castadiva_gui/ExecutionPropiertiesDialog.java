@@ -83,6 +83,9 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
         CancelButton = new javax.swing.JButton();
 
         setTitle("Edit propierties");
+        setLocationByPlatform(true);
+        setModal(true);
+        setResizable(false);
 
         ResultsFolderLabel.setText("Results Folder");
 
@@ -100,6 +103,12 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
 
         RepetitionsLabel.setText("Repetitions");
 
+        RepetitionsSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                RepetitionsSpinnerStateChanged(evt);
+            }
+        });
+
         ResultsFolderButton.setText("Search...");
 
         CancelButton.setText("Cancel");
@@ -108,7 +117,6 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 499, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,12 +137,11 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ResultsFolderButton)
                             .addComponent(SourceFolderButton)))
-                    .addComponent(RepetitionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(RepetitionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 201, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -163,6 +170,12 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
     private void SourceFoldetTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SourceFoldetTextActionPerformed
         // TODO add your handling code here:
 }//GEN-LAST:event_SourceFoldetTextActionPerformed
+
+    private void RepetitionsSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_RepetitionsSpinnerStateChanged
+        if((Integer)RepetitionsSpinner.getValue() < 1 ){
+            RepetitionsSpinner.setValue(1);
+        }
+    }//GEN-LAST:event_RepetitionsSpinnerStateChanged
 
     /**
     * @param args the command line arguments

@@ -1342,6 +1342,11 @@ public class CastadivaController {
         return false;
     }
 
+    public Boolean isScenarioDir(String s) {
+        File f = new File(s);
+        return isScenarioDir(f);
+    }
+
     public Boolean hasScenarioDir(File f) {
         if(f.exists()) {
             if(f.listFiles(new ScenarioFilenameFilter()).length > 0) {
@@ -1349,6 +1354,11 @@ public class CastadivaController {
             }
         }
         return false;
+    }
+
+    public Boolean hasScenarioDir(String s){
+        File f = new File(s);
+        return hasScenarioDir(f);
     }
 }
 
