@@ -26,7 +26,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     Vector<String> simulaciones = new Vector<String>();
     public Vector<String>paths = new Vector<String>();
     int numSim = 0;
-    public int scenario = 0;
     ExecutionPlannerTableModel tableModel = new ExecutionPlannerTableModel();
 
     /** Creates new form executionPlannerGUI */
@@ -63,6 +62,9 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             }
             columnaTabla.setPreferredWidth(columnWidth);
         }
+
+        // Activates and desactivates buttons
+        setButtonsForConfiguration();
     }
 
     public void newRow(String name) {                
@@ -124,6 +126,14 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         tableModel.fireTableDataChanged();
     }
 
+    /**
+     * @author Wannes
+     * This function returns the current status depending on the simulation time
+     * Note : the status information should probably not be stored in the GUI
+     * but it is also done in the SimulationGUI class
+     * @param row
+     * @see SimulationGUI.ConsoleText()
+     */
     public void SetStatus(int row) {
         ExecutionRecord record = getRow(row);
         if (model.WhatStopwatch() > 0 && model.WhatStopwatch() < model.GetProtocolLoadingTimeWaiting()) {
@@ -142,6 +152,32 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             record.setStatus("Retrieving data from AP. ");
         }
         this.updateTable();
+    }
+
+    public void setButtonsForSimulation()
+    {
+        this.JBclose.setEnabled(false);
+        this.JBdelete.setEnabled(false);
+        this.JBedit.setEnabled(false);
+        this.JBgenerate.setEnabled(false);
+        this.JBimportcity.setEnabled(false);
+        this.JBimportsc.setEnabled(false);
+        this.JBloadsim.setEnabled(false);
+        this.JBnewsim.setEnabled(false);
+        this.JBStopSimulations.setEnabled(true);
+    }
+
+    public void setButtonsForConfiguration()
+    {
+        this.JBclose.setEnabled(true);
+        this.JBdelete.setEnabled(true);
+        this.JBedit.setEnabled(true);
+        this.JBgenerate.setEnabled(true);
+        this.JBimportcity.setEnabled(true);
+        this.JBimportsc.setEnabled(true);
+        this.JBloadsim.setEnabled(true);
+        this.JBnewsim.setEnabled(true);
+        this.JBStopSimulations.setEnabled(false);
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -166,6 +202,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
+        JBStopSimulations = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CASTADIVA - Execution Planner");
@@ -206,6 +243,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
         JBnewsim.setText("New Simulation");
 
+        JBStopSimulations.setText("Stop Simulations");
+
         javax.swing.GroupLayout ButtonsPanelLayout = new javax.swing.GroupLayout(ButtonsPanel);
         ButtonsPanel.setLayout(ButtonsPanelLayout);
         ButtonsPanelLayout.setHorizontalGroup(
@@ -220,11 +259,12 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                     .addComponent(JBnewsim, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                     .addComponent(JBloadsim, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                     .addComponent(JBimportsc, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBclose, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBgenerate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                     .addComponent(JBdelete, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                     .addComponent(JBedit, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBimportcity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
+                    .addComponent(JBimportcity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                    .addComponent(JBclose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                    .addComponent(JBStopSimulations, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                    .addComponent(JBgenerate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
                 .addContainerGap())
         );
         ButtonsPanelLayout.setVerticalGroup(
@@ -250,11 +290,13 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(112, 112, 112)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(JBgenerate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JBStopSimulations)
+                .addGap(5, 5, 5)
                 .addComponent(JBclose)
-                .addGap(46, 46, 46))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -273,7 +315,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
                     .addComponent(ButtonsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -312,9 +354,14 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     public void addGenerateSimulationButtonListener(ActionListener a1) {
         JBgenerate.addActionListener(a1);
     }
+
+    public void addStopSimulationsButtonListener(ActionListener a1) {
+        JBStopSimulations.addActionListener(a1);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ButtonsPanel;
+    private javax.swing.JButton JBStopSimulations;
     private javax.swing.JButton JBclose;
     private javax.swing.JButton JBdelete;
     private javax.swing.JButton JBedit;

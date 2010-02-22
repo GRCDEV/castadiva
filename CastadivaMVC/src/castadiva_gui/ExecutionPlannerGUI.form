@@ -37,7 +37,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="646" max="32767" attributes="1"/>
+                  <Component id="jScrollPane1" alignment="0" pref="652" max="32767" attributes="1"/>
                   <Component id="ButtonsPanel" alignment="0" max="32767" attributes="2"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -100,7 +100,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jSeparator4" alignment="1" pref="205" max="32767" attributes="0"/>
@@ -110,11 +110,12 @@
                       <Component id="JBnewsim" alignment="0" pref="205" max="32767" attributes="1"/>
                       <Component id="JBloadsim" alignment="0" pref="205" max="32767" attributes="0"/>
                       <Component id="JBimportsc" alignment="0" pref="205" max="32767" attributes="0"/>
-                      <Component id="JBclose" alignment="0" pref="205" max="32767" attributes="3"/>
-                      <Component id="JBgenerate" alignment="1" pref="205" max="32767" attributes="2"/>
                       <Component id="JBdelete" alignment="0" pref="205" max="32767" attributes="1"/>
                       <Component id="JBedit" alignment="0" pref="205" max="32767" attributes="1"/>
                       <Component id="JBimportcity" alignment="1" pref="205" max="32767" attributes="0"/>
+                      <Component id="JBclose" alignment="1" pref="205" max="32767" attributes="3"/>
+                      <Component id="JBStopSimulations" alignment="0" pref="205" max="32767" attributes="2"/>
+                      <Component id="JBgenerate" alignment="1" pref="205" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -143,11 +144,13 @@
                   <Component id="jSeparator3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
                   <Component id="jSeparator2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="JBgenerate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="JBStopSimulations" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Component id="JBclose" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -200,6 +203,11 @@
         <Component class="javax.swing.JSeparator" name="jSeparator3">
         </Component>
         <Component class="javax.swing.JSeparator" name="jSeparator4">
+        </Component>
+        <Component class="javax.swing.JButton" name="JBStopSimulations">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Stop Simulations"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

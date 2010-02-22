@@ -55,6 +55,7 @@ public class ExecutionPlanner {
         m_exec.addLoadScenarioButtonListener(new LoadScenaryExecutionPlanner());
         m_exec.addImportScenarioButtonListener(m_control.new ImportNsListener());
         m_exec.addGenerateSimulationButtonListener(new generateSimulationsExecutionPlanner());
+        m_exec.addStopSimulationsButtonListener(new stopSimulationsExecutionPlanner());
     }
 
     void setVisible(boolean b) {
@@ -82,29 +83,18 @@ public class ExecutionPlanner {
         // Gets the concerned simulation informations
         ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
 
-        if(currentExecutionRecord != null)
+        if(currentExecutionRecord.getRuns()>0)
         {
             // Loads the Scenario into Castadiva
             m_model.LoadCastadiva(currentExecutionRecord.getSourceFolder());
 
-            // This seems to be mandatory for the mobility implementation
-            if(!m_model.mobilityModel.equals("RANDOM WAY POINT")) {
-                m_simulationWindow.ChangeMobilityModel(m_model.mobilityModel);
-            }
-            if (m_model.ExistsOldMobility()) {
-               m_simulationWindow.EnableReplay(true);
-            }
-
-            // Status update in the Grafical table
-            currentExecutionRecord.setStatus("Simulating");
-            m_exec.updateTable();
-
             // Starts a common simulation.
             m_model.AllSimulationSteaps();
         }
-        else
+        else if(m_exec.getNumberOfRows() > currentlySimulatingRow+1)
         {
-            //TODO Error message
+            currentlySimulatingRow++;
+            StartExecutionPlannerSimulation();
         }
     }
 
@@ -147,11 +137,11 @@ public class ExecutionPlanner {
             else{
                 //
                 m_model.executionPlannerSimulating = false;
-                m_exec.scenario = 0;
                 m_model.StatisticsAreShowed();
-                m_simulationWindow.ChangeReplayTime(m_model.GetSimulationTime());
-                m_simulationWindow.EnableReplay(true);
                 m_model.EndStopwatch();
+
+                // Buttons are made available
+                m_exec.setButtonsForConfiguration();
             }
         }
     }
@@ -220,12 +210,14 @@ public class ExecutionPlanner {
     class generateSimulationsExecutionPlanner implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
-            if(m_exec.getNumberOfRows() != -1)
+            if(m_exec.getNumberOfRows() > 0 )
             {
+                // The simulations start with the upper row
                 currentlySimulatingRow = 0;
 
                 // The activation of this parameter tells CastadivaModel what to do when a simulation ends.
                 m_model.executionPlannerSimulating = true;
+                m_exec.setButtonsForSimulation();
 
                 // The first simulation is processed. When that simulation ends, it will calls the next one.
                 StartExecutionPlannerSimulation();
@@ -234,6 +226,28 @@ public class ExecutionPlanner {
             }
         }
     }
+
+   /**
+    * @author Wannes
+    * Allows to cancel the simulation planner's processing
+    */
+   class stopSimulationsExecutionPlanner implements ActionListener {
+
+        public void actionPerformed(ActionEvent arg0) {
+            ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
+
+            // Current simulation is stopped
+            m_model.KillSimulation();
+
+            // Status of the current simulation is updated
+            currentExecutionRecord.setStatus("Cancelled");
+            m_exec.updateTable();
+
+            // Buttons are set available
+            m_exec.setButtonsForConfiguration();
+        }
+    }
+
 
     class newSimulationExecutionPlanner implements ActionListener {
 
