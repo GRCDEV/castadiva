@@ -140,6 +140,6 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
         if(row < rows.size()) {
             return (ExecutionRecord) rows.get(row);
         }
-        return new ExecutionRecord();
+        return null;
     }
 }

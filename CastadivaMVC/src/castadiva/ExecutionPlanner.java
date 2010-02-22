@@ -140,7 +140,7 @@ public class ExecutionPlanner {
             m_exec.updateTable();
 
             // If there are other simulations to perform
-            if(m_exec.getNumberOfRows() > currentlySimulatingRow) {
+            if(m_exec.getNumberOfRows() > currentlySimulatingRow+1) {
                 currentlySimulatingRow++;
                 StartExecutionPlannerSimulation();
             }
@@ -183,8 +183,7 @@ public class ExecutionPlanner {
             String file;
             if (!(file = m_control.ExplorationWindow("Load",
                     JFileChooser.DIRECTORIES_ONLY)).equals("")) {
-                /*TODO Cargar correctamente escenario
-                 */
+
                 File f1 = new File(file);
 
                 if (m_control.hasScenarioDir(f1)) {
@@ -197,11 +196,12 @@ public class ExecutionPlanner {
 
                     m_simulationWindow.setExecutionPlanner(true);
                     m_simulationWindow.changeSimulateButtonText("Accept");
-                    m_simulationWindow.setLoadPath(f1.getAbsolutePath());
                     m_simulationWindow.FillFields();
                     m_simulationWindow.FillAPComboBox();
                     m_simulationWindow.ActivateButtons(true);
                     m_exec.setVisible(false);
+                    f1 = f1.getParentFile();
+                    m_simulationWindow.setLoadPath(f1.getAbsolutePath());
                     m_simulationWindow.setVisible(true);
 
                 }else{

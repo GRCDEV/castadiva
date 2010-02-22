@@ -549,6 +549,9 @@ public class CastadivaModel {
      * can save, load, import from ns.
      */
     public String GetDefaultExplorationFolder() {
+      if(STARTING_FOLDER.equals("/")) {
+        return System.getenv("HOME");
+      }
         return STARTING_FOLDER;
     }
 
@@ -1535,6 +1538,17 @@ public class CastadivaModel {
        }*/
     }
 
+    private String GenerateRedirectInstructionSource(TrafficRecord record, int number, String type) {
+        String instruction = "";
+        if(record.getRedirect()) {
+            String sourceNode =  accessPoints.Get(accessPoints.SearchAP(record.getAddress())).WhatEthIP();
+            instruction = LocateIptables(number) + " -t nat -"+ type + " POSTROUTING -p udp --dport " +
+                    (TRAFFIC_PORT + number) + " -j SNAT --to-source " + sourceNode;
+        }
+
+        return instruction;
+    }
+
     private String GenerateRedirectInstruction(TrafficRecord record, int number, String type) {
         String instruction = "";
         if(record.getRedirect()) {
@@ -1567,16 +1581,19 @@ public class CastadivaModel {
                 redirect.set(destNode, true);
                 redirectInstruction = GenerateRedirectInstruction(record, i, "A");
                 AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, destNode);
+                redirectInstruction = GenerateRedirectInstructionSource(record, i, "A");
+                AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, destNode);
             }
         }
 
-        for (int i = 0; i < accessPoints.Size(); i++) {
+     /*TODO Delete this code
+      for (int i = 0; i < accessPoints.Size(); i++) {
             if(redirect.elementAt(i)) {
                 redirectInstruction =  LocateIptables(i) + " -t nat -A POSTROUTING -p udp -j SNAT --to-source " +
                         accessPoints.Get(i).WhatEthIP();
                 AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
             }
-        }
+        }*/
 
         for (int i = 0; i < accessPoints.Size(); i++) {
             redirect.set(i, false);
@@ -1594,9 +1611,12 @@ public class CastadivaModel {
                 redirect.set(destNode, true);
                 redirectInstruction = GenerateRedirectInstruction(record, i, "D");
                 AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, destNode);
+                redirectInstruction = GenerateRedirectInstructionSource(record, i, "D");
+                AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, destNode);
             }
         }
 
+        /*TODO Delete this code
         for (int i = 0; i < accessPoints.Size(); i++) {
             if(redirect.elementAt(i)) {
                 redirectInstruction =  LocateIptables(i) + " -t nat -D POSTROUTING -p udp -j SNAT --to-source " +
@@ -1604,7 +1624,7 @@ public class CastadivaModel {
                 AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
             }
         }
-
+*/
 
     }
     /**
@@ -1922,7 +1942,7 @@ public class CastadivaModel {
 
         trafficPlainText.add("Line\tStrt\tStop\tSrce\tAddr\tTraff\t" +
                 "Transf.\tSize\tPkt/sec\tPackt\t" +
-                "Thrghpt\tReceived\tAC\tDACME\tDelay\tRedirect");
+                "Thrghpt\tReceived\tMean Delay\tAC\tDACME\tDelay\tRedirect");
         trafficPlainText.add("----------------------------------------" +
                 "-----------------------------------------------------" +
                 "-----------------------------------------------------");
@@ -1934,7 +1954,8 @@ public class CastadivaModel {
                         "\t" + record.getSource() + "\t" + record.getAddress() + "\t" +
                         record.getTCPUDP() + "\t \t" + record.getSize() + "\t" + record.getPacketsSeconds() + "\t" + record.getMaxPackets() + "\t" +
                         +record.getLastSpeed() + "\t" + record.getPacketsPerCentReceived()
-                        + "\t\t" + record.getAccessCategory() + "\t" + record.getDacme()
+                        + "\t" + record.getMeanDelay()
+                        + "\t" + record.getAccessCategory() + "\t" + record.getDacme()
                         + "\t" + record.getDelay() + "\t" +record.getRedirect());
             } else {
                 trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop() +
