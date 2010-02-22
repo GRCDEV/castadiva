@@ -243,6 +243,10 @@ public class ExecutionPlanner {
             currentExecutionRecord.setStatus("Cancelled");
             m_exec.updateTable();
 
+            m_model.executionPlannerSimulating = false;
+            m_model.StatisticsAreShowed();
+            m_model.EndStopwatch();
+
             // Buttons are set available
             m_exec.setButtonsForConfiguration();
         }
