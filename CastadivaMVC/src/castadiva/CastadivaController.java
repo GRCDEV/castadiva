@@ -1254,8 +1254,15 @@ public class CastadivaController {
     }
 
     public void EachInstructionForEachSimulationSteap() {
+        if(!m_model.executionPlannerSimulating){
         m_simulationWindow.ConsoleText();
         m_simulationWindow.StopwatchText();
+        }
+        else
+        // The following code allows to update the execution planner's status
+        {
+            executionPlanner.setStatus(executionPlanner.getCurrentlySimulatingRow());
+        }
     }
 
     /**

@@ -218,9 +218,7 @@ public class CastadivaModel {
     //Ruta por defecto del planificador de ejecucioens
     public String pathScenario = "/Castadiva/Scenarios/";
     public boolean executionPlannerSimulating = false;
-    public String pathTarget = "";
-    public int plannerLoops = 0;
-    public boolean plannerNotEnded = false;
+    public String pathTarget = "";;
     public PluginDetector detector;
 
     /** Creates a new instance of CastadivaModel */
@@ -2025,19 +2023,6 @@ public class CastadivaModel {
         return "";
     }
 
-    public void NextPlannerIteration(int loops) {
-        plannerLoops++;
-        if (loops == plannerLoops){
-            plannerLoops = 0;
-         }
-    }
-    
-    public boolean IsEndOfPlannerSimulation() {
-        if (plannerLoops == 0) {
-            return true;
-        }
-        return false;
-    }
     
     /****************************************************************************
      *

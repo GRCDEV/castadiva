@@ -1,0 +1,9 @@
+ipkg update
+
+
+ipkg install kmod-fs-nfs
+ipkg install iptables-mod-ipopt
+ipkg install tcpdump
+ipkg install libgcc
+ipkg install libpthread
+ipkg install olsrd 

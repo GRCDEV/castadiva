@@ -68,6 +68,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         exe.setSourceFolder(name);
         exe.setResultsFolder(name);
         exe.setRuns(1);
+        exe.setStatus("Ready");
         
         tableModel.addRow(exe);
         updateTable();
@@ -119,6 +120,26 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
      public void updateTable() {
         tableModel.fireTableDataChanged();
     }
+
+    public void SetStatus(int row) {
+        ExecutionRecord record = getRow(row);
+        if (model.WhatStopwatch() > 0 && model.WhatStopwatch() < model.GetProtocolLoadingTimeWaiting()) {
+            record.setStatus("Loading the protocol...");
+        }
+        if (model.WhatStopwatch() > 0 && model.WhatStopwatch() == model.GetProtocolLoadingTimeWaiting()) {
+            record.setStatus("Waiting for the AP...");
+        }
+        if (model.WhatStopwatch() == model.GetApTimeWaiting()) {
+            record.setStatus("Starting simulation...");
+        }
+        if (model.WhatStopwatch() == (model.GetApTimeWaiting() + 1)) {
+            record.setStatus("Simulation in process...  ");
+        }
+        if (model.WhatStopwatch() > model.GetRealSimulationTime() && !model.IsStatisticsEnded()) {
+            record.setStatus("Retrieving data from AP. ");
+        }
+        this.updateTable();
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -147,10 +168,12 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Name", "Target Folder", "Runs"
+                "Name", "Target Folder", "Runs", "Status"
             }
         ));
         jScrollPane1.setViewportView(JTplanner);
+        JTplanner.getColumnModel().getColumn(2).setPreferredWidth(20);
+        JTplanner.getColumnModel().getColumn(3).setPreferredWidth(70);
 
         JBedit.setText("Edit Simulation");
 
@@ -212,8 +235,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 737, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -224,7 +247,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ButtonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
                 .addContainerGap())
         );
 

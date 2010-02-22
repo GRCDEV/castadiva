@@ -14,23 +14,27 @@ import javax.swing.table.AbstractTableModel;
  * @author alvaro
  */
 public class ExecutionPlannerTableModel extends AbstractTableModel{
+
     public static final int SOURCE_FOLDER_INDEX = 0;
     public static final int RESULTS_FOLDER_INDEX = 1;
     public static final int RUNS_INDEX = 2;
+    public static final int STATUS_INDEX = 3;
 
-    private String[] columnNames = {"Source folder", "Results folder", "Runs"};
+    private String[] columnNames = {"Source folder", "Results folder", "Runs", "Status"};
 
     protected Vector rows = new Vector();
 
+    @Override
     public int getRowCount() {
         return rows.size();
     }
 
+    @Override
     public int getColumnCount() {
         return columnNames.length;
     }
 
-            @Override
+    @Override
     public String getColumnName(int column) {
         return columnNames[column];
     }
@@ -45,6 +49,7 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
         switch(column) {
             case SOURCE_FOLDER_INDEX:
             case RESULTS_FOLDER_INDEX:
+            case STATUS_INDEX:
                 return String.class;
             case RUNS_INDEX:
                 return Integer.class;
@@ -53,6 +58,7 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
         }
     }
 
+    @Override
     public Object getValueAt(int row, int column) {
         ExecutionRecord exe = (ExecutionRecord) rows.get(row);
         switch(column) {
@@ -62,6 +68,8 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
                 return exe.getResultsFolder();
             case RUNS_INDEX:
                 return exe.getRuns();
+            case STATUS_INDEX:
+                return exe.getStatus();
             default:
                 return new Object();
         }
@@ -101,6 +109,14 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
                     }catch(ClassCastException ex) {
                         ex.printStackTrace();
                         exe.setRuns(1);
+                    }
+               case STATUS_INDEX:
+                    try{
+                        exe.setStatus((String)value);
+                        break;
+                    }catch(ClassCastException ex) {
+                        ex.printStackTrace();
+                        exe.setStatus("");
                     }
                 default:
                     System.err.println("setValueAt - ExecutionPlannerTableModel\n" +

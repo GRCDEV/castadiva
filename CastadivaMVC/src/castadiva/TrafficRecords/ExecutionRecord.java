@@ -13,6 +13,7 @@ public class ExecutionRecord {
     private String sourceFolder;
     private String resultsFolder;
     private Integer runs;
+    private String status;
 
     public String getResultsFolder() {
         return resultsFolder;
@@ -28,6 +29,14 @@ public class ExecutionRecord {
 
     public void setRuns(Integer runs) {
         this.runs = runs;
+    }
+
+    public String getStatus(){
+        return(this.status);
+    }
+
+    public void setStatus(String status){
+        this.status = status;
     }
 
     public String getSourceFolder() {

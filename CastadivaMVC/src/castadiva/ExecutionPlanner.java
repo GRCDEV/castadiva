@@ -26,17 +26,16 @@ public class ExecutionPlanner {
     private ExecutionPlannerGUI m_exec;
     private SimulationGUI m_simulationWindow;
     private CastadivaModel m_model;
-    private NewExternalTrafficGUI m_attachTraffic;
     private MainMenuGUI m_view;
     private CastadivaController m_control;
     private ExecutionPropiertiesDialog prop;
+    private int currentlySimulatingRow;
 
     ExecutionPlanner(SimulationGUI sim, ExecutionPlannerGUI exec, CastadivaModel model,
                      NewExternalTrafficGUI attach, MainMenuGUI main, CastadivaController control) {
         m_exec = exec;
         m_simulationWindow = sim;
         m_model=model;
-        m_attachTraffic = attach;
         m_control = control;
         m_view = main;
     }
@@ -70,26 +69,84 @@ public class ExecutionPlanner {
         m_exec.paths.add(path);
     }
 
+    /**
+     * @author Wannes
+     * Starts a new simulation based on the currentllySimulationRow value
+     * It also updates the simulation status for the concerned row in the GUI
+     * The simulations are stored as ExecutionRecords in the ExecutionPlannerGUI's Table.
+     * @see EndExecutionPlannerSimulation
+     * @see generateSimulationsExecutionPlanner
+     */
+    public void StartExecutionPlannerSimulation()
+    {
+        // Gets the concerned simulation informations
+        ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
+
+        if(currentExecutionRecord != null)
+        {
+            // Loads the Scenario into Castadiva
+            m_model.LoadCastadiva(currentExecutionRecord.getSourceFolder());
+
+            // This seems to be mandatory for the mobility implementation
+            if(!m_model.mobilityModel.equals("RANDOM WAY POINT")) {
+                m_simulationWindow.ChangeMobilityModel(m_model.mobilityModel);
+            }
+            if (m_model.ExistsOldMobility()) {
+               m_simulationWindow.EnableReplay(true);
+            }
+
+            // Status update in the Grafical table
+            currentExecutionRecord.setStatus("Simulating");
+            m_exec.updateTable();
+
+            // Starts a common simulation.
+            m_model.AllSimulationSteaps();
+        }
+        else
+        {
+            //TODO Error message
+        }
+    }
+
+    /**
+     * @author Nacho Wannes
+     * When a simulation ends, the CastadivaModel calls the following function
+     * If there are runs left for the current simulation, a new simulation is processed
+     * If there are no more runs for the current simulation, the next Scenario is loaded
+     * @see generateSimulationsExecutionPlanner
+     * @see StartExecutionPlannerSimulation
+     */
     public void EndExecutionPlannerSimulation() {
+        // Gets the concerned simulation informations
+        ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
 
-        File f = new File(m_model.pathTarget + m_exec.getSimulationName(m_exec.scenario) + File.separator + "Iterations");
+        // The result folder is created
+        File f = new File(currentExecutionRecord.getResultsFolder() + File.separator + "Iterations");
         f.mkdir();
-        m_model.PrintTraffic(m_model.pathTarget + m_exec.getSimulationName(m_exec.scenario) + File.separator + "Iterations" + File.separator + m_model.plannerLoops + "_DefinedTraffic.txt");
-        m_model.NextPlannerIteration(m_exec.getRuns(m_exec.scenario));
-        if (!m_model.IsEndOfPlannerSimulation()) {
-            m_model.GenerateExecutionPlannerSimulation(m_model.pathTarget, m_exec.getRuns(m_exec.scenario));
-            m_simulationWindow.ModifyBlackBoard();
-        } else {
-            if (m_exec.scenario != (m_exec.getTotalScenarios() - 1)) {
-                m_exec.scenario++;
-                m_model.LoadCastadiva(m_exec.paths.get(m_exec.scenario).toString());
 
-                m_model.pathTarget = m_exec.getTargetFolder(m_exec.scenario);
-                m_model.GenerateExecutionPlannerSimulation(m_exec.getTargetFolder(m_exec.scenario), m_exec.getRuns(m_exec.scenario));
-                m_simulationWindow.ModifyBlackBoard();
-            } else {
+        // The simulation results for the current run are printed into a file in the results folder
+        m_model.PrintTraffic(currentExecutionRecord.getResultsFolder() +  File.separator + "Iterations" + File.separator + currentExecutionRecord.getRuns() + "_DefinedTraffic.txt");
+
+        // The runs left for the simulation are decremented
+        currentExecutionRecord.setRuns(currentExecutionRecord.getRuns()-1);
+        m_exec.updateTable();
+
+        // If there are more runs to perform
+        if (currentExecutionRecord.getRuns()>0) {
+            StartExecutionPlannerSimulation();
+        } else {
+            // If there are no more runs, status goes to "Done"
+            currentExecutionRecord.setStatus("Done");
+            m_exec.updateTable();
+
+            // If there are other simulations to perform
+            if(m_exec.getNumberOfRows() > currentlySimulatingRow) {
+                currentlySimulatingRow++;
+                StartExecutionPlannerSimulation();
+            }
+            else{
+                //
                 m_model.executionPlannerSimulating = false;
-                m_model.plannerNotEnded = false;
                 m_exec.scenario = 0;
                 m_model.StatisticsAreShowed();
                 m_simulationWindow.ChangeReplayTime(m_model.GetSimulationTime());
@@ -99,23 +156,13 @@ public class ExecutionPlanner {
         }
     }
 
-    private void deleteSimulation() {
-        int selected = m_exec.getNumberSelectedRow();
-        //delete the files from the HD
-        File f1 = new File(m_exec.paths.get(selected) + "/APs.dat");
-        f1.delete();
-        f1 = new File(m_exec.paths.get(selected) + "/Computer.dat");
-        f1.delete();
-        f1 = new File(m_exec.paths.get(selected) + "/ExternalTraffic.dat");
-        f1.delete();
-        f1 = new File(m_exec.paths.get(selected) + "/Scenario.dat");
-        f1.delete();
-        f1 = new File(m_exec.paths.get(selected));
-        f1.delete();
-        //delete file path
-        m_exec.paths.remove(selected);
-        //delete row in JTable
-        m_exec.deleteRow(selected);
+    public void setStatus(int row)
+    {
+        m_exec.SetStatus(row);
+    }
+
+    public int getCurrentlySimulatingRow(){
+        return currentlySimulatingRow;
     }
 
     /****************************************************************\
@@ -164,21 +211,24 @@ public class ExecutionPlanner {
         }
     }
 
+    /**
+     * @author Wannes
+     * When the Generate Simulations button is pressed, the simulation planner starts its work.
+     * @see EndExecutionPlannerSimulation
+     * @see StartExecutionPlannerSimulation
+     */
     class generateSimulationsExecutionPlanner implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
-            if (m_exec.getNumberOfRows() != -1) {
-                m_model.LoadCastadiva(m_exec.getTargetFolder(0));
-                if(!m_model.mobilityModel.equals("RANDOM WAY POINT")) {
-                    m_simulationWindow.ChangeMobilityModel(m_model.mobilityModel);
-                }
-                m_simulationWindow.ChangeRoutingProtocol(m_model.routingProtocol);
-                m_simulationWindow.ModifyBlackBoard();
-                m_model.executionPlannerSimulating = true;
-                m_model.plannerNotEnded = true;
-                m_model.pathTarget = m_model.pathScenario;
-                m_model.GenerateExecutionPlannerSimulation(m_exec.getTargetFolder(0), m_exec.getRuns(0));
+            if(m_exec.getNumberOfRows() != -1)
+            {
+                currentlySimulatingRow = 0;
 
+                // The activation of this parameter tells CastadivaModel what to do when a simulation ends.
+                m_model.executionPlannerSimulating = true;
+
+                // The first simulation is processed. When that simulation ends, it will calls the next one.
+                StartExecutionPlannerSimulation();
             } else {
                 JOptionPane.showMessageDialog(null, "You must configure a simulation first.");
             }
@@ -262,6 +312,7 @@ public class ExecutionPlanner {
             exe.setSourceFolder(prop.getSourceText());
             exe.setResultsFolder(prop.getResultsText());
             exe.setRuns(prop.getRuns());
+            exe.setStatus("Ready");
 
             m_exec.updateTable();
 
