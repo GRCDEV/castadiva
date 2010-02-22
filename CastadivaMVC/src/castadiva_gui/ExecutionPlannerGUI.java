@@ -49,13 +49,16 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             columnaTabla = modeloColumna.getColumn(i);
             switch (i) {
                 case 0:
-                    columnWidth = (20 * width) / 100;
+                    columnWidth = (30 * width) / 100;
                     break;
                 case 1:
-                    columnWidth = (70 * width) / 100;
+                    columnWidth = (30 * width) / 100;
                     break;
                 case 2:
-                    columnWidth = (10 * width) / 100;
+                    columnWidth = (7 * width) / 100;
+                    break;
+                case 3:
+                    columnWidth = (33 * width) / 100;
                     break;
             }
             columnaTabla.setPreferredWidth(columnWidth);
@@ -170,10 +173,17 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             new String [] {
                 "Name", "Target Folder", "Runs", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        JTplanner.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(JTplanner);
-        JTplanner.getColumnModel().getColumn(2).setPreferredWidth(20);
-        JTplanner.getColumnModel().getColumn(3).setPreferredWidth(70);
 
         JBedit.setText("Edit Simulation");
 

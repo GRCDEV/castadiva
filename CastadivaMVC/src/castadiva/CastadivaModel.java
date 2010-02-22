@@ -3301,27 +3301,6 @@ public class CastadivaModel {
             }
         }
     }
-
-      /****************************************************************************
-     *
-     *                              EXECUTION PLANNER
-     *
-     ****************************************************************************/
-    
-       public void GenerateExecutionPlannerSimulation(String saveFolder, Integer loops) {
-        savePath = saveFolder;
-        if (debug) {
-            System.out.println("---------------------------------");
-            System.out.println("          NEW SIMULATION         ");
-            System.out.println("---------------------------------");
-            System.out.println("Nodes: " + (minNodes + (iteration) * granularity) + " Loop: " + loop);
-            System.out.println("Protocol: " + routingProtocol);
-            System.out.println("---------------------------------");
-        }
-        PrepareSimulation();
-        CalculateNewNodeVisibility();
-        StartFileSimulation();
-    }
         
     /****************************************************************************
      *
