@@ -12,6 +12,7 @@
 package castadiva_gui;
 
 import castadiva.TrafficRecords.ExecutionRecord;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 /**
@@ -25,11 +26,13 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
     public ExecutionPropiertiesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
     }
 
     public ExecutionPropiertiesDialog(java.awt.Frame parent, boolean modal, Integer selected) {
         super(parent, modal);
         initComponents();
+        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
         ExecutionPlannerGUI m_exec = (ExecutionPlannerGUI) parent;
         ExecutionRecord exe = m_exec.getRow(selected);
         this.selected = selected;
