@@ -85,6 +85,10 @@ public class ExecutionPlanner {
 
         if(currentExecutionRecord.getRuns()>0)
         {
+            // The activation of this parameter tells CastadivaModel what to do when a simulation ends.
+            m_model.executionPlannerSimulating = true;
+            m_exec.setButtonsForSimulation();
+
             // Loads the Scenario into Castadiva
             m_model.LoadCastadiva(currentExecutionRecord.getSourceFolder());
 
@@ -214,10 +218,6 @@ public class ExecutionPlanner {
             {
                 // The simulations start with the upper row
                 currentlySimulatingRow = 0;
-
-                // The activation of this parameter tells CastadivaModel what to do when a simulation ends.
-                m_model.executionPlannerSimulating = true;
-                m_exec.setButtonsForSimulation();
 
                 // The first simulation is processed. When that simulation ends, it will calls the next one.
                 StartExecutionPlannerSimulation();
