@@ -1483,7 +1483,9 @@ public class CastadivaModel {
                 "bin" + File.separator +
                 "TcpFlowClient" + sourceNode.WhatProcessor() + " " +
                 destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
-                record.getTransferSize() + " " + (record.getStop() - record.getStart()) + " ";
+                record.getTransferSize() + " " + (record.getStop() - record.getStart()) + 
+                " > " + sourceNode.WhatWorkingDirectory() + File.separator
+                + "SalidaTcp" + (TRAFFIC_PORT + number) + " ";
         return sourceInstruction;
     }
 
@@ -1543,7 +1545,8 @@ public class CastadivaModel {
         if(record.getRedirect()) {
             String sourceNode =  accessPoints.Get(accessPoints.SearchAP(record.getAddress())).WhatEthIP();
             instruction = LocateIptables(number) + " -t nat -"+ type + " POSTROUTING -p udp --dport " +
-                    (TRAFFIC_PORT + number) + " -j SNAT --to-source " + sourceNode;
+                    (TRAFFIC_PORT + number) + " -j SNAT --to-source " + 
+                    "$(/sbin/ifconfig eth | grep inet: | awk '{print $2}'| cut -d\":\" -f2) ";
         }
 
         return instruction;
