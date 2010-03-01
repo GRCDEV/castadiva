@@ -130,7 +130,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
      * @author Wannes
      * This function returns the current status depending on the simulation time
      * Note : the status information should probably not be stored in the GUI
-     * but it is also done in the SimulationGUI class
+     * but it is also how it is done in the SimulationGUI class
      * @param row
      * @see SimulationGUI.ConsoleText()
      */

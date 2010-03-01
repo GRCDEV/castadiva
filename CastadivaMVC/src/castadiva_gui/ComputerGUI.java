@@ -52,13 +52,14 @@ public class ComputerGUI extends javax.swing.JFrame {
 
     /**
      * @author Wannes
-     * The following function allows to update the textFields when their value is changed otherwise than with this GUI.
+     * The following function allows to update the textFields when their value is changed otherwise than trough this GUI.
+     * Note : It seems that the interface option is not used in Castadiva ?
+     * /TODO Maybe remove the interface ComboBox if it is not for further use.
      */
     public void GUIReady()
     {
         this.WorkingDirectoryTextField.setText(m_model.WhatComputerWorkingDirectory());
         this.InterfacesComboBox.setSelectedItem(m_model.computer.WhatInterfaceString());
-        //InterfacesComboBox.setSelectedIndex(WIDTH);
     }
     
     

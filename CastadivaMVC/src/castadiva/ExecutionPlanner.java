@@ -14,8 +14,11 @@ import castadiva_gui.NewExternalTrafficGUI;
 import castadiva_gui.SimulationGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,13 +34,24 @@ public class ExecutionPlanner {
     private ExecutionPropiertiesDialog prop;
     private int currentlySimulatingRow;
 
-    ExecutionPlanner(SimulationGUI sim, ExecutionPlannerGUI exec, CastadivaModel model,
-                     NewExternalTrafficGUI attach, MainMenuGUI main, CastadivaController control) {
+    ExecutionPlanner(SimulationGUI sim, final ExecutionPlannerGUI exec, CastadivaModel model,
+                     NewExternalTrafficGUI attach, final MainMenuGUI main, CastadivaController control) {
         m_exec = exec;
         m_simulationWindow = sim;
         m_model=model;
         m_control = control;
         m_view = main;
+
+        // Prevents the user from closing the whole program when closing the window
+        exec.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        // Overrides the windowClosing event and restores the main menu instead.
+        exec.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            main.setVisible(true);
+        }
+        });
+
     }
 
     void setPropListeners() {

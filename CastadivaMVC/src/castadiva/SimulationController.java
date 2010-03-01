@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FilenameFilter;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -82,6 +83,15 @@ public class SimulationController {
         m_simulationWindow.addChangeReplayTimeListener(new ReplayPositionListener());
         m_simulationWindow.addHelpButtonListener(new HelpSimulationListener());
         m_simulationWindow.addSaveSimulationListener(new SaveScenarioListener());
+        // Prevents the user from closing the whole program when closing the window
+        m_simulationWindow.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        // Overrides the windowClosing event and restores the main menu instead.
+        m_simulationWindow.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            m_view.setVisible(true);
+        }
+        });
     }
 
     public void PreviousSimulationSteaps() {
