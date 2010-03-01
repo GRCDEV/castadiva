@@ -1546,7 +1546,7 @@ public class CastadivaModel {
             String sourceNode =  accessPoints.Get(accessPoints.SearchAP(record.getAddress())).WhatEthIP();
             instruction = LocateIptables(number) + " -t nat -"+ type + " POSTROUTING -p udp --dport " +
                     (TRAFFIC_PORT + number) + " -j SNAT --to-source " + 
-                    "$(/sbin/ifconfig eth | grep inet: | awk '{print $2}'| cut -d\":\" -f2) ";
+                    "$(/sbin/ifconfig $(ifconfig | grep eth | awk '{print $1}') | grep inet: | awk '{print $2}'| cut -d\":\" -f2) ";
         }
 
         return instruction;
