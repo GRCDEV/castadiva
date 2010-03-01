@@ -17,7 +17,7 @@ import java.util.Enumeration;
 public class Computer implements Serializable {
     private InetAddress ipIntAdrs;
     private String ip;
-    private String workingDirectory = "/Castadiva";
+    private String workingDirectory;
     protected String card;
     transient private NetworkInterface computerInterface = null;
     
@@ -25,6 +25,7 @@ public class Computer implements Serializable {
      * The class constructor.
      */
     public Computer() {
+        workingDirectory = "/Castadiva";
         Enumeration dispositivos = null;
         try {
             dispositivos = NetworkInterface.getNetworkInterfaces();
@@ -52,11 +53,7 @@ public class Computer implements Serializable {
      * to the APs.
      */
     public String WhatInterfaceString(){
-        String[] show, piece;
-        
-        piece = computerInterface.toString().split(":");
-        show = piece[1].split(" ");
-        return show[0];
+        return card;
     }
     
     /**

@@ -346,6 +346,7 @@ public class CastadivaController {
     class ComputerConfigurationListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
+            m_computerGUI.GUIReady();
             m_computerGUI.setVisible(true);
         }
     }

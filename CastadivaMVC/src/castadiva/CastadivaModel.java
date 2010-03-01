@@ -3839,18 +3839,18 @@ public class CastadivaModel {
             float stop = record.getStart() + (record.getMaxPackets() /
                     record.getPacketsSeconds());
             float ratio = 1 / Float.parseFloat(record.getPacketsSeconds() + "");
-            line = "set udp_(" + i + ") [new Agent/UDP] " +
-                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getSource()) + ") $udp_(" + i + ") " +
-                    "set null_(" + i + ") [new Agent/Null] " +
-                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getAddress()) + ") $null_(" + i + ") " +
-                    "set cbr_(" + i + ") [new Application/Traffic/CBR] " +
-                    "$cbr_(" + i + ") set packetSize_ " + record.getSize() + " " +
-                    "$cbr_(" + i + ") set interval_ " + ratio + " " +
-                    "$cbr_(" + i + ") set random_ 0 " +
-                    "$cbr_(" + i + ") attach-agent $udp_(" + i + ") " +
-                    "$ns_ connect $udp_(" + i + ") $null_(" + i + ") " +
-                    "$ns_ at " + (float) record.getStart() + " \"$cbr_(" + i + ") start\" " +
-                    "$ns_ at " + stop + " \"$cbr_(" + i + ") stop\" ";
+            line = "set udp_(" + i + ") [new Agent/UDP]\n" +
+                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getSource()) + ") $udp_(" + i + ")\n" +
+                    "set null_(" + i + ") [new Agent/Null]\n" +
+                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getAddress()) + ") $null_(" + i + ")\n" +
+                    "set cbr_(" + i + ") [new Application/Traffic/CBR]\n" +
+                    "$cbr_(" + i + ") set packetSize_ " + record.getSize() + "\n" +
+                    "$cbr_(" + i + ") set interval_ " + ratio + "\n" +
+                    "$cbr_(" + i + ") set random_ 0\n" +
+                    "$cbr_(" + i + ") attach-agent $udp_(" + i + ")\n" +
+                    "$ns_ connect $udp_(" + i + ") $null_(" + i + ")\n" +
+                    "$ns_ at " + (float) record.getStart() + " \"$cbr_(" + i + ") start\"\n" +
+                    "$ns_ at " + stop + " \"$cbr_(" + i + ") stop\"\n";
             resultList.add(line);
         }
         return resultList;
@@ -4547,7 +4547,8 @@ public class CastadivaModel {
         try {
             l = new SerialComputerStream(folder + File.separator + FILE_COMPUTER).load();
             computer = (Computer) l.get(0);
-            computer.ChangeInterface(computer.card);
+            
+            // computer.ChangeInterface(computer.card);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {

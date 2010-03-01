@@ -49,6 +49,17 @@ public class ComputerGUI extends javax.swing.JFrame {
             InterfacesComboBox.setSelectedIndex(-1);
         
     }
+
+    /**
+     * @author Wannes
+     * The following function allows to update the textFields when their value is changed otherwise than with this GUI.
+     */
+    public void GUIReady()
+    {
+        this.WorkingDirectoryTextField.setText(m_model.WhatComputerWorkingDirectory());
+        this.InterfacesComboBox.setSelectedItem(m_model.computer.WhatInterfaceString());
+        //InterfacesComboBox.setSelectedIndex(WIDTH);
+    }
     
     
     public String ReturnSelectedInterface(){
