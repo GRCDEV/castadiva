@@ -1543,6 +1543,8 @@ public class CastadivaModel {
     private String GenerateRedirectInstructionSource(TrafficRecord record, int number, String type) {
         String instruction = "";
         if(record.getRedirect()) {
+            //TODO Modify APs to select control network (Ex. eth0, eth1...)
+            //TODO Does only works whith one "ethX"
             String sourceNode =  accessPoints.Get(accessPoints.SearchAP(record.getAddress())).WhatEthIP();
             instruction = LocateIptables(number) + " -t nat -"+ type + " POSTROUTING -p udp --dport " +
                     (TRAFFIC_PORT + number) + " -j SNAT --to-source " + 
