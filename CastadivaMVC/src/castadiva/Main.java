@@ -28,6 +28,16 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main {
 
+
+   private static void checkArgs(String[] args, CastadivaModel model) {
+        //TODO - Mejorar detección de argumentos
+        System.out.println("Checking args:");
+        if(args[0].equals("--config-dir") || args[0].equals("-cd")) {
+            System.out.println("\tConfig dir: " + args[1]);
+            model.DEFAULT_CONFIG_DIRECTORY = args[1];
+        }
+    }
+
     /** Creates a new instance of Main */
     public Main() {
         /*try {
@@ -73,6 +83,10 @@ public class Main {
         }
         
         CastadivaModel model = new CastadivaModel();
+        System.out.println("Welcome to Castadiva " + model.VERSION);
+        if(args.length > 1) {
+            checkArgs(args, model);
+        }
         MainMenuGUI view = new MainMenuGUI(model);
         AboutBox about = new AboutBox(model);
         SimulationGUI simulationWindow = new SimulationGUI(model);

@@ -89,7 +89,7 @@ public class CastadivaModel {
     private final String FILE_SCENARIO = "Scenario.dat";
     private final String FILE_EXTERNAL_TRAFFIC = "ExternalTraffic.dat";
     private String STARTING_FOLDER = "/";
-    public final String DEFAULT_CONFIG_DIRECTORY = "configuration";
+    public String DEFAULT_CONFIG_DIRECTORY = "configuration";
     public final String DEFAULT_APPLICATION_FILE = "applications.txt";
     //Simulation variables
     public final int TRAFFIC_SERVER_TIME_WAIT = 2;
