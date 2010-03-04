@@ -270,7 +270,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
         if (jComboBox1.getSelectedItem().equals("NONE")) {
             return "none";
-        } else if (jComboBox1.getSelectedItem().equals("OPTIMUM")) {
+        } else if (jComboBox1.getSelectedItem().toString().toUpperCase().equals("OPTIMUM")) {
             return "Optimum";
         } else {
             return jComboBox1.getSelectedItem().toString();
@@ -1530,7 +1530,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
         if (text.equals("NONE")) {
             return false;
-        } else if (text.equals("OPTIMUM")) {
+        } else if (text.toUpperCase().equals("OPTIMUM")) {
             return false;
         } else {
             return true;
