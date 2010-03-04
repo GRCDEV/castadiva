@@ -90,7 +90,7 @@ public class SimulationController {
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
             m_view.setVisible(true);
-        }
+    }
         });
     }
 

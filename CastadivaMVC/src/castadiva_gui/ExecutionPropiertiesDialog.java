@@ -175,7 +175,7 @@ public class ExecutionPropiertiesDialog extends javax.swing.JDialog {
 }//GEN-LAST:event_SourceFoldetTextActionPerformed
 
     private void RepetitionsSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_RepetitionsSpinnerStateChanged
-        if((Integer)RepetitionsSpinner.getValue() < 0 ){
+        if((Integer)RepetitionsSpinner.getValue() < 1 ){
             RepetitionsSpinner.setValue(1);
         }
     }//GEN-LAST:event_RepetitionsSpinnerStateChanged

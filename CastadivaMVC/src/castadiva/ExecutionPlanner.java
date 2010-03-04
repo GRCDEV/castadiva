@@ -49,7 +49,7 @@ public class ExecutionPlanner {
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
             main.setVisible(true);
-        }
+    }
         });
 
     }

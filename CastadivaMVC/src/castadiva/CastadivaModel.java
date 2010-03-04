@@ -4549,8 +4549,7 @@ public class CastadivaModel {
         try {
             l = new SerialComputerStream(folder + File.separator + FILE_COMPUTER).load();
             computer = (Computer) l.get(0);
-            
-            // computer.ChangeInterface(computer.card);
+            computer.ChangeInterface(computer.card);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {

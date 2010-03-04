@@ -49,7 +49,7 @@ public class ComputerGUI extends javax.swing.JFrame {
             InterfacesComboBox.setSelectedIndex(-1);
         
     }
-
+    
     /**
      * @author Wannes
      * The following function allows to update the textFields when their value is changed otherwise than trough this GUI.
@@ -62,7 +62,7 @@ public class ComputerGUI extends javax.swing.JFrame {
         this.InterfacesComboBox.setSelectedItem(m_model.computer.WhatInterfaceString());
     }
     
-    
+
     public String ReturnSelectedInterface(){
         return InterfacesComboBox.getSelectedItem().toString();
     }

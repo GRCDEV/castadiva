@@ -855,7 +855,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
         ProtocolPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NONE", "Optimum" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NONE", "OPTIMUM" }));
 
         jLabel15.setFont(new java.awt.Font("Dialog", 1, 18));
         jLabel15.setText("Routing protocols:");
@@ -919,7 +919,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, ShowPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jLabel7)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 64, Short.MAX_VALUE)
                 .add(ShowPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(ReplayCheckBox)
                     .add(jLabel31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1071,7 +1071,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             CenterPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(CenterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 703, Short.MAX_VALUE)
+                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
                 .add(18, 18, 18)
                 .add(ControlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
