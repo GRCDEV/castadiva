@@ -2415,12 +2415,14 @@ public class CastadivaModel {
             delList = new ArrayList<String>();
             for (int j = 0; j < accessPoints.Size(); j++) {
                 //I.E. route add -host 192.168.1.2 gw 192.168.1.1 eth1
+                if(i!=j && gatewayMatrix[i][j] != -1) {
                 protocolInstruction = "route add -host " +
                         accessPoints.Get(j).WhatWifiIP() + " gw " +
                         accessPoints.Get(gatewayMatrix[i][j]).WhatWifiIP() + " " +
                         accessPoints.Get(i).WhatWifiDevice();
                 SetInstructionToNode(routingInstruction, protocolInstruction, i);
                 delList.add(protocolInstruction);
+                }
             }
             SetInstructionToNode(routingInstruction, "sleep " + GetSimulationTime(), i);
             //Generating the deletion of the routing
@@ -2557,8 +2559,8 @@ public class CastadivaModel {
         Integer gateways[] = new Integer[accessPoints.Size()];
 
         //Set gateway matrix to 0
-        for (int j = 0; j < accessPoints.Size(); j++) {
-            for (int i = 0; i < accessPoints.Size(); i++) {
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            for (int j = 0; j < accessPoints.Size(); j++) {
                 gatewayMatrix[i][j] = 0;
             }
         }
@@ -2612,8 +2614,10 @@ public class CastadivaModel {
 
         for (int i = 0; i < accessPoints.Size(); i++) {
             prevNode = i;
-            nextNode = -1;
-            if (tree[i] == node) {
+            nextNode = tree[i];
+
+            /* OLD_CODE Think does not work properly
+             if (tree[i] == node) {
                 gateways[i] = i;
             } else {
                 //Searching the next hop in the routing.
@@ -2625,11 +2629,29 @@ public class CastadivaModel {
                     nextNode = tree[prevNode];
                 }
                 gateways[i] = prevNode;
+            }*/
+
+            //BEGIN NEW CODE
+            while(nextNode != node) {
+                prevNode = nextNode;
+                nextNode = tree[prevNode];
             }
+            gateways[i] = prevNode;
+            //END NEW CODE
+            
         }
+        System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
+        printIntegerVector(gateways);
         return gateways;
     }
 
+
+    public void printIntegerVector(Object v[]) {
+        for(int i = 0; i < v.length; i++) {
+            System.out.print(v[i].toString() + " ");
+        }
+        System.out.println();
+    }
     /**
      * Create a tree of a graph with a determinated root.
      */
@@ -2645,23 +2667,32 @@ public class CastadivaModel {
         }
 
         visited[node] = 1;
+        tree[node] = node;
         next.add(node);
 
         while (next.size() > 0) {
             nodeUsed = (Integer) next.get(0);
             next.remove(0);
+            System.out.println("Node Used " + accessPoints.Get(nodeUsed).WhatAP());
             for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
-                if (visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
+                if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
                 {
-                    if (visited[i] == 0) {
+                        System.out.println("Views " + accessPoints.Get(i).WhatAP());
                         //Add to the list.
                         next.add(i);
                         visited[i] = 1;
                         tree[i] = nodeUsed;
-                    }
                 }
             }
+        }
+        printIntegerVector(tree);
+        System.out.println("Visibility Matrix");
+        for(int i = 0; i < visibilityMatrix.length; i++){
+            for(int j = 0; j < visibilityMatrix[i].length; j++){
+                System.out.print(visibilityMatrix[i][j] + " ");
+            }
+            System.out.println();
         }
         return tree;
     }
@@ -2681,6 +2712,7 @@ public class CastadivaModel {
         }
 
         visited[node] = 1;
+        tree[node] = node;
         next.add(node);
 
         visibilityMatrix = GenerateMobilityVisibilityMatrix(second);
@@ -2689,14 +2721,12 @@ public class CastadivaModel {
             next.remove(0);
             for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
-                if (visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
+                if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
                 {
-                    if (visited[i] == 0) {
                         //Add to the list.
                         next.add(i);
                         visited[i] = 1;
                         tree[i] = nodeUsed;
-                    }
                 }
             }
         }
@@ -3338,6 +3368,11 @@ public class CastadivaModel {
      */
     private List WhatPackets() {
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_PACKET_LIST);
+
+        if(!file.exists()){
+            System.err.println("Error opening file " + file.getAbsolutePath());
+        }
+
         return ReadTextFileInLines(file);
     }
 
@@ -3970,6 +4005,10 @@ public class CastadivaModel {
     public String[] ObtainStoredApData(Integer node) {
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_APS_FILE);
 
+        if(!file.exists()){
+            System.err.println("Error opening file " + file.getAbsolutePath());
+        }
+        
         return ObtainStoredApData(node, file);
     }
 
@@ -4345,6 +4384,11 @@ public class CastadivaModel {
         String line;
         Integer help_lines = 1;
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_APS_FILE);
+
+        if(!file.exists()){
+            System.err.println("Error opening file " + file.getAbsolutePath());
+        }
+
         lines = ReadTextFileInLines(file);
         if (node + 1 > lines.size() - help_lines) {
             String descomposed_line[] = {DEFAULT_WIFI_MAC, DEFAULT_IP_NET + (node + 1),
