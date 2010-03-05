@@ -14,6 +14,7 @@ import castadiva_gui.SimulationGUI;
 import castadiva_gui.MobilityDesignerGUI;
 import castadiva_gui.InstallApGUI;
 import castadiva_gui.ExecutionPlannerGUI;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -34,7 +35,13 @@ public class Main {
         System.out.println("Checking args:");
         if(args[0].equals("--config-dir") || args[0].equals("-cd")) {
             System.out.println("\tConfig dir: " + args[1]);
-            model.DEFAULT_CONFIG_DIRECTORY = args[1];
+
+            File f = new File(args[1]);
+            if(!f.exists() || !f.isDirectory()) {
+                System.err.println("---- Configuration directory not valid ----");
+            } else {
+                model.DEFAULT_CONFIG_DIRECTORY = args[1];
+            }
         }
     }
 
@@ -60,7 +67,7 @@ public class Main {
      */
     public static void main(String[] args) {
         
-                try {
+        try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
