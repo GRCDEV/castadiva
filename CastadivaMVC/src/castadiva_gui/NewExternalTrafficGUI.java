@@ -153,6 +153,10 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         List data = new ArrayList();
         File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator + 
                 m_model.DEFAULT_APPLICATION_FILE);
+        if(!file.exists()){
+            System.err.println("Error opening file " + file.getAbsolutePath());
+        }
+        
         lines = m_model.ReadTextFileInLines(file);
         for(int i=help_lines; i<lines.size(); i++){
             line = (String)lines.get(i);

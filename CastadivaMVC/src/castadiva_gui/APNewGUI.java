@@ -39,6 +39,10 @@ public class APNewGUI extends javax.swing.JFrame {
         
         File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator + 
                 m_model.DEFAULT_PROCESSOR_FILE);
+        if(!file.exists()){
+            System.err.println("Error opening file " + file.getAbsolutePath());
+        }
+
         processor = m_model.ReadTextFileInLines(file);
         if(processor.size() == 0) processor.add("none");
         for (int i=0; i<processor.size();i++){
