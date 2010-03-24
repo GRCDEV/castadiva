@@ -142,4 +142,12 @@ public class ExecutionPlannerTableModel extends AbstractTableModel{
         }
         return null;
     }
+
+    public Vector getRowVector() {
+        return rows;
+    }
+    
+    public void setRowVector(Vector list) {
+        rows = list;
+    }
 }

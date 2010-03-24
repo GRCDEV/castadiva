@@ -14,7 +14,16 @@ import castadiva_gui.NewExternalTrafficGUI;
 import castadiva_gui.SimulationGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -31,6 +40,10 @@ public class ExecutionPlanner {
     private CastadivaController m_control;
     private ExecutionPropiertiesDialog prop;
     private int currentlySimulatingRow;
+
+    private final String MSG_EXECUTION_PLANNER_DONE = "Done";
+    private final String MSG_EXECUTION_PLANNER_READY = "Ready";
+    private final String MSG_EXECUTION_PLANNER_CANCELLED = "Cancelled";
 
     ExecutionPlanner(SimulationGUI sim, final ExecutionPlannerGUI exec, CastadivaModel model,
                      NewExternalTrafficGUI attach, final MainMenuGUI main, CastadivaController control) {
@@ -69,6 +82,8 @@ public class ExecutionPlanner {
         m_exec.addImportScenarioButtonListener(m_control.new ImportNsListener());
         m_exec.addGenerateSimulationButtonListener(new generateSimulationsExecutionPlanner());
         m_exec.addStopSimulationsButtonListener(new stopSimulationsExecutionPlanner());
+        m_exec.addLoadListButtonListener(new loadExecutionPlannerList());
+        m_exec.addSaveListButtonListener(new saveExecutionPlannerList());
     }
 
     void setVisible(boolean b) {
@@ -142,8 +157,8 @@ public class ExecutionPlanner {
         if (currentExecutionRecord.getRuns()>0) {
             StartExecutionPlannerSimulation();
         } else {
-            // If there are no more runs, status goes to "Done"
-            currentExecutionRecord.setStatus("Done");
+            // If there are no more runs, status goes to MSG_EXECUTION_PLANNER_DONE
+            currentExecutionRecord.setStatus(MSG_EXECUTION_PLANNER_DONE);
             m_exec.updateTable();
 
             // If there are other simulations to perform
@@ -170,6 +185,70 @@ public class ExecutionPlanner {
 
     public int getCurrentlySimulatingRow(){
         return currentlySimulatingRow;
+    }
+
+    private void saveSimulationList(Vector rows, File f) {
+
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(f);
+            BufferedWriter out = new BufferedWriter(fw);
+
+            out.write("#Source folder\tResults folder\tRuns");
+            out.newLine();
+
+            for( int i = 0; i < rows.size(); i++) {
+                ExecutionRecord e = (ExecutionRecord) rows.get(i);
+                out.write(e.getSourceFolder() +"\t" + e.getResultsFolder() + "\t" + e.getRuns().toString());
+                out.newLine();
+            }
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ExecutionPlanner.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ExecutionPlanner.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
+    private Vector loadSimulationList(File f) {
+        FileReader fr = null;
+        Vector rows = new Vector();
+        try {
+            fr = new FileReader(f);
+            BufferedReader br = new BufferedReader(fr);
+
+            String s;
+            while((s = br.readLine()) != null) {
+                s = s.trim();
+                if(!s.isEmpty() && !s.startsWith("#")) {
+                    ExecutionRecord e = new ExecutionRecord();
+                    String [] stringRecord = s.split("\t");
+                    e.setSourceFolder(stringRecord[0]);
+                    e.setResultsFolder(stringRecord[1]);
+                    e.setRuns(Integer.parseInt(stringRecord[2]));
+                    if(e.getRuns() > 0) {
+                        e.setStatus(MSG_EXECUTION_PLANNER_READY);
+                    }else{
+                        e.setStatus(MSG_EXECUTION_PLANNER_DONE);
+                    }
+                    rows.add(e);
+                }
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ExecutionPlanner.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex){
+            Logger.getLogger(ExecutionPlanner.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return rows;
+
+
     }
 
     /****************************************************************\
@@ -232,7 +311,7 @@ public class ExecutionPlanner {
                 // The simulations start with the upper row
                 currentlySimulatingRow = 0;
 
-                // The first simulation is processed. When that simulation ends, it will calls the next one.
+                // The first simulation is processed. When that simulation ends, it calls the next one.
                 StartExecutionPlannerSimulation();
             } else {
                 JOptionPane.showMessageDialog(null, "You must configure a simulation first.");
@@ -253,7 +332,7 @@ public class ExecutionPlanner {
             m_model.KillSimulation();
 
             // Status of the current simulation is updated
-            currentExecutionRecord.setStatus("Cancelled");
+            currentExecutionRecord.setStatus(MSG_EXECUTION_PLANNER_CANCELLED);
             m_exec.updateTable();
 
             m_model.executionPlannerSimulating = false;
@@ -343,7 +422,7 @@ public class ExecutionPlanner {
             exe.setSourceFolder(prop.getSourceText());
             exe.setResultsFolder(prop.getResultsText());
             exe.setRuns(prop.getRuns());
-            exe.setStatus("Ready");
+            exe.setStatus(MSG_EXECUTION_PLANNER_READY);
 
             m_exec.updateTable();
 
@@ -393,5 +472,42 @@ public class ExecutionPlanner {
                 }
             }
         }
+    }
+
+    class saveExecutionPlannerList implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            File f = new File(m_model.pathScenario);
+            JFileChooser save = new JFileChooser(f);
+            int selected = save.showSaveDialog(save);
+
+            if(selected == JFileChooser.APPROVE_OPTION) {
+                File file = save.getSelectedFile();
+                Vector list = m_exec.getRowVector();
+                saveSimulationList(list, file);
+                file = null;
+            }
+
+        }
+
+    }
+
+    class loadExecutionPlannerList implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            File f = new File(m_model.pathScenario);
+            JFileChooser load = new JFileChooser(f);
+            int selected = load.showOpenDialog(load);
+
+            if(selected == JFileChooser.APPROVE_OPTION) {
+                File file = load.getSelectedFile();
+                Vector list = loadSimulationList(file);
+                m_exec.setRowVector(list);
+                file = null;
+            }
+        }
+
     }
 }
