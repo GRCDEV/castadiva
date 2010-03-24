@@ -41,9 +41,6 @@ public class ExecutionPlanner {
     private ExecutionPropiertiesDialog prop;
     private int currentlySimulatingRow;
 
-    private final String MSG_EXECUTION_PLANNER_DONE = "Done";
-    private final String MSG_EXECUTION_PLANNER_READY = "Ready";
-    private final String MSG_EXECUTION_PLANNER_CANCELLED = "Cancelled";
 
     ExecutionPlanner(SimulationGUI sim, final ExecutionPlannerGUI exec, CastadivaModel model,
                      NewExternalTrafficGUI attach, final MainMenuGUI main, CastadivaController control) {
@@ -158,7 +155,7 @@ public class ExecutionPlanner {
             StartExecutionPlannerSimulation();
         } else {
             // If there are no more runs, status goes to MSG_EXECUTION_PLANNER_DONE
-            currentExecutionRecord.setStatus(MSG_EXECUTION_PLANNER_DONE);
+            currentExecutionRecord.setStatus(m_exec.MSG_EXECUTION_PLANNER_DONE);
             m_exec.updateTable();
 
             // If there are other simulations to perform
@@ -232,9 +229,9 @@ public class ExecutionPlanner {
                     e.setResultsFolder(stringRecord[1]);
                     e.setRuns(Integer.parseInt(stringRecord[2]));
                     if(e.getRuns() > 0) {
-                        e.setStatus(MSG_EXECUTION_PLANNER_READY);
+                        e.setStatus(m_exec.MSG_EXECUTION_PLANNER_READY);
                     }else{
-                        e.setStatus(MSG_EXECUTION_PLANNER_DONE);
+                        e.setStatus(m_exec.MSG_EXECUTION_PLANNER_DONE);
                     }
                     rows.add(e);
                 }
@@ -332,7 +329,7 @@ public class ExecutionPlanner {
             m_model.KillSimulation();
 
             // Status of the current simulation is updated
-            currentExecutionRecord.setStatus(MSG_EXECUTION_PLANNER_CANCELLED);
+            currentExecutionRecord.setStatus(m_exec.MSG_EXECUTION_PLANNER_CANCELLED);
             m_exec.updateTable();
 
             m_model.executionPlannerSimulating = false;
@@ -422,7 +419,7 @@ public class ExecutionPlanner {
             exe.setSourceFolder(prop.getSourceText());
             exe.setResultsFolder(prop.getResultsText());
             exe.setRuns(prop.getRuns());
-            exe.setStatus(MSG_EXECUTION_PLANNER_READY);
+            exe.setStatus(m_exec.MSG_EXECUTION_PLANNER_READY);
 
             m_exec.updateTable();
 

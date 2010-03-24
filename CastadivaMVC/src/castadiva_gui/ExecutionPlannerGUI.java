@@ -28,6 +28,14 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     int numSim = 0;
     ExecutionPlannerTableModel tableModel = new ExecutionPlannerTableModel();
 
+    public final String MSG_EXECUTION_PLANNER_DONE = "Done";
+    public final String MSG_EXECUTION_PLANNER_READY = "Ready";
+    public final String MSG_EXECUTION_PLANNER_CANCELLED = "Cancelled";
+    public final String MSG_EXECUTION_PLANNER_LOAD = "Loading protocol...";
+    public final String MSG_EXECUTION_PLANNER_WAITING = "Waiting for the AP...";
+    public final String MSG_EXECUTION_PLANNER_STARTING = "Starting simulation...";
+    public final String MSG_EXECUTION_PLANNER_SIMULATING = "Simulation in process...  ";
+    public final String MSG_EXECUTION_PLANNER_RETRIEVING = "Retrieving data from AP. ";
     /** Creates new form executionPlannerGUI */
     public ExecutionPlannerGUI(CastadivaModel model) {
         initComponents();
@@ -72,8 +80,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
         exe.setSourceFolder(name);
         exe.setResultsFolder(name);
-        exe.setRuns(1);
-        exe.setStatus("Ready");
+        exe.setRuns(10);
+        exe.setStatus(MSG_EXECUTION_PLANNER_READY);
         
         tableModel.addRow(exe);
         updateTable();
@@ -146,19 +154,19 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     public void SetStatus(int row) {
         ExecutionRecord record = getRow(row);
         if (model.WhatStopwatch() > 0 && model.WhatStopwatch() < model.GetProtocolLoadingTimeWaiting()) {
-            record.setStatus("Loading the protocol...");
+            record.setStatus(MSG_EXECUTION_PLANNER_LOAD);
         }
         if (model.WhatStopwatch() > 0 && model.WhatStopwatch() == model.GetProtocolLoadingTimeWaiting()) {
-            record.setStatus("Waiting for the AP...");
+            record.setStatus(MSG_EXECUTION_PLANNER_WAITING);
         }
         if (model.WhatStopwatch() == model.GetApTimeWaiting()) {
-            record.setStatus("Starting simulation...");
+            record.setStatus(MSG_EXECUTION_PLANNER_STARTING);
         }
         if (model.WhatStopwatch() == (model.GetApTimeWaiting() + 1)) {
-            record.setStatus("Simulation in process...  ");
+            record.setStatus(MSG_EXECUTION_PLANNER_SIMULATING);
         }
         if (model.WhatStopwatch() > model.GetRealSimulationTime() && !model.IsStatisticsEnded()) {
-            record.setStatus("Retrieving data from AP. ");
+            record.setStatus(MSG_EXECUTION_PLANNER_RETRIEVING);
         }
         this.updateTable();
     }
