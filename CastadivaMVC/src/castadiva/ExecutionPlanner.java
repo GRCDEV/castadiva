@@ -14,8 +14,6 @@ import castadiva_gui.NewExternalTrafficGUI;
 import castadiva_gui.SimulationGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -45,13 +43,14 @@ public class ExecutionPlanner {
         // Prevents the user from closing the whole program when closing the window
         exec.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         // Overrides the windowClosing event and restores the main menu instead.
-        exec.addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent e) {
-            main.setVisible(true);
-    }
-        });
-
+        exec.addWindowListener(
+                new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        main.setVisible(true);
+                    }
+                }
+        );
     }
 
     void setPropListeners() {

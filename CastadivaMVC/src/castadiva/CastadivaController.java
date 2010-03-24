@@ -933,128 +933,210 @@ public class CastadivaController {
      *
      ****************************************************************************/
 
-     void routingProtocolListenersReady() {
+    /**
+     * Action performed when the "Create plugin" button is pushed in the "configure
+     * protocols" window.
+     */
+    void routingProtocolListenersReady() {
         m_protocol.addCreatePluginListener(new createRoutingPluginListener());
     }
 
+    /**
+     * According to the information given in the "configure protocols" interface,
+     * the following class allows to create and compile a new plugin. Plugins are
+     * compiled as .jar files. Later on, they can be loaded using the
+     * ServiceLoader class.
+     * @author nacho wannes
+     * @see ServiceLoader
+     */
     class createRoutingPluginListener implements ActionListener {
-        String ruta = m_protocol.getRuta();
-        String[] sa = ruta.split("[" + File.separatorChar + "]");
-        String path = m_protocol.getPath();
-        String[] pa = path.split("[" + File.separatorChar + "]");
-        String jar = m_protocol.getJar();
-        String conf = m_protocol.getConf();
-        String flags = m_protocol.getFlags();
+        String binaryFilePath = m_protocol.getBinaryFilePath();
+       
+        String configurationFilePath; 
+        String jarFileName;
+        String protocolConfiguration;
+        String protocolFlags;
+        
+        String[] configurationFileName;
+        String[] binaryFileName;
 
         public void actionPerformed(ActionEvent arg0) {
-            //CREAR JAVA
-            ruta = m_protocol.getRuta();
-            sa = ruta.split("[" + File.separatorChar + "]");
-            path = m_protocol.getPath();
-            pa = path.split("[" + File.separatorChar + "]");
-            jar = m_protocol.getJar();
-            conf = m_protocol.getConf();
-            flags = m_protocol.getFlags();
+            // Getting information from the GUI 
+            binaryFilePath = m_protocol.getBinaryFilePath();
+            configurationFilePath = m_protocol.getConfigurationFilePath();
+            jarFileName = m_protocol.getJarFileName();
+            protocolConfiguration = m_protocol.getProtocolConfiguration();
+            protocolFlags = m_protocol.getProtocolFlags();
 
-            if (m_protocol.getJar().length() < 1) {
+            // The last part of binaryFilePath is considered as the configuration filename
+            configurationFileName = binaryFilePath.split("[" + File.separatorChar + "]");
+            // The last part of configurationFilePath is considered as the bin filename
+            binaryFileName = configurationFilePath.split("[" + File.separatorChar + "]");
+
+            // Checking if all requested information has been provided
+            if (m_protocol.getJarFileName().length() < 1) {
                 JOptionPane.showMessageDialog(new JFrame(), "The plugin needs a name");
-            } else if (m_protocol.getConf().length() <= 1) {
+            }
+            else if (m_protocol.getProtocolConfiguration().length() <= 1) {
                 JOptionPane.showMessageDialog(new JFrame(), "Empty configuration protocol content");
-            } else if (m_protocol.getPath().length() < 1 || pa.length < 1) {
+            }
+            else if (m_protocol.getConfigurationFilePath().length() < 1 || binaryFileName.length < 1) {
                 JOptionPane.showMessageDialog(new JFrame(), "Empty configuration protocol path");
-            } else if (sa.length >= 2) {
+            }
+            // The configuration file name must contain at least one File.separatorChar character
+            else if (configurationFileName.length >= 2) {
                 int answer = JOptionPane.showConfirmDialog(new JFrame(), "Do you want to save your changes?", "Save Changes?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null);
                 if (answer == JOptionPane.OK_OPTION) {
                     compileJarFile();
                     createJars();
-                    pluginDet.notifyObserversRout(jar);
+                    // The plugin detector must be warned about the creation of
+                    // a new plugin
+                    pluginDet.notifyObserversRout(jarFileName);
                 }
             }
         }
 
+        /**
+         * The following creates a .java file with the gathered protocol informations.
+         * The .java file is a class that implements IPluginsCastadiva
+         * The .java file is placed into a work folder and will later on be used
+         * by the createJars fuction.
+         * @author nacho wannes
+         * @see createJars
+         */
         private void compileJarFile() {
 
-            String nombreJar = jar;
-            String name = nombreJar + ".java";
-            //BufferedWriter bout = new BufferedWriter(new FileWriter("codeProtocols" + File.separatorChar + name));
-            try {
-                BufferedWriter bout = new BufferedWriter(new FileWriter("codeProtocols/" + name));
-                bout.write("package castadiva.Plugins;\n");
-                bout.write("import lib.IPluginCastadiva;\n");
-                bout.write("public class " + nombreJar + " implements IPluginCastadiva {\n");
-                //metodos
-                bout.write("public String getBin() {\n");
-                bout.write("return \"" + ruta + "\"; \n}\n");
-                bout.write("public String getFlags() {\n");
-                bout.write("return \"" + flags + "\"; \n}\n");
-                bout.write("public String getPathConf() {\n");
-                bout.write("return \"" + path + "\"; \n}\n");
-                bout.write("public String getConfContent(){\n");
-                bout.write("return \"" + conf + "\";\n}\n");
-                bout.write("public String getKillInstruction() {\n");
-                bout.write("return  \"killall " + sa[sa.length - 1] + " 2>/dev/null\"" + "; \n}\n}");
+            String javaFileName = jarFileName + ".java";
 
+            try {
+                // A temporary folder is created to generate the .java file
+                File pluginWorkDirectory = new File(CastadivaModel.PLUGIN_WORKFOLDER);
+                pluginWorkDirectory.mkdirs();
+
+                /* Wannes : It is not possible to write conf in the .java
+                 * file when it is written over several lines and/or with special characters.
+                 * Therefore, the conf file must be written as a file
+                 * and later on, included in the jar. The getConfContent can
+                 * then return the content of the file
+                 */
+
+                File pluginsDir = new File(pluginWorkDirectory.getPath()+"/castadiva/Plugins");
+                pluginsDir.mkdirs();
+
+                BufferedWriter bout = new BufferedWriter(new FileWriter(pluginWorkDirectory.getPath()+"/castadiva/Plugins/"+ javaFileName));
+                bout.write("package castadiva.Plugins;\n");
+                bout.write("import java.io.BufferedReader;\n");
+                bout.write("import java.io.FileReader;\n");
+                bout.write("import lib.IPluginCastadiva;\n");
+                bout.write("public class " + jarFileName + " implements IPluginCastadiva {\n");
+                //metodos
+                bout.write("    public String getBin() {\n");
+                bout.write("        return \"" + binaryFilePath + "\"; \n    }\n");
+                bout.write("    public String getFlags() {\n");
+                bout.write("        return \"" + protocolFlags + "\"; \n    }\n");
+                bout.write("    public String getPathConf() {\n");
+                bout.write("        return \"" + configurationFilePath + "\"; \n    }\n");
+                bout.write("    public String getConfContent(){\n");
+                bout.write("        BufferedReader confFileReader;\n");
+                bout.write("        try {\n");
+                bout.write("            confFileReader = new BufferedReader(new FileReader(\"src/castadiva/Plugins/"+jarFileName+".conf\"));\n");
+                bout.write("            String confFile = \"\";\n");
+                bout.write("            String confFileLine;\n");
+                bout.write("            while((confFileLine = confFileReader.readLine()) != null){\n");
+                bout.write("                 confFile+=\"\\n\"+confFileLine;\n");
+                bout.write("            }\n");
+                bout.write("            return(confFile);\n");
+                bout.write("        } catch (Exception ex) {\n");
+                bout.write("            System.out.println(ex);\n");
+                bout.write("        }\n");
+                bout.write("        return(null);\n");
+                bout.write("    }\n");
+                bout.write("    public String getKillInstruction() {\n");
+                bout.write("        return  \"killall " + binaryFileName[binaryFileName.length - 1] + " 2>/dev/null\"" + ";\n    }\n}");
                 bout.close();
-                File fp = new File("castadiva/Plugins/");
-                fp.mkdirs();
-                Runtime rt = Runtime.getRuntime();
-                Process p = rt.exec("cp codeProtocols/" + name + " castadiva/Plugins/" + name);
-                p.waitFor();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ProtocolsGUI.class.getName()).log(Level.SEVERE, null, ex);
+
+                // The configuration is saved in a .conf file directly in the final jar directory
+                BufferedWriter confFileWriter = new BufferedWriter(new FileWriter(CastadivaModel.PLUGIN_JAR_FOLDER+"/"+jarFileName+".conf"));
+                confFileWriter.write(protocolConfiguration);
+                confFileWriter.close();
+                                
             } catch (IOException ex) {
                 Logger.getLogger(ProtocolsGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
+        /**
+         * CreateJars() first compiles the .java class that was previously
+         * created in compileJarFile. It then packages it as a .jar file which
+         * can later on be used by pluginLoader with the ServiceLoader system
+         * @author nacho wannes
+         * @see compileJarFile, ServiceLoader
+         */
         private void createJars() {
             try {
-                //primero creamos los ficheros de informacion del JAR
-                File f = new File("META-INF/services/");
-                f.mkdirs();
+                // We first have to make a few folders to organise the jar file.
+                File libDir = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/lib/");
+                libDir.mkdirs();
+                File metaDir = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/META-INF/");
+                metaDir.mkdirs();
+                File servicesDir = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/META-INF/services/");
+                servicesDir.mkdirs();
+                File pluginsDir = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/Plugins");
 
-                BufferedWriter bout2 = new BufferedWriter(new FileWriter("META-INF/services/lib.IPluginCastadiva"));
-                bout2.write("castadiva.Plugins." + jar);
+                BufferedWriter bout2 = new BufferedWriter(new FileWriter(servicesDir.getPath()+"/lib.IPluginCastadiva"));
+                bout2.write("castadiva.Plugins." + jarFileName);
                 bout2.close();
                 Runtime rt = null;
                 try {
-                    //a continuacion lanzamos los procesos correspondientes a la compilacion y a la encapsulacion del JAR
                     rt = Runtime.getRuntime();
 
-                    Process p = rt.exec("javac castadiva/Plugins/" + jar + ".java lib/IPluginCastadiva.java");
+                    Process p = rt.exec("javac "+pluginsDir.getPath()+"/" + jarFileName + ".java "+CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/IPluginCastadiva.java");
                     p.waitFor(); //esperamos a que termine el proceso externo
+
+                    // The file is moved to be inserted into the package
+                    Runtime copyLib = Runtime.getRuntime();
+                    Process copyLibProcess = copyLib.exec("mv "+CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/IPluginCastadiva.class "+libDir.getPath()+"/IPluginCastadiva.class");
+                    copyLibProcess.waitFor();
                 } catch (Exception e) {
+                    System.out.println(e);
                 }
                 try {
-                    Process p2 = rt.exec("jar cf src/castadiva/Plugins/" + jar + ".jar castadiva/Plugins/" + jar + ".class lib META-INF");
+                    // Finaly the jar file is packaged in the final plugin directory
+                    Process p2 = rt.exec("jar cf "+CastadivaModel.PLUGIN_JAR_FOLDER+"/" + jarFileName + ".jar "+pluginsDir.getPath()+"/"+jarFileName+".class "+libDir.getPath()+" "+metaDir.getPath()+")");
                     p2.waitFor();
                 } catch (Exception e1) {
                 }
-                JOptionPane.showMessageDialog(new JFrame(), "Plugin created correctly");
-                //Eliminamos los fichero intermedios
+                JOptionPane.showMessageDialog(new JFrame(), "Plugin sucessfully created");
+                
+                // The temporary folder is cleaned as well as the temporary files
+                File workFolder = new File(CastadivaModel.PLUGIN_WORKFOLDER);
+                deleteDirectory(workFolder);
 
-                File f1 = new File("META-INF/services/lib.IPluginCastadiva");
-                f1.delete();
-                f1 = new File("META-INF/services/");
-                f1.delete();
-                f1 = new File("META-INF/");
-                f1.delete();
-                f1 = new File("castadiva/Plugins/" + jar + ".class");
-                f1.delete();
-                f1 = new File("castadiva/Plugins/" + jar + ".java");
-                f1.delete();
-                f1 = new File("castadiva/Plugins/");
-                f1.delete();
-                f1 = new File("castadiva/");
-                f1.delete();
-                f1 = new File("lib/IPluginCastadiva.class");
-                f1.delete();
+                // The protocol configuration window is closed
                 m_protocol.dispose();
-            /*
-            } catch (InterruptedException ex) {
-            Logger.getLogger(ProtocolsGUI.class.getName()).log(Level.SEVERE, null, ex);*/
             } catch (IOException ex) {
                 Logger.getLogger(ProtocolsGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        /*
+         * @author Wannes
+         * Allows to recursively delete a directory with its content
+         * @param path points to the folder to be deleted
+         * @return true if the deletion was sucessfull
+         * @see File
+         */
+        public void deleteDirectory(File path) {
+            if( path.exists() ) {
+                File[] files = path.listFiles();
+                for(int i=0; i<files.length; i++) {
+                    if(files[i].isDirectory()) {
+                        deleteDirectory(files[i]);
+                    }
+                    else {
+                        files[i].delete();
+                    }
+                }
             }
         }
     }
@@ -1299,9 +1381,6 @@ public class CastadivaController {
                         //If is a defined simulation, show the statistics.
                         m_model.simulationSeconds = 0;
                         if (!m_model.randomSimulating) {
-                            if (m_simulationWindow.usingPlugin()) {
-                                m_model.desinstalarEnRouters();
-                            }
                             if (!m_model.executionPlannerSimulating) {
                                 EndSimulation();
                             } else {

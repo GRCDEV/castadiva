@@ -8,6 +8,7 @@ import castadiva.TableModels.TrafficTableModel;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 //import com.sun.jndi.cosnaming.IiopUrl.Address;
@@ -34,6 +35,8 @@ import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.jar.*;
+import java.util.zip.ZipEntry;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import lib.IMobilityPluginCastadiva;
@@ -91,6 +94,10 @@ public class CastadivaModel {
     private String STARTING_FOLDER = "/";
     public String DEFAULT_CONFIG_DIRECTORY = "configuration";
     public final String DEFAULT_APPLICATION_FILE = "applications.txt";
+    public static final String PLUGIN_WORKFOLDER = "pluginFiles"; // The following folder is used to compile plugins
+    public static final String PLUGIN_JAR_FOLDER = "src/castadiva/Plugins"; // The compiled plugins are then stored in the following folder
+    public static final String PLUGIN_INCLUDE_FOLDER = "src/lib"; // To compile, the abstract IPluginCastadiva.java is needed. It must be located in the following directory
+
     //Simulation variables
     public final int TRAFFIC_SERVER_TIME_WAIT = 2;
     public final int TTCP_SERVER_MAX_WAIT = 10;
@@ -211,7 +218,7 @@ public class CastadivaModel {
     public String rutaConf = "";
 
     //If true, show output in console.
-    public final boolean debug = false;
+    public final boolean debug = true;
     public IPluginCastadiva[] routing_protocols = new IPluginCastadiva[]{};
     public IMobilityPluginCastadiva[] mob_plugins = new IMobilityPluginCastadiva[]{};
     public String mobilityModel = "RANDOM WAY POINT";
@@ -485,7 +492,7 @@ public class CastadivaModel {
         AP tmp_AP = new AP(address, wifiAddress, wifiMac, user, pwd, id, x,
                 y, z, range, directory, processor, channel, mode, wfDevice, gw);
         accessPoints.Set(number, tmp_AP);
-    }
+        }
 
     /**
      * Add an AP to the Simulation. This AP now can be used and placed into the simulation
@@ -949,9 +956,9 @@ public class CastadivaModel {
                         i, statisticsControl);
                 VectorStatisticThread.add(i, StatisticsTCP);
                 StatisticsTCP.start();
+                }
             }
         }
-    }
 
     /**
      * This function stop the simulation when all the traffic data has been calculate.
@@ -1293,8 +1300,10 @@ public class CastadivaModel {
                             exit, emptyList, computer.WhatWorkingDirectory());
                     sshThreadList.add(i, ssh);
                     ssh.start();
-                } catch (ClassCastException ce) {
-                } catch (IndexOutOfBoundsException ex) {
+                } catch (Exception ce) {
+                    if (debug){
+                        System.out.println(ce);
+                    }
                 }
             }
         }
@@ -2305,7 +2314,7 @@ public class CastadivaModel {
                 }
                 if (lastRoutingProtocol.equals("OLSR")) {
                     deleteInstruction = CleanRoutingRules(accessPoints.Get(i));
-                }
+                    }
                 if (lastRoutingProtocol.equals("Optimum")) {
                     deleteInstruction = killOptimum;
                 }
@@ -2335,17 +2344,55 @@ public class CastadivaModel {
     private void GeneratePluginProtocolInstructions() {
 
         String protocolInstruction = "";
+        routing_protocols = detector.getProtocolPlugins();
 
+        // If the user has set custom protocol plugins, instructions are sent
+        // for the selected protocol.
         if (routing_protocols.length > 0) {
+
             for (IPluginCastadiva a : routing_protocols) {
                 if (a.getClass().getSimpleName().equals(routingProtocol)) {
-                    protocolInstruction = a.getBin() + "\n\n" + "sleep " + GetRealSimulationTime() + "\n\n" + a.getKillInstruction() + "\n\n";
-                    //Instalar configuracion del protocolo en cada router
-                    rutaConf = a.getPathConf().trim();
-                    instalarEnRouters(rutaConf, a.getConfContent());
+                    PROTOCOL_TIME_WAIT = 2;
+                    // The configuration file for the protocol is copied to the local nfs folder
+                    Runtime configurationFileRuntime = Runtime.getRuntime();
+                    Process configurationFileProcess;
+                    try {
+                        configurationFileProcess = configurationFileRuntime.exec("cp src/castadiva/Plugins/" + a.getClass().getSimpleName() + ".conf " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf ");
+                        configurationFileProcess.waitFor();
+                    } catch (Exception e) {
+                        System.out.println("Unable to copy the configuration file from src/castadiva/Plugins/" + a.getClass().getSimpleName() + ".conf to " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf  : "+e);
+                    }
+
                     for (int i = 0; i < accessPoints.Size(); i++) {
-                        CleanRoutingRules(accessPoints.Get(i));
+                        rutaConf = a.getPathConf().trim();
+                        protocolInstruction = "";
+                        
+                        // The configuration path is copied through NFS to the remote location
+                        protocolInstruction ="cp "+accessPoints.Get(i).WhatWorkingDirectory()+"/"+a.getClass().getSimpleName()+".conf "+a.getPathConf()+"\n";
+                        
+                        // Once the configuration file is ready, the protocol can be started
+                        // After a sleep time, the protocol is uninstalled
+                        protocolInstruction+=
+                                "#Start routing protocol.\n" +
+                                a.getBin() +" "+a.getFlags()+"\n\n"+
+                                "#Wait for the end of simulation.\n" +
+                                "sleep " + GetRealSimulationTime() + "\n\n" +
+                                "#Kill the protocol\n" +
+                                a.getKillInstruction()+ "\n\n" +
+                                "#Clean protocol configuration file\n"+
+                                "rm "+rutaConf+"\n";
+
                         SetInstructionToNode(routingInstruction, protocolInstruction, i);
+                     }
+
+                    // The protocol configuration file can eventually be deleted here.
+
+                    // instalarEnRouters(rutaConf, a.getConfContent());
+
+                    if(debug)
+                    {
+                        System.out.println("Instrucitons sent to routers.");
+                        System.out.println("File \""+rutaConf+"\" copied to routers");
                     }
                 }
             }
@@ -2376,16 +2423,6 @@ public class CastadivaModel {
         }
     }
     
-    public void desinstalarEnRouters( ) {
-         List instructions = new ArrayList<String>();
-          instructions.add("rm " + rutaConf);
-             for(int i = 0; i < accessPoints.Size(); ++i) {
-                        String ip_host = accessPoints.Get(i).WhatEthIP();
-                        String user = accessPoints.Get(i).WhatUser();
-                        String pwd = accessPoints.Get(i).WhatPwd();
-                        SendInstruction(ip_host, user, pwd, instructions);
-                 }
-    }
 
     /**
      * Generate all specific instructions for activating the AODV protocol.
@@ -2673,12 +2710,12 @@ public class CastadivaModel {
         while (next.size() > 0) {
             nodeUsed = (Integer) next.get(0);
             next.remove(0);
-            System.out.println("Node Used " + accessPoints.Get(nodeUsed).WhatAP());
+            //System.out.println("Node Used " + accessPoints.Get(nodeUsed).WhatAP());
             for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
                 if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
                 {
-                        System.out.println("Views " + accessPoints.Get(i).WhatAP());
+                        //System.out.println("Views " + accessPoints.Get(i).WhatAP());
                         //Add to the list.
                         next.add(i);
                         visited[i] = 1;
@@ -2687,13 +2724,13 @@ public class CastadivaModel {
             }
         }
         printIntegerVector(tree);
-        System.out.println("Visibility Matrix");
+        /*System.out.println("Visibility Matrix");
         for(int i = 0; i < visibilityMatrix.length; i++){
             for(int j = 0; j < visibilityMatrix[i].length; j++){
                 System.out.print(visibilityMatrix[i][j] + " ");
             }
             System.out.println();
-        }
+        }*/
         return tree;
     }
 
@@ -3520,7 +3557,7 @@ public class CastadivaModel {
         installNode = new SshHost(ip, user, pwd, instructions,
                 false, numInst, "/tmp");
         installNode.start();
-    }
+        }
 
     /**
      * Generate all the instructions to prepare an AP to run with CASTADIVA. The ap
@@ -4937,7 +4974,7 @@ public class CastadivaModel {
      * Set a instruction to a node, without deleting the old node instructions.
      * @param nodesInstructionList A list that contain all nodes instructions.
      * @param instruction The instruction to add.
-     * @param node The namber of the node in the list.
+     * @param node The number of the node in the list.
      */
     private void SetInstructionToNode(List<List<String>> nodesInstructionList, String instruction, int node) {
         List<String> auxList;
@@ -5245,6 +5282,9 @@ public class CastadivaModel {
                     try {
                         Thread.sleep(10);
                     } catch (Exception ee) {
+                        if(debug){
+                            System.out.println(ee);
+                        }
                     }
                 }
             //Disconnect();
@@ -5319,7 +5359,11 @@ public class CastadivaModel {
                 UserInfo ui = new MyUserInfo(node);
                 session.setUserInfo(ui);
                 session.connect();
-            } catch (Exception e) {
+            } catch (JSchException e) {
+                if(debug)
+                {
+                    System.out.println(e);
+                }
                 String text = e.getMessage() + " in AP " + node.WhatAP();
                 String title = "Conexion status";
                 ShowSaveErrorMessage(text, title);
@@ -5412,7 +5456,7 @@ public class CastadivaModel {
                 }
                 JFrame frame = new JFrame();
                 JOptionPane.showMessageDialog(frame, e.getMessage() + " in " +
-                        sshIp, "Conexion status", JOptionPane.ERROR_MESSAGE);
+                        sshIp, "Connection status", JOptionPane.ERROR_MESSAGE);
                 ok = false;
             }
             return ok;

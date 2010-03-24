@@ -4,6 +4,7 @@
  */
 package castadiva.pluginLoader;
 
+import castadiva.CastadivaModel;
 import castadiva.classpath.classpathModifier;
 import lib.IPluginCastadiva;
 
@@ -19,7 +20,7 @@ public class pluginLoader {
 
     private static final String EXTENSION_JAR = ".jar";
     // private static final String DIRECTORIO_PLUGINS = "plugins";  
-    private static final String DIRECTORIO_PLUGINS = "src/castadiva/Plugins/";
+    private static final String DIRECTORIO_PLUGINS = CastadivaModel.PLUGIN_JAR_FOLDER;
     private static final String DIRECTORIO_PLUGINS_MOVILIDAD = "src/castadiva/MobilityPlugins/";
 
     //    CARGADORES DE PLUGINS //////////////////////////////////////////////////
@@ -110,7 +111,7 @@ public class pluginLoader {
         File fi = vUrls.get(0);
         System.out.println(fi.getPath());
          */
-
+        
         //retorna todos los archivos encontrados  
         return vUrls.toArray(new File[0]);
     }
@@ -155,14 +156,14 @@ public class pluginLoader {
      * Obtiene todos los plugins IPluginMensaje encontrados en el classpath 
      * @return lista de plugins encontrados e instanciados 
      */
-    public static IPluginCastadiva[] getPlugins() {
+     public static IPluginCastadiva[] getPlugins() {
 
         //cargamos todas las implementaciones de IPluginMensaje  
         //encontradas en el classpath  
         ServiceLoader<IPluginCastadiva> sl =
                 ServiceLoader.load(IPluginCastadiva.class);
         sl.reload();
-
+        
         //crea una lista vacia de plugins IPluginMensaje  
         Vector<IPluginCastadiva> vAv = new Vector<IPluginCastadiva>();
 

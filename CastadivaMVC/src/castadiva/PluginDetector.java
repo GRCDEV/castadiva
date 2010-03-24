@@ -59,8 +59,9 @@ public class PluginDetector implements ISubject{
         if (loaded) {
             try {
                 routing_protocols = pluginLoader.getPlugins();
+                System.out.println(routing_protocols.length+" Routing protocol(s) loaded");
             } catch (Exception ex) {
-                System.err.println("Excepcion: " + ex.getMessage());
+                System.err.println("Exception: " + ex.getMessage());
                 ex.printStackTrace();
             }
         }

@@ -14,7 +14,6 @@ import castadiva_gui.TrafficGUI;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FilenameFilter;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -140,7 +139,6 @@ public class SimulationController {
                 } else {
                     JOptionPane.showMessageDialog(m_simulationWindow, "Unable to add Scenario.");
                 }
-                m_simulationWindow.setExecutionPlanner(false);
                 m_simulationWindow.setVisible(false);
                 m_simulationWindow.changeSimulateButtonText("New Simulation");
                 executionPlanner.setVisible(true);

@@ -1536,6 +1536,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             return true;
         }
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox APComboBox;
     private javax.swing.JLabel APLabel;

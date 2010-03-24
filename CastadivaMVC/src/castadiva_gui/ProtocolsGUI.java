@@ -213,22 +213,22 @@ private void JBcancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         JBGuardar.addActionListener(a1);
     }
 
-    public String getRuta() {
+    public String getBinaryFilePath() {
         return JTruta.getText();
     }
-    public String getPath() {
+    public String getConfigurationFilePath() {
         return  JTpath.getText().trim();
     }
 
-    public String getJar() {
+    public String getJarFileName() {
         return JTjar.getText();
     }
 
-    public String getConf() {
+    public String getProtocolConfiguration() {
         return jTAconf.getText();
     }
 
-    public String getFlags() {
+    public String getProtocolFlags() {
         return jTflags.getText();
     }
 
