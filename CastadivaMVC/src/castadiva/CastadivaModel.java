@@ -12,6 +12,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 //import com.sun.jndi.cosnaming.IiopUrl.Address;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -214,8 +215,6 @@ public class CastadivaModel {
         "addNode.txt", "attachTraffic.txt", "scenario.txt",
         "about.txt", "mainMenu.txt"
     };
-    //ruta de los ficheros conf en routers
-    public String rutaConf = "";
 
     //If true, show output in console.
     public final boolean debug = true;
@@ -1145,7 +1144,6 @@ public class CastadivaModel {
      */
     public List<String> KillAllOldInstructions() {
         List<String> killInstructions = new ArrayList<String>();
-        //killInstructions.add("kill -9 `pidof unik-olsr` 2>/dev/null");
         killInstructions.add("/usr/bin/killall sleep 2>/dev/null;");
         return killInstructions;
     }
@@ -2312,9 +2310,6 @@ public class CastadivaModel {
                 if (lastRoutingProtocol.equals("AODV")) {
                     deleteInstruction = killAodv;
                 }
-                if (lastRoutingProtocol.equals("OLSR")) {
-                    deleteInstruction = CleanRoutingRules(accessPoints.Get(i));
-                    }
                 if (lastRoutingProtocol.equals("Optimum")) {
                     deleteInstruction = killOptimum;
                 }
@@ -2341,38 +2336,66 @@ public class CastadivaModel {
         }
     }
 
+    /**
+     * When a custom routing plugin is used, the following finds out among every
+     * custom routing protocol which one must be used.
+     * Then, it processes the requested actions for a custom routing plugin,
+     * generating instructions and storing them in the routingInstructions
+     * global variable.
+     * Later on in the simulation, the routingInstructions variables is written
+     * in the routingForNodes.sh file (see StoreAllInstructionsForOneNode).
+     * @author nacho wannes
+     * @see createRoutingPluginListener StoreAllInstructionsForOneNode pluginDetector
+     */
     private void GeneratePluginProtocolInstructions() {
 
-        String protocolInstruction = "";
+        // When the program is started, a plugin detection system checks for
+        // custom plugin files (.jar). The following allors to get the result of
+        // the plugin detection
         routing_protocols = detector.getProtocolPlugins();
+        String protocolInstructions;
 
-        // If the user has set custom protocol plugins, instructions are sent
-        // for the selected protocol.
         if (routing_protocols.length > 0) {
-
             for (IPluginCastadiva a : routing_protocols) {
                 if (a.getClass().getSimpleName().equals(routingProtocol)) {
                     PROTOCOL_TIME_WAIT = 2;
-                    // The configuration file for the protocol is copied to the local nfs folder
-                    Runtime configurationFileRuntime = Runtime.getRuntime();
-                    Process configurationFileProcess;
+
+                    // The configuration file for the protocol is copied to the
+                    // local nfs folder with the correct filename
                     try {
-                        configurationFileProcess = configurationFileRuntime.exec("cp src/castadiva/Plugins/" + a.getClass().getSimpleName() + ".conf " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf ");
-                        configurationFileProcess.waitFor();
+                        // Locate and open the jar file
+                        JarFile jar = new JarFile(CastadivaModel.PLUGIN_JAR_FOLDER+"/"+a.getClass().getSimpleName()+".jar");
+                        ZipEntry entry = jar.getEntry(a.getConf());
+
+                        // Get the configuration file's BufferedReader
+                        BufferedReader confFileReader = new BufferedReader(new InputStreamReader(jar.getInputStream(entry)));
+                        // Get the destination file's buffered writer
+                        BufferedWriter confFileWriter = new BufferedWriter(new FileWriter(computer.WhatWorkingDirectory()+"/"+a.getConf()));
+
+                        // Transfer the content of the first one into the second one
+                        String confFileLine;
+                        while((confFileLine = confFileReader.readLine()) != null){
+                              confFileWriter.write(confFileLine+"\n");
+                        }
+                        // Close the two files
+                        confFileWriter.close();
+                        confFileReader.close();
                     } catch (Exception e) {
-                        System.out.println("Unable to copy the configuration file from src/castadiva/Plugins/" + a.getClass().getSimpleName() + ".conf to " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf  : "+e);
+                        System.out.println("Unable to copy the configuration file from "+CastadivaModel.PLUGIN_JAR_FOLDER + a.getClass().getSimpleName() + ".conf to " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf  : "+e);
                     }
 
+                    // On every router, the previously copied configuration file
+                    // is now copied from the nfs folder to its final location
                     for (int i = 0; i < accessPoints.Size(); i++) {
-                        rutaConf = a.getPathConf().trim();
-                        protocolInstruction = "";
                         
+                        protocolInstructions = "";
                         // The configuration path is copied through NFS to the remote location
-                        protocolInstruction ="cp "+accessPoints.Get(i).WhatWorkingDirectory()+"/"+a.getClass().getSimpleName()+".conf "+a.getPathConf()+"\n";
+                        protocolInstructions ="cp "+accessPoints.Get(i).WhatWorkingDirectory()+"/"+a.getConf()+" "+a.getPathConf()+"\n";
                         
-                        // Once the configuration file is ready, the protocol can be started
-                        // After a sleep time, the protocol is uninstalled
-                        protocolInstruction+=
+                        // The routing instructions can now be set.
+                        // After a sleep time, the script automatically reverses
+                        // its changes.
+                        protocolInstructions+=
                                 "#Start routing protocol.\n" +
                                 a.getBin() +" "+a.getFlags()+"\n\n"+
                                 "#Wait for the end of simulation.\n" +
@@ -2380,46 +2403,19 @@ public class CastadivaModel {
                                 "#Kill the protocol\n" +
                                 a.getKillInstruction()+ "\n\n" +
                                 "#Clean protocol configuration file\n"+
-                                "rm "+rutaConf+"\n";
+                                "rm "+a.getPathConf()+"\n";
 
-                        SetInstructionToNode(routingInstruction, protocolInstruction, i);
+                        SetInstructionToNode(routingInstruction, protocolInstructions, i);
+                        
+                        if(debug){
+                            System.out.println("Routing instructions : \n"+protocolInstructions);
+                            System.out.println("File \""+a.getPathConf()+"\" copied to routers");
+                        }
                      }
-
-                    // The protocol configuration file can eventually be deleted here.
-
-                    // instalarEnRouters(rutaConf, a.getConfContent());
-
-                    if(debug)
-                    {
-                        System.out.println("Instrucitons sent to routers.");
-                        System.out.println("File \""+rutaConf+"\" copied to routers");
-                    }
                 }
             }
         } else {
-            System.out.println("No se Encontraron Plugins");
-        }
-    }
-
-    private void instalarEnRouters(String path, String Text) {
-        //enviamos a todos los routers
-        //    void SendInstruction(String ip, String user, String pwd, List instructions) {
-        List instructions = new ArrayList<String>();
-
-        String text = Text;
-
-        instructions.add("echo \"\" > " +  path);
-        while (text.length() > 256) {
-            instructions.add("echo -n \"" + text.substring(0, 256) + "\" >> " + path);
-            text = text.substring(256, text.length());
-        }
-        instructions.add("echo -n \"" + text.substring(0, text.length()) + "\" >> " + path);
-
-        for (int i = 0; i < accessPoints.Size(); ++i) {
-            String ip_host = accessPoints.Get(i).WhatEthIP();
-            String user = accessPoints.Get(i).WhatUser();
-            String pwd = accessPoints.Get(i).WhatPwd();
-            SendInstruction(ip_host, user, pwd, instructions);
+            System.out.println("No plugin found");
         }
     }
     
@@ -2548,40 +2544,6 @@ public class CastadivaModel {
             GenerateMobilityOptimumInstrucions();
         } else {
             GenerateStaticOptimumInstructions();
-        }
-    }
-
-    /**
-     * Generate all specific instructions for activating the OLSR protocol.
-     */
-    private void GenerateOlsrInstructions() {
-        PROTOCOL_TIME_WAIT = 8;
-        String protocolInstruction = "";
-        /*
-        if (avisadores.length > 0) {  
-        for (IPluginCastadiva a : avisadores) {  
-        if(a.getClass().getSimpleName().equals("olsr") ){
-        protocolInstruction = a.getProtocol() + a.getPath() + a.getSleep() + a.getKillInstruction();
-        for (int i = 0; i < accessPoints.Size(); i++) {
-        
-        CleanRoutingRules(accessPoints.Get(i));
-        SetInstructionToNode(routingInstruction, protocolInstruction, i);
-        }
-        }
-        }  
-        } else {  
-        System.out.println("No se Encontraron Plugins");  
-        }  */
-
-        for (int i = 0; i < accessPoints.Size(); i++) {
-            protocolInstruction = "#Start olsrd protocol.\n" +
-                    "/usr/sbin/olsrd\n\n" +
-                    "#Wait for the end of simulation.\n" +
-                    "sleep " + GetRealSimulationTime() + "\n\n" +
-                    "#Kill olsrd protocol\n" +
-                    "kill -9 `pidof olsrd` 2>/dev/null \n\n" +
-                    CleanRoutingRules(accessPoints.Get(i));
-            SetInstructionToNode(routingInstruction, protocolInstruction, i);
         }
     }
 
