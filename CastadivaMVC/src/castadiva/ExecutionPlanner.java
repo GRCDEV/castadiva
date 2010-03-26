@@ -105,12 +105,13 @@ public class ExecutionPlanner {
      */
     public void StartExecutionPlannerSimulation()
     {
-        // Gets the concerned simulation informations
+        // Gets the concerned simulation's informations
         ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
 
+        // Do we have to simulate for the current row ?
         if(currentExecutionRecord.getRuns()>0)
         {
-            // The activation of this parameter tells CastadivaModel what to do when a simulation ends.
+            // The activation of this variable tells CastadivaModel what to do when the simulation ends.
             m_model.executionPlannerSimulating = true;
             m_exec.setButtonsForSimulation();
 
@@ -120,10 +121,27 @@ public class ExecutionPlanner {
             // Starts a common simulation.
             m_model.AllSimulationSteaps();
         }
-        else if(m_exec.getNumberOfRows() > currentlySimulatingRow+1)
+        else
         {
-            currentlySimulatingRow++;
-            StartExecutionPlannerSimulation();
+            // If there are no more runs, status goes to MSG_EXECUTION_PLANNER_DONE
+            currentExecutionRecord.setStatus(m_exec.MSG_EXECUTION_PLANNER_DONE);
+            m_exec.updateTable();
+            
+            // Are there more rows to be simulated ?
+            if(m_exec.getNumberOfRows() > currentlySimulatingRow+1)
+            {
+                currentlySimulatingRow++;
+                StartExecutionPlannerSimulation();
+            }
+            else
+            {
+                m_model.executionPlannerSimulating = false;
+                m_model.StatisticsAreShowed();
+                m_model.EndStopwatch();
+
+                // Buttons are made available
+                m_exec.setButtonsForConfiguration();
+            }
         }
     }
 
@@ -150,29 +168,7 @@ public class ExecutionPlanner {
         currentExecutionRecord.setRuns(currentExecutionRecord.getRuns()-1);
         m_exec.updateTable();
 
-        // If there are more runs to perform
-        if (currentExecutionRecord.getRuns()>0) {
-            StartExecutionPlannerSimulation();
-        } else {
-            // If there are no more runs, status goes to MSG_EXECUTION_PLANNER_DONE
-            currentExecutionRecord.setStatus(m_exec.MSG_EXECUTION_PLANNER_DONE);
-            m_exec.updateTable();
-
-            // If there are other simulations to perform
-            if(m_exec.getNumberOfRows() > currentlySimulatingRow+1) {
-                currentlySimulatingRow++;
-                StartExecutionPlannerSimulation();
-            }
-            else{
-                //
-                m_model.executionPlannerSimulating = false;
-                m_model.StatisticsAreShowed();
-                m_model.EndStopwatch();
-
-                // Buttons are made available
-                m_exec.setButtonsForConfiguration();
-            }
-        }
+        StartExecutionPlannerSimulation();
     }
 
     public void setStatus(int row)
