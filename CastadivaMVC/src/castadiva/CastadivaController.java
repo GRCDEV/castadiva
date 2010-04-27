@@ -1229,7 +1229,7 @@ public class CastadivaController {
                 rt = Runtime.getRuntime();
 
                 //Process p = rt.exec("javac mobilityDesigns/castadiva/Plugins/Mobility/" + mobDes.getName() + ".java lib/IPluginCastadiva.java");
-                Process p = rt.exec("javac lib/IMobilityPluginCastadiva.java castadiva/AP.java " +
+                Process p = rt.exec("javac src/lib/IMobilityPluginCastadiva.java castadiva/AP.java " +
                         "castadiva/APs.java castadiva/Movement.java " +
                         "castadiva/NodeCheckPoint.java castadiva/Plugins/Mobility/" + name  + ".java");
 

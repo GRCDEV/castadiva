@@ -95,7 +95,7 @@ public class CastadivaModel {
     private String STARTING_FOLDER = "/";
     public String DEFAULT_CONFIG_DIRECTORY = "configuration";
     public final String DEFAULT_APPLICATION_FILE = "applications.txt";
-    public static final String PLUGIN_WORKFOLDER = "pluginFiles"; // The following folder is used to compile plugins
+    public static final String PLUGIN_WORKFOLDER = "pluginTemporaryFiles"; // The following folder is used to compile plugins
     public static final String PLUGIN_JAR_FOLDER = "src/castadiva/Plugins"; // The compiled plugins are then stored in the following folder
     public static final String PLUGIN_INCLUDE_FOLDER = "src/lib"; // To compile, the abstract IPluginCastadiva.java is needed. It must be located in the following directory
 
@@ -108,8 +108,8 @@ public class CastadivaModel {
     private final int TRAFFIC_PORT = 23000;
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
-    private final String WIFI_SSID = "CastadivaNuevo";
-    private final String DEFAULT_GW = "192.168.1.15";
+    private final String WIFI_SSID = "Wannes";
+    private final String DEFAULT_GW = "192.168.1.2";
     private boolean statisticsShowed = true;
     private int stopwatch;
     private Timer timer;
@@ -155,13 +155,13 @@ public class CastadivaModel {
     private boolean simulating = false;
     //NS export/import
     private final String DEFAULT_USER = "root";
-    private final String DEFAULT_PWD = "";
-    private final String DEFAULT_IP_NET = "192.168.2.";
-    private final String DEFAULT_WIFI_IP_NET = "192.168.1.";
+    private final String DEFAULT_PWD = ".GRC0510";
+    private final String DEFAULT_IP_NET = "192.168.1.";
+    private final String DEFAULT_WIFI_IP_NET = "192.168.2.";
     private final String DEFAULT_WIFI_MAC = "00:00:00:00:00:00";
     //private final String DEFAULT_WIFI_DEVICE = "eth1";
-    private final String DEFAULT_WIFI_DEVICE = "wlan0";
-    private final String DEFAULT_ID = "AP";
+    private final String DEFAULT_WIFI_DEVICE = "wl0";
+    private final String DEFAULT_ID = "router";
     private final float DEFAULT_RANGE = 250;
     private final Integer DEFAULT_CHANNEL = 3;
     private final String DEFAULT_MODE = "Ad-Hoc";
@@ -170,7 +170,7 @@ public class CastadivaModel {
     private final String DEFAULT_PROCESSOR = "MIPS";
     public final String DEFAULT_PROCESSOR_FILE = "processors.txt";
     public final String DEFAULT_APS_FILE = "aps.txt";
-    public final String DEFAULT_NFS_DIRECTORY = "/CASTADIVA/nfs";
+    public final String DEFAULT_NFS_DIRECTORY = "/castadiva/nfs";
     Random randomGenerator;
     private NodePositionsFromNsMobility nsData;
     //Traffic variables.
@@ -2863,8 +2863,8 @@ public class CastadivaModel {
                 }
             }
             allInstructions = allInstructions + "\n#Delete remaining visibility " +
-                    "instructions at the end of the simulation.\nsleep " + (sleep[z] +
-                    DELETING_INSTRUCTIONS_WAITING_TIME) + "\n" + delNodeInstructions;
+                    "instructions at the end of the simulation.\nsleep " +
+                    (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
             String aux = (String) addInstruction.get(z);
             aux = aux + "\n" + allInstructions;
             addInstruction.set(z, aux);
@@ -3011,6 +3011,14 @@ public class CastadivaModel {
                 node.y = point.yCoordinate;
                 node.z = point.zCoordinate;
             } catch (NullPointerException npe) {
+            }
+            if(this.debug){
+                // In debug mode, position of each node (Or one node) is printed out along with the corresponding simulation time
+                // This was introduced by Wannes in order to check the position processing. It can be removed at any time.
+                if(true)// Put i = x to only display one node
+                {
+                    System.out.format("at second %d node %d is at position : (%.1f, %.1f %.1f)%n",second,i, node.x, node.y, node.z);
+                }
             }
         }
         GenerateMobilityVisibilityMatrix(second);
@@ -4168,7 +4176,7 @@ public class CastadivaModel {
                 node_str = words[3];
                 node_substr = node_str.split("\\(")[1];
                 node_id = node_substr.split("\\)")[0];
-                node_name = DEFAULT_ID + node_id;
+                node_name = DEFAULT_ID + new Integer(new Integer(node_id)+1); //TODO this simply means that nodes should be named from string0 to stringx. There is no obligation for that and it should be coded otherwise.
                 node = accessPoints.SearchAP(node_name);
                 allAddresses.ChangeMobilityVector(xDestCoordinate, yDestCoordinate, speed, node);
                 nsData.AddNodeInformation(node, xDestCoordinate, yDestCoordinate, speed, second);

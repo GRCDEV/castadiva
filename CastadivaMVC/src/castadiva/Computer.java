@@ -17,7 +17,7 @@ import java.util.Enumeration;
 public class Computer implements Serializable {
     private InetAddress ipIntAdrs;
     private String ip;
-    private String workingDirectory = "/Castadiva";
+    private String workingDirectory = "/CASTADIVA";
     protected String card;
     transient private NetworkInterface computerInterface = null;
     
