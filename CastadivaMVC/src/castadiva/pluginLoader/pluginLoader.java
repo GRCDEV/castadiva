@@ -4,7 +4,9 @@
  */
 package castadiva.pluginLoader;
 
+import castadiva.APs;
 import castadiva.CastadivaModel;
+import castadiva.NodeCheckPoint;
 import castadiva.classpath.classpathModifier;
 import lib.IPluginCastadiva;
 
@@ -19,9 +21,6 @@ import lib.IMobilityPluginCastadiva;
 public class pluginLoader {
 
     private static final String EXTENSION_JAR = ".jar";
-    // private static final String DIRECTORIO_PLUGINS = "plugins";  
-    private static final String DIRECTORIO_PLUGINS = CastadivaModel.PLUGIN_JAR_FOLDER;
-    private static final String DIRECTORIO_PLUGINS_MOVILIDAD = "src/castadiva/MobilityPlugins/";
 
     //    CARGADORES DE PLUGINS //////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +91,7 @@ public class pluginLoader {
         Vector<File> vUrls = new Vector<File>();
 
         //si existe el directorio "plugins" continua  
-        File directorioPlugins = new File(DIRECTORIO_PLUGINS);
+        File directorioPlugins = new File(CastadivaModel.PLUGIN_JAR_FOLDER);
         if (directorioPlugins.exists() && directorioPlugins.isDirectory()) {
             //obtiene todos los archivos con la extension .jar  
             File[] jars = directorioPlugins.listFiles(new FilenameFilter() {
@@ -125,7 +124,7 @@ public class pluginLoader {
         Vector<File> vUrls = new Vector<File>();
 
         //si existe el directorio "plugins" continua  
-        File directorioPlugins = new File(DIRECTORIO_PLUGINS_MOVILIDAD);
+        File directorioPlugins = new File(CastadivaModel.MOBILITY_PLUGIN_JAR_FOLDER);
         if (directorioPlugins.exists() && directorioPlugins.isDirectory()) {
             //obtiene todos los archivos con la extension .jar  
             File[] jars = directorioPlugins.listFiles(new FilenameFilter() {

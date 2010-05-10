@@ -95,9 +95,11 @@ public class CastadivaModel {
     private String STARTING_FOLDER = "/";
     public String DEFAULT_CONFIG_DIRECTORY = "configuration";
     public final String DEFAULT_APPLICATION_FILE = "applications.txt";
+    public static final String CASTADIVA_SOURCE_FOLDER = "src";
     public static final String PLUGIN_WORKFOLDER = "pluginTemporaryFiles"; // The following folder is used to compile plugins
     public static final String PLUGIN_JAR_FOLDER = "src/castadiva/Plugins"; // The compiled plugins are then stored in the following folder
     public static final String PLUGIN_INCLUDE_FOLDER = "src/lib"; // To compile, the abstract IPluginCastadiva.java is needed. It must be located in the following directory
+    public static final String MOBILITY_PLUGIN_JAR_FOLDER = "src/castadiva/MobilityPlugins/"; // The compiled mobility plugins are stored in that folder
 
     //Simulation variables
     public final int TRAFFIC_SERVER_TIME_WAIT = 2;
@@ -1982,12 +1984,42 @@ public class CastadivaModel {
     }
 
     /**
+     * The following can be used to generate gnuplot freindly text files.
+     */
+    private List customTraficToTextExport()
+    {
+        TrafficRecord record = null;
+        String line = null;
+        List<String> trafficPlainText = new ArrayList<String>();
+        if (record.getTCPUDP().equals("UDP")) {
+             trafficPlainText.add("# packets/sec throughput %received");
+        }
+        else
+        {
+             trafficPlainText.add("# transfer_size throughput");
+        }
+        for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
+            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
+            line = "";
+            if (record.getTCPUDP().equals("UDP")) {
+                // We are going to display UDP packets/sec, throughput and received packets
+                trafficPlainText.add(record.getPacketsSeconds()+" "+record.getLastSpeed()+" "+record.getPacketsPerCentReceived());
+            } else {
+                // We are going to display TCP transfer size and throughput
+                trafficPlainText.add(record.getTransferSize()+" "+record.getLastSpeed());
+            }
+        }
+        return trafficPlainText;
+    }
+
+    /**
      * Generate a file with all the traffic in plain text. Useful for printing.
      * @see ExportTrafficToText
      */
     void PrintTraffic(String file) {
         List trafficPlainText;
-        trafficPlainText = ExportTrafficToText();
+        //trafficPlainText = ExportTrafficToText();
+        trafficPlainText = customTraficToTextExport();
         //ShowTraffic(trafficPlainText);
         SaveInFile(trafficPlainText, file);
     }
@@ -2917,24 +2949,42 @@ public class CastadivaModel {
 
       
     /**
-     * Move each node the covered distance in one second.
+     * When mobility is used, the following function is called. First, it will
+     * try to find out which mobility model was choses. If it was not RANDOM WAY
+     * POINT or CITYMOB, it will search among the available mobility plugins
+     * As a resut this function, the global variable nodePositions will be set.
+     * @author Nacho Wannes
+     * @see CastadivaController.generatePluginListener() PluginDetector
+     *
      */
     private void ObtainNodePositionsForEntireSimulation() {
-        
+        // Check if the RANDOM WAY POINT model was asked
         if (mobilityModel.equals("RANDOM WAY POINT")) {
             nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
             allAddresses = new MobilityVectors(this, accessPoints, minSpeed, maxSpeed, pause);
             allAddresses.ObtainNodePositionsForEntireSimulation(accessPoints);
-        } else if (mobilityModel.equals("CITYMOB")) {
-            //Las instrucciones han sido importadas y adaptadas ya
-        } else {
+        }
+        // Check if CITIMOB was asked
+        else if (mobilityModel.equals("CITYMOB")) {
+            //With citymob, nodePositions is is already set
+        }
+        // If the two previous options failed, it looks for a plugin
+        else {
+            // Recuperation of the mobility plugins
             mob_plugins = detector.getMobilityPlugins();
-            for (IMobilityPluginCastadiva a : mob_plugins) {
-                if (a.getClass().getSimpleName().equals(mobilityModel)) {
-                      nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
-                      allAddresses = new MobilityVectors(this, accessPoints, minSpeed, maxSpeed, pause);
-                      totalTime = 111;
-                      a.ObtainNodePositionsForEntireSimulation(nodePositions, accessPoints, minSpeed, maxSpeed, pause, totalTime, x, y);
+            for (IMobilityPluginCastadiva plugin : mob_plugins) {
+                // Each mobility plugin's name is compared to the selected plugin
+                if (plugin.getClass().getSimpleName().equals(mobilityModel)) {
+                    // Initialization of the nodePositions variable
+                    nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
+                    allAddresses = new MobilityVectors(this, accessPoints, minSpeed, maxSpeed, pause);
+                    if(debug)
+                    {
+                        System.out.println("Mobility plugin "+plugin.getClass().getSimpleName()+" is being used");
+                    }
+                    // The following calls the user specified function
+                    plugin.ObtainNodePositionsForEntireSimulation(nodePositions, accessPoints, minSpeed, maxSpeed, pause, totalTime, x, y);
+                    break;
                 }
             }
         }
@@ -3010,14 +3060,15 @@ public class CastadivaModel {
                 node.x = point.xCoordinate;
                 node.y = point.yCoordinate;
                 node.z = point.zCoordinate;
-            } catch (NullPointerException npe) {
+            } catch (NullPointerException e) {
+                System.out.println("ERROR : Position is not defined for node "+i+" at simulation time "+second);
             }
             if(this.debug){
                 // In debug mode, position of each node (Or one node) is printed out along with the corresponding simulation time
                 // This was introduced by Wannes in order to check the position processing. It can be removed at any time.
                 if(true)// Put i = x to only display one node
                 {
-                    System.out.format("at second %d node %d is at position : (%.1f, %.1f %.1f)%n",second,i, node.x, node.y, node.z);
+                    System.out.format("Mobility : At second %d node %d should be at position : (%.1f, %.1f, %.1f)%n",second,i, node.x, node.y, node.z);
                 }
             }
         }
@@ -4800,7 +4851,7 @@ public class CastadivaModel {
             for (int j = 0; j < matrix.length; j++) {
                 line = line + " " + matrix[i][j];
             }
-            System.out.println(line);
+            //System.out.println(line);
         }
         System.out.println(" ");
     }

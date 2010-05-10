@@ -29,7 +29,7 @@
               <EmptySpace pref="443" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="89" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -41,7 +41,7 @@
               <Component id="JTName" min="-2" pref="141" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
               <Component id="JBgenerate" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="327" max="32767" attributes="0"/>
+              <EmptySpace pref="362" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
@@ -94,7 +94,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value=" Float maxSpeed, Float pause, int totaltime, float X, float Y) {"/>
+        <Property name="text" type="java.lang.String" value=" Float maxSpeed, Float simulationPause, int totalTime, float X, float Y) {"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -108,7 +108,7 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value=" &#xa;for (int j = 1; j &lt;= totalTime; j++) {&#xa;            //Change the position of all nodes in one second.&#xa;            for (int i = 0; i &lt; aps.Size(); i++) {&#xa;                AP p = aps.Get(i);&#xa;&#xa; &#xa;                NodeCheckPoint checkPoint = new NodeCheckPoint((float) p.x, (float) p.y,  new Float(0));&#xa;                nodes[i][j] = checkPoint;&#xa;                &#xa;            }&#xa;}"/>
+            <Property name="text" type="java.lang.String" value=" &#xa;for (int j = 1; j &lt;= totalTime; j++) {&#xa;            //Change the position of all nodes in one second.&#xa;            for (int i = 0; i &lt; accessPoints.Size(); i++) {&#xa;                AP p = accessPoints.Get(i);&#xa;&#xa; &#xa;                NodeCheckPoint checkPoint = new NodeCheckPoint((float) p.x, (float) p.y,  new Float(0));&#xa;                nodes[i][j] = checkPoint;&#xa;                &#xa;            }&#xa;}"/>
           </Properties>
         </Component>
       </SubComponents>

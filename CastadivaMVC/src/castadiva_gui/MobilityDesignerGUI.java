@@ -69,11 +69,11 @@ public class MobilityDesignerGUI extends javax.swing.JFrame {
         jLabel2.setText("void ObtainNodePositionsForEntireSimulation(NodeCheckPoint[][] nodes, APs accessPoints, Float minSpeed");
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        jLabel3.setText(" Float maxSpeed, Float pause, int totaltime, float X, float Y) {");
+        jLabel3.setText(" Float maxSpeed, Float simulationPause, int totalTime, float X, float Y) {");
 
         JTcode.setColumns(20);
         JTcode.setRows(5);
-        JTcode.setText(" \nfor (int j = 1; j <= totalTime; j++) {\n            //Change the position of all nodes in one second.\n            for (int i = 0; i < aps.Size(); i++) {\n                AP p = aps.Get(i);\n\n \n                NodeCheckPoint checkPoint = new NodeCheckPoint((float) p.x, (float) p.y,  new Float(0));\n                nodes[i][j] = checkPoint;\n                \n            }\n}");
+        JTcode.setText(" \nfor (int j = 1; j <= totalTime; j++) {\n            //Change the position of all nodes in one second.\n            for (int i = 0; i < accessPoints.Size(); i++) {\n                AP p = accessPoints.Get(i);\n\n \n                NodeCheckPoint checkPoint = new NodeCheckPoint((float) p.x, (float) p.y,  new Float(0));\n                nodes[i][j] = checkPoint;\n                \n            }\n}");
         jScrollPane1.setViewportView(JTcode);
 
         JBgenerate.setText("Generate Plug-in");
@@ -87,7 +87,7 @@ public class MobilityDesignerGUI extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(443, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(89, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2))
@@ -97,7 +97,7 @@ public class MobilityDesignerGUI extends javax.swing.JFrame {
                 .addComponent(JTName, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80)
                 .addComponent(JBgenerate)
-                .addContainerGap(327, Short.MAX_VALUE))
+                .addContainerGap(362, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 765, javax.swing.GroupLayout.PREFERRED_SIZE)

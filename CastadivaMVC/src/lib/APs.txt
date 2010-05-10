@@ -1,0 +1,22 @@
+package castadiva;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class APs implements Serializable {
+    private List<AP> accessPoints;
+
+    public APs() {
+        accessPoints = new ArrayList<AP>();
+    }
+    
+
+    public Integer Size(){
+        return accessPoints.size();
+    }
+    public AP Get(int i){
+        return (AP) accessPoints.get(i);
+    }
+}

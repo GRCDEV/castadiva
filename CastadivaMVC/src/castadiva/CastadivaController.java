@@ -11,11 +11,15 @@ import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1125,27 +1129,27 @@ public class CastadivaController {
                 Logger.getLogger(ProtocolsGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        /*
-         * @author Wannes
-         * Allows to recursively delete a directory with its content
-         * @param path points to the folder to be deleted
-         * @return true if the deletion was sucessfull
-         * @see File
-         */
-        public void deleteDirectory(File path) {
-            if( path.exists() ) {
-                File[] files = path.listFiles();
-                for(int i=0; i<files.length; i++) {
-                    if(files[i].isDirectory()) {
-                        deleteDirectory(files[i]);
-                    }
-                    else {
-                        files[i].delete();
-                    }
-                }
-            }
-        }
+    }
+    /*
+     * @author Wannes
+     * Allows to recursively delete a directory with its content
+     * @param path points to the folder to be deleted
+     * @return true if the deletion was sucessfull
+     * @see File
+     */
+    public boolean deleteDirectory(File path) {
+    if( path.exists() ) {
+      File[] files = path.listFiles();
+      for(int i=0; i<files.length; i++) {
+         if(files[i].isDirectory()) {
+           deleteDirectory(files[i]);
+         }
+         else {
+           files[i].delete();
+         }
+      }
+    }
+    return( path.delete());
     }
 
   
@@ -1155,99 +1159,127 @@ public class CastadivaController {
      *  *                 MOBILITY DESIGNER
      *
      ****************************************************************************/
+
+    /*
+     * Action performed when the Generate plug-in button ins performed in the
+     * mobility plugin designer
+     */
     void mobilityDesignerListenersReady() {
         mobDes.addGeneratePluginListener(new generatePluginListener());
 
     }
 
+    /*
+     * The following fucntion is meant to generate a custom mobility plugin,
+     * according to a user algorithm
+     * @author Nacho Wannes
+     * @see ServiceLoader
+     */
     class generatePluginListener implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
-            //First we create Movement.java, the file that includes the new code
-            Vector<String> movement = new Vector<String>();
+            // First, we need to create a few directories that will be usefull for plugin's compilation
+            File pluginFolder = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/Plugins");
+            pluginFolder.mkdirs();
+
+            File libFolder = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/lib");
+            libFolder.mkdirs();
+
+            File metaFolder = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/META-INF/services");
+            metaFolder.mkdirs();
+
+            // In order to successfully compile the plugin, we need a few classes as AP.java, APs.java and NodeCheckPoint
+            // Thoses classes are stored in the src/lib directory as .txt files. They are copied to our working directory
+            copyfile(CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/IMobilityPluginCastadiva.java",CastadivaModel.PLUGIN_WORKFOLDER+"/lib/IMobilityPluginCastadiva.java");
+            copyfile(CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/AP.txt",CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/AP.java");
+            copyfile(CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/APs.txt",CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/APs.java");
+            copyfile(CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/NodeCheckPoint.txt",CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/NodeCheckPoint.java");
+
+            // Now we are going to merge the user code into a java class. That class is loacated in MobilityPluginWraper.txt
+            // and contains special characters (/*name*/ and /*code*/ ) to indicate where the plugin name and code should be written
+            Vector<String> mobilityPluginSourceCode = new Vector<String>();
             String name = "";
 
+            // We are getting the plugin name from the GUI.
             name = mobDes.getMobName();
 
-            BufferedReader br;
+            BufferedReader codeWrapper;
             try {
-                br = new BufferedReader(new FileReader("castadiva/Movement2.java"));
+                // This is the uncomplete class that will be merged with user info
+                codeWrapper = new BufferedReader(new FileReader(CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/MobilityPluginWraper.txt"));
                 String line;
-
-                while ((line = br.readLine()) != null) {
-
-                    if (line.trim().equals("#")) {
-                       movement.add(mobDes.getCode());
+                // We are going to read line by line the class that we plan to complete, looking for the special tags
+                while ((line = codeWrapper.readLine()) != null) {
+                    if(line.trim().contains("/*name*/"))
+                    {
+                        mobilityPluginSourceCode.add(line.replace("/*name*/", name));
+                    }
+                    else if (line.trim().equals("/*code*/")) {
+                       mobilityPluginSourceCode.add(mobDes.getCode());
                     } else {
-                        movement.add(line);
+                        mobilityPluginSourceCode.add(line);
                     }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(CastadivaController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-
-            BufferedWriter bout = null;
+            // Now that we merged the information in a single array, we will write it to a file
             try {
-                bout = new BufferedWriter(new FileWriter("castadiva/Movement.java"));
-
-                for(int i = 0; i < movement.size(); ++i)
-                    bout.write(movement.get(i) + "\n");
-
-                bout.close();
-
+                BufferedWriter mobilityPluginSourceFile = new BufferedWriter(new FileWriter(CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/Plugins/"+name+".java"));
+                for(int i = 0; i < mobilityPluginSourceCode.size(); ++i)
+                {
+                    mobilityPluginSourceFile.write(mobilityPluginSourceCode.get(i) + "\n");
+                }
+                mobilityPluginSourceFile.close();
             } catch (IOException ex) {
                 Logger.getLogger(CastadivaController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            Vector<String> newMain = loadNewMainForThePLugin(name);
-
-            //Before compiling we have to create the main .java for the plugin and modify METAINF file
-            BufferedWriter bufout = null;
-            try {
-                bufout = new BufferedWriter(new FileWriter("castadiva/Plugins/Mobility/" + name + ".java"));
-
-                for(int i = 0; i < newMain.size(); ++i)
-                    bufout.write(newMain.get(i) + "\n");
-
+            try{
+                // To enable the ServiceLoader system, we need to create a specific file in a META-INF
+                // That specific file must be located in META-INF/services and be named as the abstract class that the plugin system uses
+                BufferedWriter bufout = new BufferedWriter(new FileWriter(CastadivaModel.PLUGIN_WORKFOLDER+"/META-INF/services/lib.IMobilityPluginCastadiva"));
+                // Within that file we must indicate the package path to the file that inplement the interface
+                bufout.write("castadiva.Plugins." + name);
                 bufout.close();
-                bufout = new BufferedWriter(new FileWriter("META-INF/services/lib.IMobilityPluginCastadiva"));
-                bufout.write("castadiva.Plugins.Mobility." + name);
-
-                bufout.close();
-
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 Logger.getLogger(CastadivaController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
 
 
-            //Now we need to compile and to create the jar file
-            Runtime rt = null;
+            //Now we need to compile the plugin
             try {
-                //a continuacion lanzamos los procesos correspondientes a la compilacion y a la encapsulacion del JAR
-                rt = Runtime.getRuntime();
+                // We are going to use the javac command to compile
+                Runtime runTime = Runtime.getRuntime();
 
-                //Process p = rt.exec("javac mobilityDesigns/castadiva/Plugins/Mobility/" + mobDes.getName() + ".java lib/IPluginCastadiva.java");
-                Process p = rt.exec("javac src/lib/IMobilityPluginCastadiva.java castadiva/AP.java " +
-                        "castadiva/APs.java castadiva/Movement.java " +
-                        "castadiva/NodeCheckPoint.java castadiva/Plugins/Mobility/" + name  + ".java");
+                // Tip : If the plugin compilation does not work properly, it might be interesting to
+                // deactivate the plugin temporary file deletion and print out the following command.
+                // Then it is possible to run it manually and get error feedback
+                Process process = runTime.exec("javac "+CastadivaModel.PLUGIN_WORKFOLDER+"/lib/IMobilityPluginCastadiva.java "+CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/AP.java " +
+                CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/APs.java "+CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/NodeCheckPoint.java "+CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/Plugins/"+name+".java");
+                process.waitFor(); // We wait for the command to be processed
 
-                p.waitFor(); //esperamos a que termine el proceso externo
-
-                InputStream is = p.getErrorStream();
-                BufferedReader br2 = new BufferedReader(new InputStreamReader(is));
-                if (br2.readLine() != null) {  //if it contains errors
+                // In order to allow error feedback through the GUI, we need to recuperate eventual errors
+                InputStream is = process.getErrorStream();
+                BufferedReader CompilationErrorBufferedReader = new BufferedReader(new InputStreamReader(is));
+                // If there was any error, it is shown to the user
+                if (CompilationErrorBufferedReader.readLine() != null) {
                     ErrorsGUI e = new ErrorsGUI();
-                    e.showErrors(br2);
-                } else {
+                    e.showErrors(CompilationErrorBufferedReader);
+                }
+                // If there was no error, the plugin is packaged as a .jar file and
+                // placed in the mobility plugin directory
+                else {
                     try {
-                        Process p2 = rt.exec("jar cf src/castadiva/MobilityPlugins/" + name + ".jar " +
-                                "castadiva lib META-INF");
-                        p2.waitFor();//"mobilityDesigns/
+                        Process p2 = runTime.exec("jar cf ../"+CastadivaModel.MOBILITY_PLUGIN_JAR_FOLDER+"/"+ name + ".jar " +
+                                "castadiva lib META-INF",null,new File(CastadivaModel.PLUGIN_WORKFOLDER));
+                        p2.waitFor();
 
 
-                        InputStream ins = p.getErrorStream();
+                        InputStream ins = process.getErrorStream();
                         BufferedReader br3 = new BufferedReader(new InputStreamReader(ins));
                         if (br3.readLine() != null) {
                             ErrorsGUI e = new ErrorsGUI();
@@ -1263,39 +1295,43 @@ public class CastadivaController {
                     } catch (Exception e1) {
                         System.out.println(e1);
                     }
-                //JOptionPane.showMessageDialog(this, "Plugin created correctly");
                 }
-
+                // The temporary directory is deleted
+                deleteDirectory(new File(CastadivaModel.PLUGIN_WORKFOLDER));
             } catch (Exception e) {
-            }/*
-        try {
-        Process p2 = rt.exec("jar cf src/castadiva/Plugins/" + nombreJar + ".jar castadiva/Plugins/" + nombreJar + ".class lib META-INF");
-            p2.waitFor();
-            }catch(Exception e1) {}
-            JOptionPane.showMessageDialog(this, "Plugin created correctly");*/
 
+            }
         }
     }
 
-    private Vector<String> loadNewMainForThePLugin(String name) {
-        Vector<String> file = new Vector<String>();
+    /*
+     * Allows to copy a text file from srFile to dtFile
+     * @author Wannes
+     */
+    private void copyfile(String srFile, String dtFile){
+        try{
+            File f1 = new File(srFile);
+            File f2 = new File(dtFile);
+            InputStream in = new FileInputStream(f1);
 
-        file.add("package castadiva.Plugins.Mobility; \n");
-        file.add("import castadiva.APs; \n");
-        file.add("import castadiva.Movement; \n");
-        file.add("import castadiva.NodeCheckPoint; \n");
-        file.add("import lib.IMobilityPluginCastadiva;    \n");
-        file.add("/**    \n");
-        file.add(" * @author nacho    \n");
-        file.add(" */    \n");
-        file.add("public class " + name + "  implements IMobilityPluginCastadiva {    \n");
-        file.add("public void ObtainNodePositionsForEntireSimulation(NodeCheckPoint[][] nodes, APs accessPoints, Float minSpeed, Float maxSpeed, Float simulationPause, int totalTime,  float X, float Y) {    \n");
-        file.add("Movement P = new Movement(minSpeed, maxSpeed, simulationPause, totalTime, X, Y);    \n");
-        file.add("P.ObtainNodePositionsForEntireSimulation(accessPoints, nodes); \n");
-        file.add(" }   \n  }  \n");
+            //For Overwrite the file.
+            OutputStream out = new FileOutputStream(f2);
 
-
-        return file;
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0){
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+        }
+        catch(FileNotFoundException ex){
+            System.out.println(ex.getMessage() + " in the specified directory.");
+            System.exit(0);
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
   

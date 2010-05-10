@@ -61,7 +61,7 @@ public class PluginDetector implements ISubject{
                 routing_protocols = pluginLoader.getPlugins();
                 System.out.println(routing_protocols.length+" Routing protocol(s) loaded");
             } catch (Exception ex) {
-                System.err.println("Exception: " + ex.getMessage());
+                System.err.println("Exception with routing plugin loading: " + ex.getMessage());
                 ex.printStackTrace();
             }
         }
@@ -69,6 +69,7 @@ public class PluginDetector implements ISubject{
         if (loaded2) {
             try {
                 mob_plugins = pluginLoader.getMobilityPlugins();
+                 System.out.println(mob_plugins.length+" Mobility plugin(s) loaded");
             } catch (Exception ex) {
                 System.err.println("Excepcion: " + ex.getMessage());
                 ex.printStackTrace();

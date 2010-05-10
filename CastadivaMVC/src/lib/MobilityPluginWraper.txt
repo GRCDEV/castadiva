@@ -1,0 +1,28 @@
+package castadiva.Plugins; 
+
+import castadiva.APs;
+
+import castadiva.AP;
+
+import castadiva.NodeCheckPoint; 
+
+import lib.IMobilityPluginCastadiva; 
+
+import java.io.Serializable;
+
+import java.util.Random;
+
+import castadiva.NodeCheckPoint;   
+
+/**    
+
+ * @author nacho
+
+ */    
+
+public class /*name*/  implements IMobilityPluginCastadiva {    
+    public void ObtainNodePositionsForEntireSimulation(NodeCheckPoint[][] nodes, APs accessPoints, Float minSpeed, Float maxSpeed, Float simulationPause, int totalTime, float X, float Y) {
+        /*code*/
+    }   
+  }  
+
