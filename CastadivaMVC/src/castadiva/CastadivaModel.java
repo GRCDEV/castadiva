@@ -12,7 +12,6 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 //import com.sun.jndi.cosnaming.IiopUrl.Address;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -1715,7 +1714,7 @@ public class CastadivaModel {
      * @param number The number of the instruction.
      * @return The instruction in one string.
      */
-    private String GeneranteServerTrafficUDPInstruction(AP router, int number, int seconds) {
+    private String GenerateServerTrafficUDPInstruction(AP router, int number, int seconds) {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
@@ -1796,7 +1795,7 @@ public class CastadivaModel {
                     nodo = accessPoints.SearchAP(record.getSource());
                     router = accessPoints.Get(nodo);
                 }
-                addressInstruction = addressInstruction + GeneranteServerTrafficUDPInstruction(router, i,
+                addressInstruction = addressInstruction + GenerateServerTrafficUDPInstruction(router, i,
                             record.getStop() - record.getStart());
             } else {
                 // Is defined the traffic like TCP.
