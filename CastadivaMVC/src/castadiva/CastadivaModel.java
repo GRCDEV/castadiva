@@ -1724,12 +1724,16 @@ public class CastadivaModel {
      */
     private String GenerateServerTrafficUDPInstruction(AP router, int number, int seconds) {
         String addressInstruction;
+        int times = WRITE_TIME_IN_FILE;
+        if(router.WhatProcessor().equals("MIPS")) {
+            times = 0;
+        }
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
         addressInstruction = router.WhatWorkingDirectory() + File.separator +
                 "bin" + File.separator +
                 "UdpFlowServer" + router.WhatProcessor() + " " +
                 (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " +
-                (seconds+1) + " " + WRITE_TIME_IN_FILE + " > " +
+                (seconds) + " " + times + " > " +
                 router.WhatWorkingDirectory() + File.separator +
                 STATISTICS_UDP_DESTINATION_FILE + (number + 1);
         return addressInstruction;
@@ -2026,7 +2030,7 @@ public class CastadivaModel {
     void PrintTraffic(String file) {
         List trafficPlainText;
         //trafficPlainText = ExportTrafficToText();
-        trafficPlainText = customTraficToTextExport();
+        trafficPlainText = ExportTrafficToText();
         //ShowTraffic(trafficPlainText);
         SaveInFile(trafficPlainText, file);
     }

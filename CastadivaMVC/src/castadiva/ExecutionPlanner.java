@@ -164,6 +164,22 @@ public class ExecutionPlanner {
         // The simulation results for the current run are printed into a file in the results folder
         m_model.PrintTraffic(currentExecutionRecord.getResultsFolder() +  File.separator + "Iterations" + File.separator + currentExecutionRecord.getRuns() + "_DefinedTraffic.txt");
 
+        //Copies the files "times_XXXX.txt" to the Iterations folder.
+        //It scans all instructionsForNode folders
+        //Author - Alvaro Torres
+        File times = new File(m_model.computer.WhatWorkingDirectory());
+        File destDir = new File(currentExecutionRecord.getResultsFolder() + File.separator + "Iterations");
+        File[] linst = times.listFiles(m_control.new BeginWithFilenameFilter("instructionsForNode"));
+        for(int j = 0; j < linst.length; j++) {
+            if(linst[j].isDirectory()) {
+                File[] ltimes = linst[j].listFiles(m_control.new BeginWithFilenameFilter("times"));
+                for(int i = 0; i < ltimes.length; i++) {
+                   // File aux = new File(currentExecutionRecord.getResultsFolder() +  File.separator + "Iterations" + File.separator + currentExecutionRecord.getRuns()+ "_" + ltimes[i].getName());
+                   m_control.copyfile(ltimes[i].getAbsolutePath(), destDir.getAbsolutePath() + File.separator + currentExecutionRecord.getRuns() + "_" + ltimes[i].getName());
+                }
+            }
+        }
+
         // The runs left for the simulation are decremented
         currentExecutionRecord.setRuns(currentExecutionRecord.getRuns()-1);
         m_exec.updateTable();

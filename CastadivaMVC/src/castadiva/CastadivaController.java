@@ -1319,7 +1319,7 @@ public class CastadivaController {
      * Allows to copy a text file from srFile to dtFile
      * @author Wannes
      */
-    private void copyfile(String srFile, String dtFile){
+    public void copyfile(String srFile, String dtFile){
         try{
             File f1 = new File(srFile);
             File f2 = new File(dtFile);
@@ -1460,7 +1460,8 @@ public class CastadivaController {
                         }
                     }
                 }
-            } catch (Throwable t) {
+            } catch (Exception t) {
+                System.err.println(t.getMessage());
                 t.printStackTrace();
             }
         }
@@ -1470,6 +1471,19 @@ public class CastadivaController {
 
         public boolean accept(File dir, String name) {
             return name.equals("Scenario");
+        }
+
+    }
+
+    public class BeginWithFilenameFilter implements FilenameFilter{
+        String start;
+
+        public BeginWithFilenameFilter(String begin) {
+            start = begin;
+        }
+
+        public boolean accept(File dir, String name) {
+            return name.startsWith(start);
         }
 
     }
