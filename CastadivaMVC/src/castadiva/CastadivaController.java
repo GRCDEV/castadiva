@@ -1116,8 +1116,8 @@ public class CastadivaController {
                     p.waitFor(); //esperamos a que termine el proceso externo
                     
                     // The previously compiled IPluginCastadiva.class file is moved to be inserted into the package.
-                    Process copyLibProcess = rt.exec("mv "+CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/IPluginCastadiva.class "+libDir.getPath()+"/IPluginCastadiva.class");
-                    copyLibProcess.waitFor();
+                    File IPluginCastadiva = new File(CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/IPluginCastadiva.class");
+                    IPluginCastadiva.renameTo(new File(libDir.getPath()+"/IPluginCastadiva.class"));
                 } catch (Exception e) {
                     System.out.println("Error while compiling plugin :"+e);
                 }
