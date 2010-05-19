@@ -2666,6 +2666,9 @@ public class CastadivaModel {
 
             //BEGIN NEW CODE
             while(nextNode != node) {
+                if(tree[prevNode] == 0) {
+                    break;
+                }
                 prevNode = nextNode;
                 nextNode = tree[prevNode];
             }
