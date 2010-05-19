@@ -314,6 +314,17 @@ public class CastadivaController {
 
         public void actionPerformed(ActionEvent e) {
             m_view.setVisible(false);
+            // Prevents the user from closing the whole program when closing the window
+            m_randomSimulation.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            // Overrides the windowClosing event and restores the main menu instead.
+            m_randomSimulation.addWindowListener(
+                    new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosing(java.awt.event.WindowEvent e) {
+                            m_view.setVisible(true);
+                        }
+                    }
+            );
             m_model.randomTrafficModel.UpdateData(m_model.accessPoints.GetRandomTraffic());
             m_randomSimulation.UpdateTable();
             m_randomSimulation.setVisible(true);
@@ -1108,14 +1119,14 @@ public class CastadivaController {
                     Process copyLibProcess = rt.exec("mv "+CastadivaModel.PLUGIN_INCLUDE_FOLDER+"/IPluginCastadiva.class "+libDir.getPath()+"/IPluginCastadiva.class");
                     copyLibProcess.waitFor();
                 } catch (Exception e) {
-                    System.out.println(e);
+                    System.out.println("Error while compiling plugin :"+e);
                 }
                 try {
                     // It is necessary to execute the jar command from within the correct folder
                     Process p2  = rt.exec("jar cf ../"+CastadivaModel.PLUGIN_JAR_FOLDER+"/" + jarFileName + ".jar castadiva/Plugins"+"/"+jarFileName+".class lib META-INF "+configurationFilename[configurationFilename.length-1],null,workingFolder);
                     p2.waitFor();
                 } catch (Exception e1) {
-                    System.out.println(e1);
+                    System.out.println("Error while converting plugin to jar :"+e1);
                 }
                 JOptionPane.showMessageDialog(new JFrame(), "Plugin sucessfully created");
                 
@@ -1161,7 +1172,7 @@ public class CastadivaController {
      ****************************************************************************/
 
     /*
-     * Action performed when the Generate plug-in button ins performed in the
+     * Action performed when the Generate plug-in button is clicked in the
      * mobility plugin designer
      */
     void mobilityDesignerListenersReady() {
@@ -1293,7 +1304,7 @@ public class CastadivaController {
                         }
 
                     } catch (Exception e1) {
-                        System.out.println(e1);
+                        System.out.println("Error while converting plugin to jar :"+e1);
                     }
                 }
                 // The temporary directory is deleted
@@ -1330,7 +1341,7 @@ public class CastadivaController {
             System.exit(0);
         }
         catch(IOException e){
-            System.out.println(e.getMessage());
+            System.out.println("Error copying file :"+e.getMessage());
         }
     }
 

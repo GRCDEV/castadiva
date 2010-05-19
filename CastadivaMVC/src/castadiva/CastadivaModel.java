@@ -907,15 +907,14 @@ public class CastadivaModel {
                 " grep \"/usr/sbin/dropbear\" | grep -v grep | grep -v \"400 S\" " +
                 "| tail -1 | cut -n -d \"r\" -f1 )";
 
-        aux.add(instruction);
+            aux.add(instruction);
         //Kill the SSH session (sometimes, not end).
-        aux.add(nodeSelfDestructionInstruction);
-
-        nodeInstructions.add(aux);
-
+            aux.add(nodeSelfDestructionInstruction);
+        for(int i =0; i < accessPoints.Size(); i++){
+            nodeInstructions.add(i, aux);
+        }
 
         RunSimulation(SSHInstructionThread, nodeInstructions, withExit);
-
         //Close the session.
         try {
             for (int i = 0; i < SSHInstructionThread.size(); i++) {
@@ -924,6 +923,7 @@ public class CastadivaModel {
             }
             SSHInstructionThread = null;
         } catch (NullPointerException npe) {
+            System.out.println("SSH session already closed :"+npe);
         }
     }
 
@@ -1145,6 +1145,9 @@ public class CastadivaModel {
      */
     public List<String> KillAllOldInstructions() {
         List<String> killInstructions = new ArrayList<String>();
+        // Killing the sleep instructions will force every function to be processed imediatly
+        // Only client and Server will remain as they have an internal timeout.
+        
         killInstructions.add("/usr/bin/killall sleep 2>/dev/null;");
         return killInstructions;
     }
@@ -1201,8 +1204,13 @@ public class CastadivaModel {
         AllFilesInstructions.add("sleep " + PROTOCOL_TIME_WAIT);
         AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + INSTRUCTIONS_SERVER_FILE + " & ");
         AllFilesInstructions.add("sleep " + TRAFFIC_SERVER_TIME_WAIT);
-        AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + INSTRUCTIONS_VISIBILITY_FILE + " & ");
         AllFilesInstructions.add("sleep " + VISIBILITY_TIME_WAIT);
+        // Wannes : With static simulations, it was possible to set visibility at any time before the simulation start.
+        // With mobility, visibility rules become dynamic. If visibility instructions are not started at the same time,
+        // visibility and traffic will not coincide and results will be wrong
+        // Here, I left the "Visibility time wait" and moved the instruction. This is because I dont know exactly how
+        // statistics are collected afterwards. This might have en influence. //TODO
+        AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + INSTRUCTIONS_VISIBILITY_FILE + " & ");
         AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + INSTRUCTIONS_CLIENT_FILE + " & ");
         AllFilesInstructions.add("sleep " + GetSimulationTime());
         //AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + "./" + FINISH_UDP_INSTRUCTIONS_FILE + " & ");
@@ -1301,7 +1309,7 @@ public class CastadivaModel {
                     ssh.start();
                 } catch (Exception ce) {
                     if (debug){
-                        System.out.println(ce);
+                        System.out.println("An error occured while initializing the ssh connection with AP"+i+" :"+ce);
                     }
                 }
             }
@@ -2437,11 +2445,6 @@ public class CastadivaModel {
                                 "rm "+a.getPathConf()+"\n";
 
                         SetInstructionToNode(routingInstruction, protocolInstructions, i);
-                        
-                        if(debug){
-                            System.out.println("Routing instructions : \n"+protocolInstructions);
-                            System.out.println("File \""+a.getPathConf()+"\" copied to routers");
-                        }
                      }
                 }
             }
@@ -2680,7 +2683,6 @@ public class CastadivaModel {
         for(int i = 0; i < v.length; i++) {
             System.out.print(v[i].toString() + " ");
         }
-        System.out.println();
     }
     /**
      * Create a tree of a graph with a determinated root.
@@ -4084,7 +4086,7 @@ public class CastadivaModel {
             line = (String) lines.get(l+help_lines);
             ap = line.split(" ");
             if(ap.length == nparams) {
-                System.out.println(line);
+                System.out.println("Ap is :"+line);
                AP node = new AP(ap[0], ap[1], ap[2], ap[3], ap[4], ap[5],
                         Float.parseFloat(ap[6]), Float.parseFloat(ap[7]),
                         Float.parseFloat(ap[8]), Float.parseFloat(ap[9]),
@@ -4206,34 +4208,52 @@ public class CastadivaModel {
         String[] words;
 
 
+        // Generation, for each node, of a mobility vecotr
+        // Max speed is set to -1 to that mobility vector
         allAddresses = new MobilityVectors(this, accessPoints, pause);
+
+        // We initialise nsData, which will contain the position and speed of each node
+        // at any time in the simulation.
         nsData = new NodePositionsFromNsMobility(accessPoints.Size());
 
         if (debug) {
             System.out.println("\nImporting NS Mobility:");
         }
         for (i = startingLine; i < nsText.length; i++) {
+            // Example line :
+            // $ns_ at 27.373013805488327 "$node_(1) setdest 800.0 400.0 68.42146302464042"
             words = nsText[i].split(" ");
-            //quitar las lineas god_
+            // If we have a correct line
             if (words[0].endsWith("$ns_") && words[1].endsWith("at") &&
                     words[4].endsWith("setdest") && !words[0].startsWith("#")) {
-                //guardar las lineas ns_ at
+
                 second = Float.parseFloat(words[2]);
                 xDestCoordinate = Float.parseFloat(words[5]);
                 yDestCoordinate = Float.parseFloat(words[6]);
+
+                // Parse the speed
                 speed_str = words[7];
-                speed = Float.parseFloat(speed_str.split("\"")[0]);
+                speed = Float.parseFloat(speed_str.split("\"")[0]); // Remove the final "
+
+                // Get the node id
                 node_str = words[3];
                 node_substr = node_str.split("\\(")[1];
                 node_id = node_substr.split("\\)")[0];
-                node_name = DEFAULT_ID + new Integer(new Integer(node_id)+1); //TODO this simply means that nodes should be named from string0 to stringx. There is no obligation for that and it should be coded otherwise.
-                node = accessPoints.SearchAP(node_name);
+
+                // Compose the node name using the node id and the default prefix
+                // This means that nodes should be named as String0, String1, ...
+                // node_name = DEFAULT_ID + new Integer(new Integer(node_id)+1);
+                node = new Integer(node_id);
+
                 allAddresses.ChangeMobilityVector(xDestCoordinate, yDestCoordinate, speed, node);
+                
+                // We add the collected information to nsData. It now contains the movement instructions as in the CityMob file.
                 nsData.AddNodeInformation(node, xDestCoordinate, yDestCoordinate, speed, second);
                 if (GetSimulationTime() < Float.parseFloat(words[2])) {
                     SetSimulationTime((int) Float.parseFloat(words[2]) + 1);
                 }
             } else {
+                // If we have a god_ line
                 if (words[0].endsWith("$ns_") && words[1].endsWith("at") && words[3].endsWith("god_")) {
                     if (GetSimulationTime() < Float.parseFloat(words[2])) {
                         SetSimulationTime((int) Float.parseFloat(words[2]) + 1);
@@ -4315,65 +4335,104 @@ public class CastadivaModel {
     }
 
     /**
-     * Transform the data readen form NS to the mobility matrix used in Castadiva for the simulation.
+     * Transforms the mobility instructions readen form a CityMob file to the
+     * mobility matrix used in Castadiva.
+     * The data was previously readen from the file using the ImportNsCITYMOB function.
+     * Warning : In castadiva, an aproximation is made, the time granularity is set to one second
+     * For example, an instruction that would be : at 28.654488 set .... in citymob is interpreted as : at 29 set ..... in castadiva
+     * @author Nacho Wannes
+     * @see ImportNsCITYMOB
      */
     private void TranslateNsDataToMobilityMatrix() {
         List<NodeImportedData> nodeMovements;
         NodeImportedData nodeVector1, nodeVector2, nodeVector3;
-        Integer timeUsed;
 
+        // Creation of the matrix that will contain node's position at any time of the simulation
         nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
 
-        //Add starting pause (NS start with pause time).
+        // We first place each node at it's initial position for the whole simulation
+        // Later on, we will browse the mobility instructions and make the apropriate changes at the apropriate time
+        // Any node that is not affected by any mobility instruction will remain as it was set here
         for (int node = 0; node < accessPoints.Size(); node++) {
+            // recovery of the node
             AP ap = accessPoints.Get(node);
-            nodeMovements = nsData.GetNodeInformation(node);
-            try {
-                for (int j = 0; j < nodeMovements.get(0).second; j++) {
-                    StoreNewNodePosition(ap.x, ap.y, node, j);
-                }
-            } catch (IndexOutOfBoundsException iobe) {
-                for (int j = 0; j < GetSimulationPause(); j++) {
-                    StoreNewNodePosition(ap.x, ap.y, node, j);
-                }
+
+            // Set nodes position a it's initial position for the whole simulation
+            for(int j=0;j <= GetSimulationTime(); j++ )
+            {
+                StoreNewNodePosition(ap.x, ap.y, node, j);
             }
         }
+
+        // Now that each node is safely placed, we need to introduces movement instructions for each node
         for (int node = 0; node < accessPoints.Size(); node++) {
-            //Read one node movement.
+            
+            // Recovery of the mobility instructions for the node
             nodeMovements = nsData.GetNodeInformation(node);
-            //If one node has no movement.
-            if (nodeMovements.size() == 0) {
-                AP ap = accessPoints.Get(node);
-                for (int j = 0; j <= GetSimulationTime(); j++) {
-                    StoreNewNodePosition(ap.x, ap.y, node, j);
+
+            // Each mobility instruction influences the next one.
+            // We need to keep a trace of the position of the node after its move.
+            float xPos;
+            float yPos;
+
+            // For each instruction we have for the current node
+            for (int i = 0; i < nodeMovements.size(); i++)
+            {
+                // Recovery of the specific mobility instruction
+                NodeImportedData movementInstruction = nodeMovements.get(i);
+
+                // Recovery of the position of the node when the instruction occurs
+                xPos = nodePositions[node][movementInstruction.second].xCoordinate;
+                yPos = nodePositions[node][movementInstruction.second].yCoordinate;
+
+
+                // We now calculate the different parameters of the move
+                float deltaX = movementInstruction.xCoordinate - xPos;
+                float deltaY = movementInstruction.yCoordinate - yPos;
+
+                // Delta is the distance of the move
+                float delta = (float) Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2));
+
+                int aproximateTimeMoving = 0;
+                float exactTimeMoving = 0;
+
+                // How do the x and y coordinates change for a one second movement
+                float oneSecXIncrease = 0;
+                float oneSecYIncrease = 0;
+
+                // This is necessary to avoid division by 0. Speed = 0 is used in citymob as a STOP instruction.
+                if(movementInstruction.speed > 0)
+                {
+                    exactTimeMoving = delta/movementInstruction.speed;
+                    aproximateTimeMoving = (int) Math.round(exactTimeMoving);
+
+                    // We can now know how a node move
+                    oneSecXIncrease = deltaX/exactTimeMoving;
+                    oneSecYIncrease = deltaY/exactTimeMoving;
                 }
-            } else {
-                //For the movements
-                for (int i = 0; i < nodeMovements.size(); i++) {
-                    nodeVector2 = nodeMovements.get(i);
-                    if (i == nodeMovements.size() - 1) {
-                        if (i == 0) {
-                            AP ap = accessPoints.Get(node);
-                            nodeVector1 = new NodeImportedData(node, ap.x, ap.y, (float) 0, 0);
-                        } else {
-                            nodeVector1 = nodeMovements.get(i - 1);
-                        }
-                        //The last movement.
-                        ObtainLastNodePositionMovement(nodeVector1,
-                                nodeVector2, node);
-                    } else {
-                        nodeVector3 = nodeMovements.get(i + 1);
-                        if (i == 0) {
-                            AP ap = accessPoints.Get(node);
-                            nodeVector1 = new NodeImportedData(node, ap.x, ap.y, (float) 0, 0);
-                            ObtainNodePositionBetweenTwoMovements(nodeVector1,
-                                    nodeVector2, node, nodeVector3.second - nodeVector2.second);
-                        } else {
-                            nodeVector1 = nodeMovements.get(i - 1);
-                            ObtainNodePositionBetweenTwoMovements(nodeVector1,
-                                    nodeVector2, node, nodeVector3.second - nodeVector2.second);
-                        }
+
+
+                // As we calculated the time of the movement, we now write the new positions in the matrix
+                // if the movement instruction is given at time t, the node will have moved at time t+1
+                for(int second=movementInstruction.second+1; second<= movementInstruction.second + aproximateTimeMoving && second < GetSimulationTime(); second++)
+                {
+                    // If we are making our last move, we apply a correction.
+                    // That correction allows to obtain better results,
+                    // it avoid aproximation errors to sum after each mobility instruction
+                    if(second == movementInstruction.second+aproximateTimeMoving){
+                        xPos=movementInstruction.xCoordinate;
+                        yPos=movementInstruction.yCoordinate;
+                    }else{
+                        xPos+=oneSecXIncrease;
+                        yPos+=oneSecYIncrease;
                     }
+                    StoreNewNodePosition( xPos,  yPos, node, second);
+                }
+
+                // The position of the node after it's move must be updated in the matrix
+                // Next movement instructions might erase this, or not
+                for(int second = movementInstruction.second+aproximateTimeMoving+1;second<=GetSimulationTime();second++){
+                    StoreNewNodePosition(xPos, yPos, node, second);
                 }
             }
         }
@@ -4384,24 +4443,41 @@ public class CastadivaModel {
      *                          IMPORT CITYMOB SCENARIO
      *
      ****************************************************************************/
+    
+    /* Imports a CityMob mobility scenario from a file into castadiva*/
     boolean ImportNsCITYMOB(String file) {
         String rawText;
         int lastReadedLine;
         String nsText[];
 
+        // Reading the file
         rawText = NSRead(file);
+
+        // Seperation each line
         nsText = rawText.split("\n");
 
         //Se transforman los datos
         try {
+            // We try to get the simulation information from the header :
+            // max speed, number of nodes, pause time, width, height
             if (ReadNSHeadCITYMOB(nsText)) {
+                // If the lecture was sucessfull, the comments are cleaned out of the
+                // text file. The header (14 first lines) is kept.
                 nsText = DeleteNsBodyComments(14, nsText);
+
+                // We now read the initial position information for each node and
+                // add the nodes to Castadiva using information stroed in configuration/aps.txt
                 lastReadedLine = ReadNsNodeCITYMOB(14, nsText);
-                if (maxSpeed > 0) {
-                    ReadNsMobility(lastReadedLine, nsText);
-                    TranslateNsDataToMobilityMatrix();
+
+                // If maxSpeed is = 0, there is no need to import any more mobility information
+               if (maxSpeed > 0) {
+                   // Analysis of the cityMob information 
+                   ReadNsMobility(lastReadedLine, nsText);
+                   // Conversion of the cityMob information into a mobility matrix in Castadiva
+                   TranslateNsDataToMobilityMatrix();
                 }
             } else {
+                // If we were unable to read the header...
                 return false;
             }
 
@@ -4436,6 +4512,10 @@ public class CastadivaModel {
         return true;
     }
 
+    /* This function optains Access Point information from the aps.txt file
+     * that is stored in the configuration folder
+     * It is mandatory for CityMob Importation to set aps.txt correctly
+     */
     public String[] ObtainStoredApDataCITYMOB(Integer node) {
         List lines;
         String line;
@@ -4447,6 +4527,8 @@ public class CastadivaModel {
         }
 
         lines = ReadTextFileInLines(file);
+        // If there are no suficient lines in aps.txt, we generate a default node
+        // configuration.
         if (node + 1 > lines.size() - help_lines) {
             String descomposed_line[] = {DEFAULT_WIFI_MAC, DEFAULT_IP_NET + (node + 1),
                 DEFAULT_WIFI_IP_NET + (node + 1), DEFAULT_CHANNEL + "", DEFAULT_WIFI_DEVICE,
@@ -4460,28 +4542,44 @@ public class CastadivaModel {
             return descomposed_line;
         }
     }
-
+    /**
+     * The following function allows to read every node's position from the cityMob
+     * file and to create the nodes in castadiva according to the information stored
+     * in configuration/aps.txt
+     * @param startingLine is the line in the cityMob file where the header ends and
+     * node's initial position starts.
+     * @parem nsText contains the cityMob file.
+     */
     private int ReadNsNodeCITYMOB(int startingLine, String nsText[]) {
         int i, id;
         float positionX, positionY, positionZ;
-        //contador de aps
-        int apnum = 0;
+        
+        int apnum = 0; //Access point counter
 
         accessPoints = new APs();
+        // Reading information from all AP. Information is structured as follows
+        // $node_(0) set X_ 200
         for (i = startingLine; i < numberNodes * 3 + startingLine; i += 3) {
             positionX = Float.parseFloat(nsText[i].split(" ")[3]);
             positionY = Float.parseFloat(nsText[i + 1].split(" ")[3]);
             positionZ = Float.parseFloat(nsText[i + 2].split(" ")[3]);
+
             id = Integer.parseInt(nsText[i].split("\\)")[0].split("\\(")[1]);
+
+            // We get AP configuration from the configuration/aps.txt file
+            // If aps.txt contains no sufficient information, default values are returned.
             String[] ap = ObtainStoredApDataCITYMOB(apnum);
             apnum++;
 
+            // We now try to set the name, from aps.txt or by default.
             String name = "";
             try {
-                name = ap[11];
+                name = ap[11]; // The twleveth field is the name of the AP
             } catch (Exception e) {
-                name = DEFAULT_ID + id;
+                name = DEFAULT_ID + id; // This is a default name for the AP.
             }
+
+            // Creation of a node from the previoulsy gathered information
             AP node = new AP(ap[1], ap[2], ap[0], ap[6], ap[7], name, positionX, positionY, positionZ,
                     Float.parseFloat(ap[5]), ap[9], ap[8], Integer.parseInt(ap[3]), DEFAULT_MODE,
                     ap[4], DEFAULT_GW);
@@ -4792,7 +4890,6 @@ public class CastadivaModel {
     public void ShowList(List list) {
         for (int i = 0; i < list.size(); i++) {
             String show = list.get(i).toString();
-            System.out.println(show);
         }
     }
 
@@ -4808,11 +4905,11 @@ public class CastadivaModel {
         System.out.println("****************************");
         for (int i = 0; i < showedInstructions.size(); i++) {
             System.out.println("");
-            System.out.println("NODO: " + (i + 1));
+            System.out.println("Node: " + (i + 1));
             System.out.println("--------------");
             nodo = (List) showedInstructions.get(i);
             for (int j = 0; j < nodo.size(); j++) {
-                System.out.println(nodo.get(j));
+                System.out.println("Node :"+nodo.get(j));
             }
         }
         System.out.println("****************************");
@@ -4952,8 +5049,8 @@ public class CastadivaModel {
             text = new String(bt);
             inputData.close();
         } catch (IOException ex) {
+             System.out.println("Error while reading the text "+text+" in the file "+file+" :"+ex);
         }
-                System.out.println(text);
         return text;
     }
 
@@ -5212,7 +5309,7 @@ public class CastadivaModel {
     void ShowSaveErrorMessage(String text, String title) {
         JFrame frame = null;
         if (debug) {
-            System.out.println(text);
+            System.out.println("Error message :"+text);
         }
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
@@ -5303,14 +5400,14 @@ public class CastadivaModel {
                         Thread.sleep(10);
                     } catch (Exception ee) {
                         if(debug){
-                            System.out.println(ee);
+                            System.out.println("Error while puttin thread to sleep :"+ee);
                         }
                     }
                 }
             //Disconnect();
             } catch (Exception e) {
                 if (debug) {
-                    System.out.println(e);
+                    System.out.println("Error while running command :"+e);
                 }
             }
         }
@@ -5320,14 +5417,14 @@ public class CastadivaModel {
                 channel.disconnect();
             } catch (NullPointerException npe) {
                 if (debug) {
-                    System.out.println(npe);
+                    System.out.println("Channel already disconnected:"+npe);
                 }
             }
             try {
                 session.disconnect();
             } catch (NullPointerException npe) {
                 if (debug) {
-                    System.out.println(npe);
+                    System.out.println("Session already disconnected:"+npe);
                 }
             }
         }
@@ -5382,7 +5479,7 @@ public class CastadivaModel {
             } catch (JSchException e) {
                 if(debug)
                 {
-                    System.out.println(e);
+                    System.out.println("Error while connecting :"+e);
                 }
                 String text = e.getMessage() + " in AP " + node.WhatAP();
                 String title = "Conexion status";
@@ -5550,7 +5647,7 @@ public class CastadivaModel {
 
         public void dump() throws IOException, ClassNotFoundException {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
-            System.out.println(is.readObject());
+            System.out.println("Dump :"+is.readObject());
             is.close();
         }
     }

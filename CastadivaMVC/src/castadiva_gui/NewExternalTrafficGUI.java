@@ -256,7 +256,7 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
     void ShowErrorMessage(String text, String title){
         JFrame frame = null;
         if (m_model.debug)
-            System.out.println(text);
+            System.out.println("Error message :"+text);
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
     
@@ -335,7 +335,7 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         DeviceComboBox2 = new javax.swing.JComboBox();
         jLabel11 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Attach external application");
         setResizable(false);
 

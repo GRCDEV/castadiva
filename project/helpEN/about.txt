@@ -7,26 +7,25 @@ VERSION (25/10/2007)
 -----------------
 
 0.8 Static simulation.
-0.9 Added instalation of Aps.
-1.0 Added routing protocols.
-1.1 Random Scenaries.
-1.2 Mobility.
-1.3 Upgrading performance.
-1.4 Correct some bugs.
-1.5 Compatibility with external traffic.
-1.6 Adapting to JE 1.6 specifications.
+0.81 Added instalation of Aps.
+0.82 Added routing protocols.
+0.83 Random Scenaries.
+0.9 Mobility.
+0.91 Upgrading performance.
+0.92 Correct some bugs.
+0.93 Compatibility with external traffic.
+0.94 Adapting to JE 1.6 specifications. Correct some bugs with the stopwatch.
 
 
 AUTHOR
 -----------------
 
-Universidad Politécnica de Valencia.
-Departamento de Informática de Sistemas y Computadores.
+Universidad Politecnica de Valencia.
+Departamento de Informatica de Sistemas y Computadores.
 Camino de Vera, s/n
 46022 Valencia
 SPAIN
 
 Software Developer:
 Jorge Hortelano Otero.
-jorgehortelano@gmail.com
-
+softwaremagico@gmail.com

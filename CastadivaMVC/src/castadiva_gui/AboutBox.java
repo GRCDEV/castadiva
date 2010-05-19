@@ -45,7 +45,7 @@ public class AboutBox extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         VersionLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About...");
         setResizable(false);
 

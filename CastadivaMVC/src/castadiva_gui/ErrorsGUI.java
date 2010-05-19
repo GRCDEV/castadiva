@@ -65,7 +65,7 @@ public class ErrorsGUI extends javax.swing.JFrame {
         errorsText = new javax.swing.JTextArea();
         BotonCerrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CASTADIVA - Compilation errors");
         setResizable(false);
 
@@ -92,7 +92,7 @@ public class ErrorsGUI extends javax.swing.JFrame {
                         .addContainerGap()
                         .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(381, Short.MAX_VALUE)
+                        .addContainerGap(407, Short.MAX_VALUE)
                         .add(BotonCerrar))
                     .add(layout.createSequentialGroup()
                         .add(208, 208, 208)

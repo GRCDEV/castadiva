@@ -403,7 +403,6 @@ public class SimulationController {
 
         public void actionPerformed(ActionEvent e) {
             mobDes.setVisible(true);
-            m_view.setVisible(false);
         }
     }
 }

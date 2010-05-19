@@ -58,7 +58,7 @@ public class MobilityDesignerGUI extends javax.swing.JFrame {
         JBgenerate = new javax.swing.JButton();
         JTName = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24));

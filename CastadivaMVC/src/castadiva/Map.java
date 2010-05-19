@@ -24,7 +24,7 @@ public class Map extends JPanel {
     private boolean directions = false;
     private boolean grid = true;
     
-    
+
     
     /**
      * Creates a new instance of Map
@@ -122,7 +122,6 @@ public class Map extends JPanel {
             //Draw the movement of the nodes.
             if(directions){
                 if(m_model.simulationSeconds < m_model.GetSimulationTime() && m_model.simulationSeconds > 0){
-                    System.out.println(m_model.simulationSeconds);
                     try{
                    NodeCheckPoint nextPoint = m_model.nodePositions[k][m_model.simulationSeconds + 1];
                    int nextXp = (int)(nextPoint.xCoordinate * this.getWidth() / m_model.WhatBoardSize());

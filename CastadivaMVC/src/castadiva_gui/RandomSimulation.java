@@ -473,7 +473,7 @@ public class RandomSimulation extends javax.swing.JFrame {
         AodvCheckBox = new javax.swing.JCheckBox();
         Frame = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CASTADIVA - Random simulation");
         setResizable(false);
 
@@ -656,7 +656,7 @@ public class RandomSimulation extends javax.swing.JFrame {
             .add(TrafficPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(TrafficPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, RandomTrafficScrollPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 886, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, RandomTrafficScrollPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 907, Short.MAX_VALUE)
                     .add(TableTitleLabel)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, TrafficPanelLayout.createSequentialGroup()
                         .add(OrderButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 125, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -769,7 +769,7 @@ public class RandomSimulation extends javax.swing.JFrame {
                     .add(jLabel9)
                     .add(CurrentTimeTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel16))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         ButtonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -834,7 +834,7 @@ public class RandomSimulation extends javax.swing.JFrame {
                 .add(CastadivaRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(NSRadioButton)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         ChoosePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -871,7 +871,7 @@ public class RandomSimulation extends javax.swing.JFrame {
                 .add(BalancedFlowRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(RandomFlowRadioButton)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         ProtocolPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -919,7 +919,7 @@ public class RandomSimulation extends javax.swing.JFrame {
                 .add(ProtocolPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(NoneCheckBox)
                     .add(AodvCheckBox))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 28, Short.MAX_VALUE)
                 .add(ProtocolPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(OptimumCheckBox)
                     .add(DsrCheckBox))
@@ -939,7 +939,7 @@ public class RandomSimulation extends javax.swing.JFrame {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(SourcePanel, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(ScenarioPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                    .add(ScenarioPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(TrafficPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

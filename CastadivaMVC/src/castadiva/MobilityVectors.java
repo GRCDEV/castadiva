@@ -204,7 +204,7 @@ public class MobilityVectors implements Serializable {
             private Float speed;
             public Float waitingTime;
             //COMPATIBILIDAD CON PLUGINS
-                        MobilityVector(Float maxMobilitySpeed, Float min) {
+            MobilityVector(Float maxMobilitySpeed, Float min) {
                 speed = maxMobilitySpeed;
                 waitingTime = (float) 0;
             }

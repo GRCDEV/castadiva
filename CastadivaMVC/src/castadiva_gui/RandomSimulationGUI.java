@@ -518,7 +518,7 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
         AodvCheckBox = new javax.swing.JCheckBox();
         Frame = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CASTADIVA - Random simulation");
         setResizable(false);
 
@@ -554,7 +554,7 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
                 .add(StoreDataPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(SaveFolderTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(SearchDirectoryButton))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         SourcePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -705,12 +705,12 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
             .add(TrafficPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(TrafficPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, RandomTrafficScrollPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 882, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, RandomTrafficScrollPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 896, Short.MAX_VALUE)
                     .add(TableTitleLabel)
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, TrafficPanelLayout.createSequentialGroup()
                         .add(jLabel17)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(ConsoleTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                        .add(ConsoleTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(OrderButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 125, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -727,7 +727,7 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(TableTitleLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(RandomTrafficScrollPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                .add(RandomTrafficScrollPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(TrafficPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(DeleteAllButton)
@@ -889,7 +889,7 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
                 .add(CastadivaRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(NSRadioButton)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         ChoosePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -926,7 +926,7 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
                 .add(BalancedFlowRadioButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(RandomFlowRadioButton)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         ProtocolPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -973,7 +973,7 @@ public class RandomSimulationGUI extends javax.swing.JFrame {
                 .add(ProtocolPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(NoneCheckBox)
                     .add(AodvCheckBox))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 24, Short.MAX_VALUE)
                 .add(ProtocolPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(OptimumCheckBox)
                     .add(OlsrCheckBox))
