@@ -10,9 +10,9 @@ import castadiva.TableModels.ExecutionPlannerTableModel;
 import castadiva.TrafficRecords.ExecutionRecord;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Vector;
 import javax.swing.JViewport;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -143,6 +143,45 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         tableModel.fireTableDataChanged();
     }
 
+    public Boolean getWaitChecked() {
+        return StartSimulationCheckBox.isSelected();
+    }
+
+    public Integer getWaitingTime() {
+        Integer MAXTime = 24 * 60; //A complete DAY in minutes.
+        
+        if(getWaitChecked()) {
+            Integer hora = (Integer)StartSimulationHoursSpinner.getValue();
+            Integer minutos = (Integer)StartSimulationMinutesSpinner.getValue();
+
+            Calendar rightNow = Calendar.getInstance();
+            Integer hour = rightNow.get(Calendar.HOUR_OF_DAY);
+            Integer minutes = rightNow.get(Calendar.MINUTE);
+
+
+
+
+            Integer actualTime = hour * 60 + minutes;
+            Integer desiredTime = hora * 60 + minutos;
+
+            Integer WaitingTime;
+
+            if(actualTime > desiredTime) {
+                WaitingTime = desiredTime + (MAXTime - actualTime);
+            }else{
+                WaitingTime = desiredTime - actualTime;
+            }
+
+            System.out.println("Spinner-> Hora " + hora + " Minutos " + minutos);
+            System.out.println("Local-> Hora " + hour + " Minutos " + minutes);
+            System.out.println("Operaciones-> actual " + actualTime + " deseado " + desiredTime);
+
+            return WaitingTime;
+        }else{
+            return 0;
+        }
+    }
+
     /**
      * @author Wannes
      * This function returns the current status depending on the simulation time
@@ -182,6 +221,9 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBloadsim.setEnabled(false);
         this.JBnewsim.setEnabled(false);
         this.JBStopSimulations.setEnabled(true);
+        this.StartSimulationCheckBox.setEnabled(false);
+        this.StartSimulationHoursSpinner.setEnabled(false);
+        this.StartSimulationMinutesSpinner.setEnabled(false);
     }
 
     public void setButtonsForConfiguration()
@@ -195,6 +237,9 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBloadsim.setEnabled(true);
         this.JBnewsim.setEnabled(true);
         this.JBStopSimulations.setEnabled(false);
+        this.StartSimulationCheckBox.setEnabled(true);
+        this.StartSimulationHoursSpinner.setEnabled(true);
+        this.StartSimulationMinutesSpinner.setEnabled(true);
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -225,6 +270,11 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         JBSaveList = new javax.swing.JButton();
         jSeparator6 = new javax.swing.JSeparator();
         jSeparator7 = new javax.swing.JSeparator();
+        StartSimulationHoursSpinner = new javax.swing.JSpinner();
+        StartSimulationMinutesSpinner = new javax.swing.JSpinner();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        StartSimulationCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CASTADIVA - Execution Planner");
@@ -271,6 +321,24 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
         JBSaveList.setText("Save list");
 
+        StartSimulationHoursSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                StartSimulationHoursSpinnerStateChanged(evt);
+            }
+        });
+
+        StartSimulationMinutesSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                StartSimulationMinutesSpinnerStateChanged(evt);
+            }
+        });
+
+        jLabel2.setText("Hours");
+
+        jLabel3.setText("Minutes");
+
+        StartSimulationCheckBox.setText("Start simulation at");
+
         javax.swing.GroupLayout ButtonsPanelLayout = new javax.swing.GroupLayout(ButtonsPanel);
         ButtonsPanel.setLayout(ButtonsPanelLayout);
         ButtonsPanelLayout.setHorizontalGroup(
@@ -278,24 +346,34 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             .addGroup(ButtonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBLoadList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBnewsim, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBloadsim, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBimportsc, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBimportcity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBclose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBStopSimulations, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBgenerate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBedit, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBdelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                    .addComponent(JBSaveList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE))
+                    .addComponent(jSeparator6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(jSeparator7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBLoadList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBnewsim, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBloadsim, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBimportsc, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBimportcity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBclose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBStopSimulations, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBgenerate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBedit, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBdelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBSaveList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addGroup(ButtonsPanelLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(StartSimulationHoursSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(StartSimulationMinutesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(StartSimulationCheckBox))
                 .addContainerGap())
         );
         ButtonsPanelLayout.setVerticalGroup(
@@ -329,7 +407,15 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                 .addComponent(JBSaveList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74)
+                .addGap(5, 5, 5)
+                .addComponent(StartSimulationCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(StartSimulationMinutesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(StartSimulationHoursSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(JBgenerate)
@@ -346,7 +432,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 743, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -356,13 +442,33 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
                     .addComponent(ButtonsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void StartSimulationMinutesSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_StartSimulationMinutesSpinnerStateChanged
+        // TODO add your handling code here:
+        if((Integer)StartSimulationMinutesSpinner.getValue() < 0) {
+            StartSimulationMinutesSpinner.setValue(new Integer(0));
+        }
+        if((Integer)StartSimulationMinutesSpinner.getValue() > 59) {
+            StartSimulationMinutesSpinner.setValue(new Integer(59));
+        }
+    }//GEN-LAST:event_StartSimulationMinutesSpinnerStateChanged
+
+    private void StartSimulationHoursSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_StartSimulationHoursSpinnerStateChanged
+        // TODO add your handling code here:
+        if((Integer)StartSimulationHoursSpinner.getValue() < 0) {
+            StartSimulationHoursSpinner.setValue(new Integer(0));
+        }
+        if((Integer)StartSimulationHoursSpinner.getValue() > 23) {
+            StartSimulationHoursSpinner.setValue(new Integer(23));
+        }
+    }//GEN-LAST:event_StartSimulationHoursSpinnerStateChanged
 
     public void addNewSimulationListener(ActionListener a1) {
         JBnewsim.addActionListener(a1);
@@ -422,6 +528,11 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     private javax.swing.JButton JBloadsim;
     private javax.swing.JButton JBnewsim;
     private javax.swing.JTable JTplanner;
+    private javax.swing.JCheckBox StartSimulationCheckBox;
+    private javax.swing.JSpinner StartSimulationHoursSpinner;
+    private javax.swing.JSpinner StartSimulationMinutesSpinner;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;

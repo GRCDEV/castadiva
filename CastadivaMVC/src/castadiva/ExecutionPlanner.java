@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -40,7 +41,8 @@ public class ExecutionPlanner {
     private CastadivaController m_control;
     private ExecutionPropiertiesDialog prop;
     private int currentlySimulatingRow;
-
+    private SleepMinutes sleep;
+    private Boolean interrupted;
 
     ExecutionPlanner(SimulationGUI sim, final ExecutionPlannerGUI exec, CastadivaModel model,
                      NewExternalTrafficGUI attach, final MainMenuGUI main, CastadivaController control) {
@@ -306,6 +308,54 @@ public class ExecutionPlanner {
         }
     }
 
+
+    class SleepMinutes extends Thread {
+        long MinutesToSleep;
+
+        public SleepMinutes(long l) {
+            MinutesToSleep = l;
+        }
+        @Override
+        public void run() {
+            try {
+              //sleep
+              TimeUnit.MINUTES.sleep(MinutesToSleep);
+            } catch (InterruptedException ex) {
+               interrupted = true;
+               System.err.println("Wait interrupted - Sleep");
+            }
+        }
+
+    }
+
+    class LaunchThread extends Thread {
+
+        @Override
+        public void run() {
+            interrupted = false;
+            currentlySimulatingRow = 0;
+                m_exec.setButtonsForSimulation();
+
+                Integer minWait = m_exec.getWaitingTime();
+                sleep = new SleepMinutes(minWait);
+                sleep.start();
+                System.out.println("Waiting " + minWait + " minutes");
+                try {
+                    sleep.join();
+                } catch (InterruptedException ex) {
+                    interrupted = true;
+                    System.err.println("Wait interrupted - Join");
+                } finally {
+
+                if(interrupted == false) {
+                // The first simulation is processed. When that simulation ends, it calls the next one.
+                    StartExecutionPlannerSimulation();
+                }
+                }
+        }
+
+    }
+
     /**
      * @author Wannes
      * When the Generate Simulations button is pressed, the simulation planner starts its work.
@@ -315,13 +365,30 @@ public class ExecutionPlanner {
     class generateSimulationsExecutionPlanner implements ActionListener {
 
         public void actionPerformed(ActionEvent arg0) {
+            //Boolean interrupted = false;
             if(m_exec.getNumberOfRows() > 0 )
             {
                 // The simulations start with the upper row
-                currentlySimulatingRow = 0;
+                /*currentlySimulatingRow = 0;
+                m_exec.setButtonsForSimulation();
 
+                Integer minWait = m_exec.getWaitingTime();
+                sleep = new SleepMinutes(minWait);
+                sleep.start();
+                try {
+                    sleep.join();
+                } catch (InterruptedException ex) {
+                    interrupted = true;
+                }
+
+                if(interrupted == false) {
                 // The first simulation is processed. When that simulation ends, it calls the next one.
-                StartExecutionPlannerSimulation();
+                    StartExecutionPlannerSimulation();
+                }*/
+
+                Thread lanza = new LaunchThread();
+                lanza.start();
+                
             } else {
                 JOptionPane.showMessageDialog(null, "You must configure a simulation first.");
             }
@@ -334,7 +401,11 @@ public class ExecutionPlanner {
     */
    class stopSimulationsExecutionPlanner implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
+            if(sleep.isAlive()) {
+                sleep.interrupt();
+            }
             ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
 
             // Current simulation is stopped
@@ -356,6 +427,7 @@ public class ExecutionPlanner {
 
     class newSimulationExecutionPlanner implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             m_simulationWindow.setExecutionPlanner(true);
             m_simulationWindow.setVisible(true);
