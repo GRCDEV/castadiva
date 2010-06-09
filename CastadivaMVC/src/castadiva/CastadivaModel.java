@@ -218,7 +218,7 @@ public class CastadivaModel {
     };
 
     //If true, show output in console.
-    public final boolean debug = true;
+    public final boolean debug = false;
     public IPluginCastadiva[] routing_protocols = new IPluginCastadiva[]{};
     public IMobilityPluginCastadiva[] mob_plugins = new IMobilityPluginCastadiva[]{};
     public String mobilityModel = "RANDOM WAY POINT";
@@ -2649,6 +2649,9 @@ public class CastadivaModel {
         Integer prevNode;
         Integer nextNode;
 
+        if(debug) {
+            System.out.println("\nGateway for Node " + accessPoints.Get(node).WhatAP() + "\n");
+        }
         for (int i = 0; i < accessPoints.Size(); i++) {
             prevNode = i;
             nextNode = tree[i];
@@ -2670,18 +2673,23 @@ public class CastadivaModel {
 
             //BEGIN NEW CODE
             while(nextNode != node) {
-                if(tree[prevNode] == 0) {
+                if(tree[prevNode] == -1) {
                     break;
                 }
                 prevNode = nextNode;
                 nextNode = tree[prevNode];
             }
+            if(debug) {
+                System.out.println("Through " + accessPoints.Get(prevNode).WhatAP()  + " Views " + accessPoints.Get(i).WhatAP());
+            }
             gateways[i] = prevNode;
             //END NEW CODE
             
         }
-        System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
-        printIntegerVector(gateways);
+        if(debug) {
+            System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
+            printIntegerVector(gateways);
+        }
         return gateways;
     }
 
@@ -2690,6 +2698,7 @@ public class CastadivaModel {
         for(int i = 0; i < v.length; i++) {
             System.out.print(v[i].toString() + " ");
         }
+        System.out.println();
     }
     /**
      * Create a tree of a graph with a determinated root.
@@ -2700,11 +2709,15 @@ public class CastadivaModel {
         List<Integer> next = new ArrayList<Integer>();
         Integer tree[] = new Integer[accessPoints.Size()];
 
+        //Put vectors to default
         for (int i = 0; i < accessPoints.Size(); i++) {
-            tree[i] = 0;
+            tree[i] = -1;
             visited[i] = 0;
         }
 
+        if(debug) {
+            System.out.println("Tree for Node " + accessPoints.Get(node).WhatAP() + "\n");
+        }
         visited[node] = 1;
         tree[node] = node;
         next.add(node);
@@ -2712,12 +2725,14 @@ public class CastadivaModel {
         while (next.size() > 0) {
             nodeUsed = (Integer) next.get(0);
             next.remove(0);
-            //System.out.println("Node Used " + accessPoints.Get(nodeUsed).WhatAP());
+            
             for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
                 if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
                 {
-                        //System.out.println("Views " + accessPoints.Get(i).WhatAP());
+                    if(debug) {
+                        System.out.println("Through " + accessPoints.Get(nodeUsed).WhatAP()  + " Views " + accessPoints.Get(i).WhatAP());
+                    }
                         //Add to the list.
                         next.add(i);
                         visited[i] = 1;
@@ -2725,8 +2740,10 @@ public class CastadivaModel {
                 }
             }
         }
-        printIntegerVector(tree);
-        /*System.out.println("Visibility Matrix");
+        if(debug) {
+            printIntegerVector(tree);
+        }
+       /*System.out.println("Visibility Matrix");
         for(int i = 0; i < visibilityMatrix.length; i++){
             for(int j = 0; j < visibilityMatrix[i].length; j++){
                 System.out.print(visibilityMatrix[i][j] + " ");
@@ -2746,7 +2763,7 @@ public class CastadivaModel {
         Integer tree[] = new Integer[accessPoints.Size()];
 
         for (int i = 0; i < accessPoints.Size(); i++) {
-            tree[i] = 0;
+            tree[i] = -1;
             visited[i] = 0;
         }
 
