@@ -220,7 +220,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBimportsc.setEnabled(false);
         this.JBloadsim.setEnabled(false);
         this.JBnewsim.setEnabled(false);
-        this.JBStopSimulations.setEnabled(true);
+        this.JBResetAPs.setEnabled(true);
         this.StartSimulationCheckBox.setEnabled(false);
         this.StartSimulationHoursSpinner.setEnabled(false);
         this.StartSimulationMinutesSpinner.setEnabled(false);
@@ -236,11 +236,28 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBimportsc.setEnabled(true);
         this.JBloadsim.setEnabled(true);
         this.JBnewsim.setEnabled(true);
-        this.JBStopSimulations.setEnabled(false);
+        this.JBResetAPs.setEnabled(false);
         this.StartSimulationCheckBox.setEnabled(true);
         this.StartSimulationHoursSpinner.setEnabled(true);
         this.StartSimulationMinutesSpinner.setEnabled(true);
     }
+
+    /**
+     * Allows to change the text value of the Reset APS button and set it to cancel
+     * When a simulation is plannified, it should be cancelable
+     * @param cancel
+     */
+    public void setResetButtonToCancel(boolean cancel)
+    {
+        if(cancel){
+            this.JBResetAPs.setText("Cancel");
+        }
+        else{
+            this.JBResetAPs.setText("Reset Access Points");
+        }
+    }
+
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -263,7 +280,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
-        JBStopSimulations = new javax.swing.JButton();
+        JBResetAPs = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
         JBLoadList = new javax.swing.JButton();
@@ -315,7 +332,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
         JBnewsim.setText("New Simulation");
 
-        JBStopSimulations.setText("Stop Simulations");
+        JBResetAPs.setText("Reset Access Points");
 
         JBLoadList.setText("Load list");
 
@@ -359,7 +376,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                     .addComponent(JBimportsc, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBimportcity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBclose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                    .addComponent(JBStopSimulations, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBResetAPs, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBgenerate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBedit, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBdelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
@@ -420,7 +437,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(JBgenerate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JBStopSimulations)
+                .addComponent(JBResetAPs)
                 .addGap(5, 5, 5)
                 .addComponent(JBclose)
                 .addContainerGap())
@@ -502,8 +519,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         JBgenerate.addActionListener(a1);
     }
 
-    public void addStopSimulationsButtonListener(ActionListener a1) {
-        JBStopSimulations.addActionListener(a1);
+    public void addResetAPsButtonListener(ActionListener a1) {
+        JBResetAPs.addActionListener(a1);
     }
 
     public void addLoadListButtonListener(ActionListener a) {
@@ -517,8 +534,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ButtonsPanel;
     private javax.swing.JButton JBLoadList;
+    private javax.swing.JButton JBResetAPs;
     private javax.swing.JButton JBSaveList;
-    private javax.swing.JButton JBStopSimulations;
     private javax.swing.JButton JBclose;
     private javax.swing.JButton JBdelete;
     private javax.swing.JButton JBedit;

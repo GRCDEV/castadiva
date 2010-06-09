@@ -1187,7 +1187,6 @@
                           <Component id="CloseButton" pref="221" max="32767" attributes="2"/>
                           <Component id="ResetButton" alignment="0" pref="221" max="32767" attributes="2"/>
                           <Component id="RandomSceneryButton" alignment="0" pref="221" max="32767" attributes="0"/>
-                          <Component id="StopSimulationButton" alignment="0" pref="221" max="32767" attributes="0"/>
                           <Component id="ReplaySimulationButton" alignment="0" pref="221" max="32767" attributes="0"/>
                           <Component id="SimulateButton" alignment="0" pref="221" max="32767" attributes="2"/>
                           <Component id="HelpButton" alignment="0" pref="221" max="32767" attributes="0"/>
@@ -1203,9 +1202,7 @@
                       <Component id="SimulateButton" pref="32" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="ReplaySimulationButton" pref="32" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="StopSimulationButton" pref="32" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       <Component id="SaveButton" pref="34" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="RandomSceneryButton" pref="32" max="32767" attributes="0"/>
@@ -1244,11 +1241,6 @@
             <Component class="javax.swing.JButton" name="ReplaySimulationButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Replay Simulation"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="StopSimulationButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Stop Simulation"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="HelpButton">

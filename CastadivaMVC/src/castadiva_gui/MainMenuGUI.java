@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 public class MainMenuGUI extends javax.swing.JFrame {
     private CastadivaModel m_model;
     private LogoFrame logo;
-    
+
     /** Creates new form CastadivaGUI */
     public MainMenuGUI(CastadivaModel model) {
         m_model = model;

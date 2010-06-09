@@ -235,11 +235,9 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
         TrafficButton.setEnabled(activation);
         if(this.executionPlanner) {
             ReplaySimulationButton.setEnabled(false);
-            StopSimulationButton.setEnabled(false);
             ResetButton.setEnabled(false);
         }else {
             ReplaySimulationButton.setEnabled(activation);
-            StopSimulationButton.setEnabled(activation);
             ResetButton.setEnabled(activation);
         }
         SimulateButton.setEnabled(activation);
@@ -341,7 +339,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
         SimulateButton.setText("New Simulation");
         ReplaySimulationButton.setText("Replay Simulation");
         SimulateButton.setEnabled(true);
-        StopSimulationButton.setEnabled(false);
         RandomSceneryButton.setEnabled(true);
         EnableReplay(true);
         if (m_model.WhatMaxSpeed() > 0) {
@@ -364,19 +361,16 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
     public void DisableSimulation() {
         SimulateButton.setEnabled(false);
         ReplaySimulationButton.setEnabled(false);
-        StopSimulationButton.setEnabled(false);
     }
 
     public void ReplaySimulationView() {
         SimulateButton.setEnabled(false);
         ReplaySimulationButton.setEnabled(false);
-        StopSimulationButton.setEnabled(true);
         ReplaySimulationButton.setText("Replaying!!");
     }
 
     public void RunningSimulationView() {
         SimulateButton.setEnabled(false);
-        StopSimulationButton.setEnabled(true);
         ReplaySimulationButton.setEnabled(false);
         SimulateButton.setText("Simulating!!");
         RandomSceneryButton.setEnabled(false);
@@ -421,9 +415,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
      *                             LISTENERS
      *
      *********************************************************************/
-    public void addStopSimulationListener(ActionListener al) {
-        StopSimulationButton.addActionListener(al);
-    }
 
     public void addSimulateButtonListener(ActionListener al) {
         SimulateButton.addActionListener(al);
@@ -603,7 +594,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
         SimulateButton = new javax.swing.JButton();
         RandomSceneryButton = new javax.swing.JButton();
         ReplaySimulationButton = new javax.swing.JButton();
-        StopSimulationButton = new javax.swing.JButton();
         HelpButton = new javax.swing.JButton();
         SaveButton = new javax.swing.JButton();
         RepresentationPanel = new javax.swing.JPanel();
@@ -919,7 +909,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             .add(org.jdesktop.layout.GroupLayout.TRAILING, ShowPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(jLabel7)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 64, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 65, Short.MAX_VALUE)
                 .add(ShowPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(ReplayCheckBox)
                     .add(jLabel31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -1071,7 +1061,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
             CenterPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(CenterPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
+                .add(Frame, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 703, Short.MAX_VALUE)
                 .add(18, 18, 18)
                 .add(ControlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -1262,8 +1252,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
 
         ReplaySimulationButton.setText("Replay Simulation");
 
-        StopSimulationButton.setText("Stop Simulation");
-
         HelpButton.setText("Help");
 
         SaveButton.setText("Save Scenario");
@@ -1279,7 +1267,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
                     .add(CloseButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                     .add(ResetButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                     .add(RandomSceneryButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                    .add(StopSimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                     .add(ReplaySimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                     .add(SimulateButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                     .add(HelpButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
@@ -1292,9 +1279,7 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
                 .add(SimulateButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(ReplaySimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(StopSimulationButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(44, 44, 44)
                 .add(SaveButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(RandomSceneryButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
@@ -1586,7 +1571,6 @@ public class SimulationGUI extends javax.swing.JFrame implements IObserver {
     private javax.swing.JTextField SizeTextField;
     private javax.swing.JPanel SpeedPanel;
     private javax.swing.JPanel StatusPanel;
-    private javax.swing.JButton StopSimulationButton;
     private javax.swing.JPanel TimePanel;
     private javax.swing.JButton TrafficButton;
     private javax.swing.JPanel TrafficPanel;

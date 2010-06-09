@@ -80,7 +80,7 @@ public class ExecutionPlanner {
         m_exec.addLoadScenarioButtonListener(new LoadScenaryExecutionPlanner());
         m_exec.addImportScenarioButtonListener(m_control.new ImportNsListener());
         m_exec.addGenerateSimulationButtonListener(new generateSimulationsExecutionPlanner());
-        m_exec.addStopSimulationsButtonListener(new stopSimulationsExecutionPlanner());
+        m_exec.addResetAPsButtonListener(new resetAPs());
         m_exec.addLoadListButtonListener(new loadExecutionPlannerList());
         m_exec.addSaveListButtonListener(new saveExecutionPlannerList());
     }
@@ -349,6 +349,7 @@ public class ExecutionPlanner {
 
                 if(interrupted == false) {
                 // The first simulation is processed. When that simulation ends, it calls the next one.
+                    m_exec.setResetButtonToCancel(false);
                     StartExecutionPlannerSimulation();
                 }
                 }
@@ -387,6 +388,7 @@ public class ExecutionPlanner {
                 }*/
 
                 Thread lanza = new LaunchThread();
+                m_exec.setResetButtonToCancel(true);
                 lanza.start();
                 
             } else {
@@ -397,27 +399,39 @@ public class ExecutionPlanner {
 
    /**
     * @author Wannes
-    * Allows to cancel the simulation planner's processing
+    * Allows to reset the Access Points and stop the execution planner
     */
-   class stopSimulationsExecutionPlanner implements ActionListener {
+   class resetAPs implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
             if(sleep.isAlive()) {
                 sleep.interrupt();
+                m_exec.setResetButtonToCancel(false);
             }
-            ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
+            else
+            {
+                ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
 
-            // Current simulation is stopped
-            m_model.KillSimulation();
 
-            // Status of the current simulation is updated
-            currentExecutionRecord.setStatus(m_exec.MSG_EXECUTION_PLANNER_CANCELLED);
-            m_exec.updateTable();
+                m_model.rebootAPs();
 
-            m_model.executionPlannerSimulating = false;
-            m_model.StatisticsAreShowed();
-            m_model.EndStopwatch();
+                // If the execution planner was simulating, we set the current to "canceled"
+                if(currentlySimulatingRow!=-1){
+                    // The simulation is stopped
+
+                    // Status of the current simulation is updated
+                    currentExecutionRecord.setStatus(m_exec.MSG_EXECUTION_PLANNER_CANCELLED);
+                    m_exec.updateTable();
+
+                    // The simulation window is updated
+                    m_simulationWindow.ActivateButtons(true);
+
+                }
+
+                m_model.executionPlannerSimulating = false;
+                m_model.StatisticsAreShowed();
+            }
 
             // Buttons are set available
             m_exec.setButtonsForConfiguration();

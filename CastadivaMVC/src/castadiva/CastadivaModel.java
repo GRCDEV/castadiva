@@ -898,18 +898,14 @@ public class CastadivaModel {
      * @param withExit If must be showed the return of the instruction.
      */
     void InstructionForAll(String instruction, boolean withExit) {
-        String action;
         List<List<String>> nodeInstructions = new ArrayList<List<String>>();
         SshNode ssh;
         SSHInstructionThread = new ArrayList<SSH>();
+        
         List<String> aux = new ArrayList<String>();
-        String nodeSelfDestructionInstruction = "kill -9 $(ps -e |" +
-                " grep \"/usr/sbin/dropbear\" | grep -v grep | grep -v \"400 S\" " +
-                "| tail -1 | cut -n -d \"r\" -f1 )";
+        aux.add(instruction);
 
-            aux.add(instruction);
-        //Kill the SSH session (sometimes, not end).
-            aux.add(nodeSelfDestructionInstruction);
+        //Kill the SSH session (sometimes, not end)
         for(int i =0; i < accessPoints.Size(); i++){
             nodeInstructions.add(i, aux);
         }
@@ -925,6 +921,19 @@ public class CastadivaModel {
         } catch (NullPointerException npe) {
             System.out.println("SSH session already closed :"+npe);
         }
+    }
+
+    /**
+     * Sends the "reboot" instruction to all routers via Ssh
+     * and stops any current simulation
+     * @author Wannes
+     */
+    public void rebootAPs(){
+            InstructionForAll("reboot", false);
+            // Stop the simulation in Castadiva
+            NodeDisconnect();
+            SetStopwatch(0);
+            EndStopwatch();
     }
 
     /**
@@ -1335,16 +1344,6 @@ public class CastadivaModel {
 
     }
 
-    /**
-     * Kill a started simulation.
-     */
-    void KillSimulation() {
-        String stopAll = KillAllOldInstructions() +
-                StopTraffic();
-        InstructionForAll(stopAll, false);
-        EndStopwatch();
-        StopSimulation();
-    }
 
     /****************************************************************************
      *
@@ -2687,8 +2686,8 @@ public class CastadivaModel {
             
         }
         if(debug) {
-            System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
-            printIntegerVector(gateways);
+        System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
+        printIntegerVector(gateways);
         }
         return gateways;
     }
@@ -2725,7 +2724,7 @@ public class CastadivaModel {
         while (next.size() > 0) {
             nodeUsed = (Integer) next.get(0);
             next.remove(0);
-            
+
             for (int i = 0; i < accessPoints.Size(); i++) {
                 //This node reach other node.
                 if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
@@ -2743,7 +2742,7 @@ public class CastadivaModel {
         if(debug) {
             printIntegerVector(tree);
         }
-       /*System.out.println("Visibility Matrix");
+        /*System.out.println("Visibility Matrix");
         for(int i = 0; i < visibilityMatrix.length; i++){
             for(int j = 0; j < visibilityMatrix[i].length; j++){
                 System.out.print(visibilityMatrix[i][j] + " ");
@@ -3651,9 +3650,6 @@ public class CastadivaModel {
         chmodScript = "chown nobody " + scriptsApFolder + File.separator + scriptName +
                 " && chmod u+x " + scriptsApFolder + File.separator + scriptName +
                 " && chown nobody " + nfsApFolder + " && chmod 777 " + nfsApFolder;
-        changeOlsrConf = ConfigureOLSRInstruction(wifiDevice, ObtainNetTypeC(newWifiIp), "255.255.255.0");
-        nvram = SetNvramVariables(scriptsApFolder + File.separator + scriptName,
-                ethDevice, switchDevice);
 
         createFolders = folderScriptInstallation + " " + folderNfs;
         instructionList.add(packetInstallation);
@@ -3662,9 +3658,6 @@ public class CastadivaModel {
         instructionList.add(creatingNfsFolder);
         instructionList.add(chmodScript);
         instructionList.add(autoBoot);
-        instructionList.addAll(changeOlsrConf);
-        instructionList.add(nvram);
-        //ShowList(instructionList);
         SendInstruction(currentIp, user, pwd, instructionList);
     }
 
@@ -5062,14 +5055,16 @@ public class CastadivaModel {
     }
 
     /**
-     * Read the text stored in a file.
+     * Devuelve el fichero leido como un unico string.
      */
-    String ReadTextFile(String file) {
+    public String ReadTextFile(String file) {
         File licence = new File(file);
-        String text = "Error opening the file.";
+        String text = "Error opening the file:" + file;
         try {
             FileInputStream inputData = new FileInputStream(licence);
+
             byte bt[] = new byte[(int) licence.length()];
+            int numBytes = inputData.read(bt);    /* If not this line, the file is no readed propetly. */
             text = new String(bt);
             inputData.close();
         } catch (IOException ex) {

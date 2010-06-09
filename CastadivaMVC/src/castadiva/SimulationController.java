@@ -62,7 +62,6 @@ public class SimulationController {
     public void SimulationAllListenersReady() {
         m_simulationWindow.addSimulateButtonListener(new SimulateListener());
         m_simulationWindow.addReplaySimulationListener(new ReplaySimulationListener());
-        m_simulationWindow.addStopSimulationListener(new StopSimulationListener());
         m_simulationWindow.addResetButtonListener(new ResetSimulationListener());
         m_simulationWindow.addCloseButtonListener(new CloseButtonListener());
         m_simulationWindow.addXTextFieldListener(new XFieldListener());
@@ -164,20 +163,11 @@ public class SimulationController {
         }
     }
 
-    class StopSimulationListener implements ActionListener {
-
-        public void actionPerformed(ActionEvent e) {
-            m_model.KillSimulation();
-        }
-    }
 
     class ResetSimulationListener implements ActionListener {
-
         public void actionPerformed(ActionEvent e) {
-            String instruction = "/sbin/reboot";
-            m_model.InstructionForAll(instruction, false);
-            m_model.EndStopwatch();
-            if (m_model.externalTrafficFlow.size() < 1) {
+           m_model.rebootAPs();
+           if (m_model.externalTrafficFlow.size() < 1) {
                 m_simulationWindow.ActivateButtons(true);
             }
         }

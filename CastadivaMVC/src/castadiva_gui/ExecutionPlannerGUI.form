@@ -116,7 +116,7 @@
                       <Component id="JBimportsc" alignment="0" pref="235" max="32767" attributes="0"/>
                       <Component id="JBimportcity" alignment="1" pref="235" max="32767" attributes="0"/>
                       <Component id="JBclose" alignment="1" pref="235" max="32767" attributes="3"/>
-                      <Component id="JBStopSimulations" alignment="0" pref="235" max="32767" attributes="2"/>
+                      <Component id="JBResetAPs" alignment="0" pref="235" max="32767" attributes="2"/>
                       <Component id="JBgenerate" alignment="1" pref="235" max="32767" attributes="2"/>
                       <Component id="JBedit" alignment="0" pref="235" max="32767" attributes="1"/>
                       <Component id="JBdelete" alignment="1" pref="235" max="32767" attributes="1"/>
@@ -182,7 +182,7 @@
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="JBgenerate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="JBStopSimulations" min="-2" max="-2" attributes="0"/>
+                  <Component id="JBResetAPs" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Component id="JBclose" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -237,9 +237,9 @@
         </Component>
         <Component class="javax.swing.JSeparator" name="jSeparator4">
         </Component>
-        <Component class="javax.swing.JButton" name="JBStopSimulations">
+        <Component class="javax.swing.JButton" name="JBResetAPs">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Stop Simulations"/>
+            <Property name="text" type="java.lang.String" value="Reset Access Points"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSeparator" name="jSeparator3">

@@ -6,7 +6,7 @@ package castadiva.classpath;
  import java.net.MalformedURLException;  
  import java.net.URL;  
  import java.net.URLClassLoader;  
-   
+
  public class classpathModifier {
    
      private static final String METODO_ADD_URL = "addURL";  
