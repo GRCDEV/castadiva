@@ -107,6 +107,10 @@ public class Computer implements Serializable {
     public String WhatWorkingDirectory(){
         return workingDirectory;
     }
+
+    public void setWorkingDirectory(String dir){
+        workingDirectory = dir;
+    }
     
     /**
      * Change the directory where all simulation files would be stored.

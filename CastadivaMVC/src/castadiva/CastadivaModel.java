@@ -227,6 +227,8 @@ public class CastadivaModel {
     public boolean executionPlannerSimulating = false;
     public String pathTarget = "";;
     public PluginDetector detector;
+    public Boolean RESET_APS = true;
+    private String computerWorkingDirectory;
 
     /** Creates a new instance of CastadivaModel */
     public CastadivaModel() {
@@ -235,6 +237,7 @@ public class CastadivaModel {
             tableModel = new TrafficTableModel(accessPoints.GetTraffic());
             randomTrafficModel = new RandomTrafficTableModel(accessPoints.GetRandomTraffic());
             computer = new Computer();
+            computerWorkingDirectory = computer.WhatWorkingDirectory();
             SetStopwatch(0);
         
     }
@@ -260,6 +263,10 @@ public class CastadivaModel {
         return computer.WhatWorkingDirectory();
     }
 
+    public void setComputerWorkingDirectory(String dir) {
+        computerWorkingDirectory = dir;
+        computer.setWorkingDirectory(dir);
+    }
     /**
      * Change the directory where all data are saved.
      * @see Computer
@@ -4884,6 +4891,7 @@ public class CastadivaModel {
     void Reset() {
 
         computer = new Computer();
+        computer.setWorkingDirectory(computerWorkingDirectory);
         accessPoints = new APs();
         tableModel = new TrafficTableModel(accessPoints.GetTraffic());
         randomTrafficModel = new RandomTrafficTableModel(accessPoints.GetRandomTraffic());

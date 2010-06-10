@@ -15,6 +15,7 @@ import castadiva_gui.MobilityDesignerGUI;
 import castadiva_gui.InstallApGUI;
 import castadiva_gui.ExecutionPlannerGUI;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -30,19 +31,73 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main {
 
 
-   private static void checkArgs(String[] args, CastadivaModel model) {
+   private static Boolean checkArgs(String[] args, CastadivaModel model) {
         //TODO - Mejorar detección de argumentos
-        System.out.println("Checking args:");
-        if(args[0].equals("--config-dir") || args[0].equals("-cd")) {
-            System.out.println("\tConfig dir: " + args[1]);
+       String recognizedArgs[] = {"--config-dir","-cd","--no-reset","-nr", "--computer-working-dir", "-cwd"};
+       Integer option[] = {1,1,2,2,3,3};
 
-            File f = new File(args[1]);
-            if(!f.exists() || !f.isDirectory()) {
-                System.err.println("---- Configuration directory not valid ----");
-            } else {
-                model.DEFAULT_CONFIG_DIRECTORY = args[1];
-            }
-        }
+       Boolean used[] = new Boolean[args.length];
+       for(int i = 0; i < used.length; i++)
+           used[i] = false;
+
+       Boolean error = false;
+
+       System.out.println("Checking args:");
+  
+       File f;
+       for(int i = 0; i < args.length; i++) {
+           Integer SelectedOption = 0;
+           if(args[i].startsWith("-") && !used[i]) {
+               for(int j = 0; j < recognizedArgs.length; j++) {
+                   if(args[i].equals(recognizedArgs[j])) {
+                       SelectedOption = option[j];
+                       break;
+                   }
+               }
+               switch(SelectedOption) {
+                   case 0:
+                       error = true;
+                       System.err.println(args[i] + " : Command not recognized.");
+                       break;
+                   case 1:
+                       System.out.println("\tConfig dir: " + args[i+1]);
+
+                       f = new File(args[i+1]);
+                       if(!f.exists() || !f.isDirectory()) {
+                            System.err.println("---- Configuration directory not valid ----");
+                            error = true;
+                       } else {
+                            model.DEFAULT_CONFIG_DIRECTORY = args[i+1];
+                            used[i] = true;
+                            used[i+1] = true;
+                       }
+                       break;
+                   case 2:
+                       System.out.println("Not rebooting APS in Execution Planner.");
+                       model.RESET_APS = false;
+                       used[i] = true;
+                       break;
+                   case 3:
+                       System.out.println("Computer Working directory: " + args[i+1]);
+                       f = new File(args[i+1]);
+                       if(!f.exists() || !f.isDirectory()) {
+                            System.err.println("---- Working directory not valid ----");
+                            error = true;
+                       } else {
+                            model.setComputerWorkingDirectory(args[i+1]);
+                            used[i] = true;
+                            used[i+1] = true;
+                       }
+                       break;
+               }
+           }else{
+                if(used[i] == false) {
+                    System.err.println(args[i] +  " is not a valid option");
+                }
+           }
+       }
+
+       return error;
     }
 
     /** Creates a new instance of Main */
@@ -91,9 +146,9 @@ public class Main {
         
         CastadivaModel model = new CastadivaModel();
         System.out.println("Welcome to Castadiva " + model.VERSION);
-        if(args.length > 1) {
-            checkArgs(args, model);
-        }
+        
+        if(!checkArgs(args, model)) {
+       
         MainMenuGUI view = new MainMenuGUI(model);
         AboutBox about = new AboutBox(model);
         SimulationGUI simulationWindow = new SimulationGUI(model);
@@ -127,5 +182,10 @@ public class Main {
         protocolGui.setVisible(false);
         exec.setVisible(false);
         mobDes.setVisible(false);
+
+
+        }else{
+            System.err.println("Error parsing args. Exiting...");
+        }
     }
 }

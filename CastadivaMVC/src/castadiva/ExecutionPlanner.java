@@ -268,6 +268,7 @@ public class ExecutionPlanner {
 
     class closeExecutionPlanner implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             m_exec.setVisible(false);
             m_view.setVisible(true);
@@ -276,6 +277,7 @@ public class ExecutionPlanner {
 
     class LoadScenaryExecutionPlanner implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = m_control.ExplorationWindow("Load",
@@ -413,9 +415,9 @@ public class ExecutionPlanner {
             {
                 ExecutionRecord currentExecutionRecord = m_exec.getRow(currentlySimulatingRow);
 
-
-                m_model.rebootAPs();
-
+                if(m_model.RESET_APS) {
+                    m_model.rebootAPs();
+                }
                 // If the execution planner was simulating, we set the current to "canceled"
                 if(currentlySimulatingRow!=-1){
                     // The simulation is stopped
