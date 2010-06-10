@@ -265,7 +265,7 @@ public class CastadivaModel {
 
     public void setComputerWorkingDirectory(String dir) {
         computerWorkingDirectory = dir;
-        computer.setWorkingDirectory(dir);
+        computer.ChangeWorkingDirectory(dir);
     }
     /**
      * Change the directory where all data are saved.
@@ -4891,7 +4891,7 @@ public class CastadivaModel {
     void Reset() {
 
         computer = new Computer();
-        computer.setWorkingDirectory(computerWorkingDirectory);
+        computer.ChangeWorkingDirectory(computerWorkingDirectory);
         accessPoints = new APs();
         tableModel = new TrafficTableModel(accessPoints.GetTraffic());
         randomTrafficModel = new RandomTrafficTableModel(accessPoints.GetRandomTraffic());
