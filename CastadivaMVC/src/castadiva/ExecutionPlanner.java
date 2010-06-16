@@ -115,10 +115,24 @@ public class ExecutionPlanner {
             // The activation of this variable tells CastadivaModel what to do when the simulation ends.
             m_model.executionPlannerSimulating = true;
             m_exec.setButtonsForSimulation();
-
-            // Loads the Scenario into Castadiva
             m_model.LoadCastadiva(currentExecutionRecord.getSourceFolder());
 
+            // Loads the Scenario into Castadiva
+            if(!m_model.mobilityModel.equals("RANDOM WAY POINT")) {
+                    m_simulationWindow.ChangeMobilityModel(m_model.mobilityModel);
+            }
+
+            m_simulationWindow.ModifyBlackBoard();
+
+            // This is mandatory, if the simulation time is less than the traffic times, it is updated
+            m_model.CalculateRealSimulationTime();
+
+            if (m_model.MobiliyActivated()) {
+                m_model.ExtendNodePositions();
+            }
+            
+            m_model.ChangeRoutingProtocol(m_simulationWindow.ProtocolSelected());
+            
             // Starts a common simulation.
             m_model.AllSimulationSteaps();
         }
@@ -288,9 +302,8 @@ public class ExecutionPlanner {
                     f1 = new File(f1.getAbsolutePath() + File.separator + "Scenario");
                 }
                 if (m_control.isScenarioDir(f1)) {
-                    File APfile = new File(f1.getAbsolutePath() + File.separator + m_model.FILE_APS);
                     m_model.Reset();
-                    m_model.LoadAP(APfile.getAbsolutePath());
+                    m_model.LoadCastadiva(file);
 
                     m_simulationWindow.setExecutionPlanner(true);
                     m_simulationWindow.changeSimulateButtonText("Accept");
