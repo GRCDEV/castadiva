@@ -216,8 +216,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBdelete.setEnabled(false);
         this.JBedit.setEnabled(false);
         this.JBgenerate.setEnabled(false);
-        this.JBimportcity.setEnabled(false);
-        this.JBimportsc.setEnabled(false);
         this.JBloadsim.setEnabled(false);
         this.JBnewsim.setEnabled(false);
         this.JBResetAPs.setEnabled(true);
@@ -232,8 +230,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBdelete.setEnabled(true);
         this.JBedit.setEnabled(true);
         this.JBgenerate.setEnabled(true);
-        this.JBimportcity.setEnabled(true);
-        this.JBimportsc.setEnabled(true);
         this.JBloadsim.setEnabled(true);
         this.JBnewsim.setEnabled(true);
         this.JBResetAPs.setEnabled(false);
@@ -273,8 +269,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         JBdelete = new javax.swing.JButton();
         JBgenerate = new javax.swing.JButton();
         JBclose = new javax.swing.JButton();
-        JBimportcity = new javax.swing.JButton();
-        JBimportsc = new javax.swing.JButton();
         JBloadsim = new javax.swing.JButton();
         JBnewsim = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -324,10 +318,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
 
         JBclose.setText("Close");
 
-        JBimportcity.setText("Import CityMob Scenario");
-
-        JBimportsc.setText("Import NS-2 Scenario");
-
         JBloadsim.setText("Load Scenario");
 
         JBnewsim.setText("New Simulation");
@@ -370,11 +360,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                     .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                    .addComponent(JBnewsim, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                    .addComponent(JBloadsim, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                    .addComponent(JBimportsc, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                    .addComponent(JBimportcity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBclose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBResetAPs, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addComponent(JBgenerate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
@@ -390,23 +375,22 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(StartSimulationMinutesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(StartSimulationCheckBox))
+                    .addComponent(StartSimulationCheckBox)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBnewsim, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                    .addComponent(JBloadsim, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
                 .addContainerGap())
         );
         ButtonsPanelLayout.setVerticalGroup(
             ButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ButtonsPanelLayout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(125, 125, 125)
                 .addComponent(JBnewsim)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JBloadsim)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JBimportsc)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JBimportcity, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JBedit)
@@ -459,7 +443,7 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
                     .addComponent(ButtonsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -507,14 +491,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         JBloadsim.addActionListener(a1);
     }
 
-    public void addImportScenarioButtonListener(ActionListener a1) {
-        JBimportsc.addActionListener(a1);
-    }
-
-    public void addImportCityMobScenarioButtonListener(ActionListener a1) {
-        JBimportcity.addActionListener(a1);
-    }
-
     public void addGenerateSimulationButtonListener(ActionListener a1) {
         JBgenerate.addActionListener(a1);
     }
@@ -540,8 +516,6 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
     private javax.swing.JButton JBdelete;
     private javax.swing.JButton JBedit;
     private javax.swing.JButton JBgenerate;
-    private javax.swing.JButton JBimportcity;
-    private javax.swing.JButton JBimportsc;
     private javax.swing.JButton JBloadsim;
     private javax.swing.JButton JBnewsim;
     private javax.swing.JTable JTplanner;

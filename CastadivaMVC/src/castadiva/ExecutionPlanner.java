@@ -78,7 +78,6 @@ public class ExecutionPlanner {
         m_exec.addCloseButtonListener(new closeExecutionPlanner());
         m_exec.addDeleteButtonListener(new deleteExecutionPlanner());
         m_exec.addLoadScenarioButtonListener(new LoadScenaryExecutionPlanner());
-        m_exec.addImportScenarioButtonListener(m_control.new ImportNsListener());
         m_exec.addGenerateSimulationButtonListener(new generateSimulationsExecutionPlanner());
         m_exec.addResetAPsButtonListener(new resetAPs());
         m_exec.addLoadListButtonListener(new loadExecutionPlannerList());
