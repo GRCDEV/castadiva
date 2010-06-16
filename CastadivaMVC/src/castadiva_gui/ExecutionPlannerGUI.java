@@ -219,6 +219,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBloadsim.setEnabled(false);
         this.JBnewsim.setEnabled(false);
         this.JBResetAPs.setEnabled(true);
+        this.JBSaveList.setEnabled(false);
+        this.JBLoadList.setEnabled(false);
         this.StartSimulationCheckBox.setEnabled(false);
         this.StartSimulationHoursSpinner.setEnabled(false);
         this.StartSimulationMinutesSpinner.setEnabled(false);
@@ -233,6 +235,8 @@ public class ExecutionPlannerGUI extends javax.swing.JFrame {
         this.JBloadsim.setEnabled(true);
         this.JBnewsim.setEnabled(true);
         this.JBResetAPs.setEnabled(false);
+        this.JBSaveList.setEnabled(true);
+        this.JBLoadList.setEnabled(true);
         this.StartSimulationCheckBox.setEnabled(true);
         this.StartSimulationHoursSpinner.setEnabled(true);
         this.StartSimulationMinutesSpinner.setEnabled(true);
