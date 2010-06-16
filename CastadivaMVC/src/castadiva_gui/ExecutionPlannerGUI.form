@@ -37,7 +37,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="676" max="32767" attributes="1"/>
+                  <Component id="jScrollPane1" alignment="0" pref="759" max="32767" attributes="1"/>
                   <Component id="ButtonsPanel" alignment="0" max="32767" attributes="2"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -103,18 +103,19 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jSeparator6" alignment="1" pref="235" max="32767" attributes="0"/>
-                      <Component id="jSeparator7" alignment="1" pref="235" max="32767" attributes="0"/>
-                      <Component id="JBLoadList" alignment="1" pref="235" max="32767" attributes="0"/>
-                      <Component id="jSeparator3" alignment="1" pref="235" max="32767" attributes="0"/>
-                      <Component id="jSeparator5" alignment="1" pref="235" max="32767" attributes="0"/>
+                      <Component id="jSeparator3" alignment="0" pref="235" max="32767" attributes="0"/>
+                      <Component id="jSeparator1" alignment="1" pref="235" max="32767" attributes="0"/>
                       <Component id="jSeparator4" alignment="1" pref="235" max="32767" attributes="0"/>
-                      <Component id="jSeparator2" alignment="1" pref="235" max="32767" attributes="0"/>
                       <Component id="JBclose" alignment="1" pref="235" max="32767" attributes="3"/>
                       <Component id="JBResetAPs" alignment="0" pref="235" max="32767" attributes="2"/>
                       <Component id="JBgenerate" alignment="1" pref="235" max="32767" attributes="2"/>
+                      <Component id="JBnewsim" alignment="0" pref="235" max="32767" attributes="1"/>
+                      <Component id="JBloadsim" alignment="0" pref="235" max="32767" attributes="0"/>
+                      <Component id="jSeparator5" alignment="1" pref="235" max="32767" attributes="0"/>
                       <Component id="JBedit" alignment="0" pref="235" max="32767" attributes="1"/>
                       <Component id="JBdelete" alignment="1" pref="235" max="32767" attributes="1"/>
+                      <Component id="jSeparator7" alignment="1" pref="235" max="32767" attributes="0"/>
+                      <Component id="JBLoadList" alignment="1" pref="235" max="32767" attributes="0"/>
                       <Component id="JBSaveList" alignment="1" pref="235" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="12" pref="12" max="12" attributes="0"/>
@@ -127,9 +128,7 @@
                           <Component id="StartSimulationMinutesSpinner" min="-2" pref="51" max="-2" attributes="0"/>
                       </Group>
                       <Component id="StartSimulationCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jSeparator1" alignment="1" pref="235" max="32767" attributes="0"/>
-                      <Component id="JBnewsim" alignment="0" pref="235" max="32767" attributes="1"/>
-                      <Component id="JBloadsim" alignment="0" pref="235" max="32767" attributes="0"/>
+                      <Component id="jSeparator2" alignment="0" pref="235" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -137,32 +136,30 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                   <Component id="JBnewsim" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JBloadsim" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jSeparator1" min="-2" pref="18" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                  <Component id="jSeparator3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jSeparator1" min="-2" pref="6" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JBedit" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JBdelete" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jSeparator5" pref="10" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jSeparator4" min="-2" pref="0" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                  <Component id="jSeparator6" min="-2" max="-2" attributes="0"/>
+                  <Component id="jSeparator5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JBLoadList" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JBSaveList" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jSeparator7" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                  <EmptySpace pref="120" max="32767" attributes="0"/>
+                  <Component id="jSeparator4" min="-2" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jSeparator3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="StartSimulationCheckBox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -171,9 +168,9 @@
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="StartSimulationHoursSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jSeparator2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="137" max="-2" attributes="0"/>
                   <Component id="JBgenerate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="JBResetAPs" min="-2" max="-2" attributes="0"/>
@@ -226,8 +223,6 @@
             <Property name="text" type="java.lang.String" value="Reset Access Points"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JSeparator" name="jSeparator3">
-        </Component>
         <Component class="javax.swing.JSeparator" name="jSeparator5">
         </Component>
         <Component class="javax.swing.JButton" name="JBLoadList">
@@ -239,8 +234,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Save list"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JSeparator" name="jSeparator6">
         </Component>
         <Component class="javax.swing.JSeparator" name="jSeparator7">
         </Component>
@@ -268,6 +261,8 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Start simulation at"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JSeparator" name="jSeparator3">
         </Component>
       </SubComponents>
     </Container>
