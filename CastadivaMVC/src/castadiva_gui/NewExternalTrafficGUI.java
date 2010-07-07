@@ -3,7 +3,6 @@
  *
  * Created on 12 de julio de 2007, 12:33
  */
-
 package castadiva_gui;
 
 import castadiva.*;
@@ -20,83 +19,89 @@ import javax.swing.JOptionPane;
  * @author  jorge
  */
 public class NewExternalTrafficGUI extends javax.swing.JFrame {
+
     CastadivaModel m_model;
     List<String[]> applications;
-    
+
     /** Creates new form NewExternalApplication */
     public NewExternalTrafficGUI(CastadivaModel model) {
         m_model = model;
         initComponents();
-        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
+        setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - (int) (this.getWidth() / 2), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (this.getHeight() / 2));
         GUIReady();
     }
-    
+
     /**
      * Start the window with default data.
      */
-    private void GUIReady(){
-        applications=ObtainStoredApplicationData();
+    private void GUIReady() {
+        applications = ObtainStoredApplicationData();
         FillStandarAppComboBox();
         UpdateWindow();
     }
-    
+
     /**
      * Make visual changes to the window.
      */
-    public void UpdateWindow(){
+    public void UpdateWindow() {
         FillApComboBox1();
         FillApComboBox2();
         FillExternalTrafficComboBox();
-        if(ApComboBox1.getItemCount() > 0)
+        if (ApComboBox1.getItemCount() > 0) {
             AttachButton.setEnabled(true);
-        else
+        } else {
             AttachButton.setEnabled(false);
-        if(ExternalTrafficComboBox.getItemCount() > 0){
+        }
+        if (ExternalTrafficComboBox.getItemCount() > 0) {
             SelectExternalTrafficFlow(ExternalTrafficComboBox.getSelectedIndex());
         }
-            
+
     }
-    
+
     /**
      * Prepare windows after a successful delete option.
      */
-    public void UpdateAfterDelete(){
+    public void UpdateAfterDelete() {
         ClearInputText();
         FillExternalTrafficComboBox();
     }
-        
+
     /**
      * Fill the AP combobox with all ap that exists in the system.
      */
-    private boolean FillApComboBox1(){
+    private boolean FillApComboBox1() {
         ApComboBox1.removeAllItems();
-        if (m_model.HowManyAP() == 0) return false;
+        if (m_model.HowManyAP() == 0) {
+            return false;
+        }
         //Preparamos los elementos relativos a los Puntos de acceso.
-        for(int i=0;i<m_model.HowManyAP();i++){
+        for (int i = 0; i < m_model.HowManyAP(); i++) {
             ApComboBox1.addItem(m_model.GetAP(i).WhatAP());
         }
         ApComboBox1.setSelectedIndex(0);
         return true;
     }
-    
+
     /**
      * Fill the AP combobox with all ap that exists in the system.
      */
-    private boolean FillApComboBox2(){
+    private boolean FillApComboBox2() {
         ApComboBox2.removeAllItems();
-        if (m_model.HowManyAP() == 0) return false;
+        if (m_model.HowManyAP() == 0) {
+            return false;
+        }
         //Preparamos los elementos relativos a los Puntos de acceso.
-        for(int i=0;i<m_model.HowManyAP();i++){
+        for (int i = 0; i < m_model.HowManyAP(); i++) {
             ApComboBox2.addItem(m_model.GetAP(i).WhatAP());
         }
         ApComboBox2.setSelectedIndex(0);
         return true;
     }
-    
+
     /**
      * Obtain the networks of the selected ap.
      */
-    private boolean FillDeviceComboBox1(){
+    private boolean FillDeviceComboBox1() {
         DeviceComboBox1.removeAllItems();
         if (ApComboBox1.getItemCount() > 0) {
             DeviceComboBox1.addItem(m_model.selectionedAP1.WhatEthIP());
@@ -105,11 +110,11 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         }
         return false;
     }
-    
+
     /**
      * Obtain the networks of the selected ap.
      */
-    private boolean FillDeviceComboBox2(){
+    private boolean FillDeviceComboBox2() {
         DeviceComboBox2.removeAllItems();
         if (ApComboBox2.getItemCount() > 0) {
             DeviceComboBox2.addItem(m_model.selectionedAP2.WhatEthIP());
@@ -118,99 +123,100 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         }
         return false;
     }
-    
+
     /**
      * Fill the application combobox with the datas contained in the list applications.
      */
-    private void FillStandarAppComboBox(){
+    private void FillStandarAppComboBox() {
         this.StandarAppComboBox.removeAllItems();
         String[] application;
-        for(int i=0; i<applications.size(); i++){
+        for (int i = 0; i < applications.size(); i++) {
             application = applications.get(i);
             StandarAppComboBox.addItem(application[0]);
         }
     }
-    
+
     /**
      * Fill the External Traffic ComboBox with all inserted ExternalTraffic data.
      */
-    private void FillExternalTrafficComboBox(){
+    private void FillExternalTrafficComboBox() {
         ExternalTraffic externalTraffic;
         ExternalTrafficComboBox.removeAllItems();
-        for(int i=0; i<m_model.externalTrafficFlow.size(); i++){
-            externalTraffic = (ExternalTraffic)m_model.externalTrafficFlow.get(i);
+        for (int i = 0; i < m_model.externalTrafficFlow.size(); i++) {
+            externalTraffic = (ExternalTraffic) m_model.externalTrafficFlow.get(i);
             ExternalTrafficComboBox.addItem(externalTraffic.name);
         }
     }
-    
+
     /**
      * Obtain data for an application from a file or set a default one.
      */
-    private List ObtainStoredApplicationData(){
+    private List ObtainStoredApplicationData() {
         List lines;
         String line;
         Integer help_lines = 1;
         List data = new ArrayList();
-        File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator + 
-                m_model.DEFAULT_APPLICATION_FILE);
-        if(!file.exists()){
+        File file = new File(m_model.DEFAULT_CONFIG_DIRECTORY + File.separator
+                + m_model.DEFAULT_APPLICATION_FILE);
+        if (!file.exists()) {
             System.err.println("Error opening file " + file.getAbsolutePath());
         }
-        
+
         lines = m_model.ReadTextFileInLines(file);
-        for(int i=help_lines; i<lines.size(); i++){
-            line = (String)lines.get(i);
+        for (int i = help_lines; i < lines.size(); i++) {
+            line = (String) lines.get(i);
             String[] descomposed_line = line.split(" ");
             data.add(descomposed_line);
         }
         return data;
     }
-    
+
     /**
      * Attach the generated traffic to the selected ap.
      */
-    public void AttachTraffic(){
+    public void AttachTraffic() {
         int returnValue = -1;
-        if(m_model.CheckNetStructure(FromIpTextField.getText()) &&
-                m_model.CheckNetStructure(ToIpTextField.getText())){
+        if (m_model.CheckNetStructure(FromIpTextField.getText())
+                && m_model.CheckNetStructure(ToIpTextField.getText())) {
             returnValue = m_model.AttachExternalTraffic(StartingPortTextField.getText(),
                     EndingPortTextField.getText(), FromIpTextField.getText(),
                     ToIpTextField.getText(),
-                    ApComboBox1.getSelectedIndex(), (String)DeviceComboBox1.getSelectedItem(),
-                    ApComboBox2.getSelectedIndex(), (String)DeviceComboBox2.getSelectedItem(),
+                    ApComboBox1.getSelectedIndex(), (String) DeviceComboBox1.getSelectedItem(),
+                    ApComboBox2.getSelectedIndex(), (String) DeviceComboBox2.getSelectedItem(),
                     ProtocolTextField.getText(), NameTextField.getText());
         }
-        if(returnValue < 0){
-            ShowErrorMessage("Values inserted are not valid!","Input error");
-        }else{
+        if (returnValue < 0) {
+            ShowErrorMessage("Values inserted are not valid!", "Input error");
+        } else {
             ClearInputText();
             FillExternalTrafficComboBox();
         }
     }
-    
+
     /**
      * Delete all inserted text.
      */
-    public void ClearInputText(){
+    public void ClearInputText() {
         NameTextField.setText("");
         FromIpTextField.setText("");
         ToIpTextField.setText("");
         ProtocolTextField.setText("");
         StartingPortTextField.setText("1024");
         EndingPortTextField.setText("1025");
-        try{
+        try {
             ApComboBox1.setSelectedIndex(0);
-            ApComboBox2.setSelectedIndex(ApComboBox2.getItemCount()-1);
-        }catch(IllegalArgumentException iae){}
+            ApComboBox2.setSelectedIndex(ApComboBox2.getItemCount() - 1);
+        } catch (IllegalArgumentException iae) {
+        }
     }
-    
+
     /**
      * Complete the window with the data obtained on the list applications.
      */
-    private void SelectStandarApplication(Integer application){
+    private void SelectStandarApplication(Integer application) {
         int startAp, endAp;
-        
-        String appData[] =  applications.get(application);
+
+        String appData[] = applications.get(application);
         NameTextField.setText(appData[1]);
         ProtocolTextField.setText(appData[2]);
         StartingPortTextField.setText(appData[3]);
@@ -219,81 +225,84 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         ToIpTextField.setText(appData[6]);
         startAp = Integer.parseInt(appData[7]);
         endAp = Integer.parseInt(appData[8]);
-        if(ApComboBox1.getItemCount() > 0){
-            if(startAp > ApComboBox1.getItemCount()) startAp = 1;
-            ApComboBox1.setSelectedIndex(startAp-1);
-            if(endAp > ApComboBox2.getItemCount()) endAp =  ApComboBox2.getItemCount();
-            ApComboBox2.setSelectedIndex(endAp-1);
+        if (ApComboBox1.getItemCount() > 0) {
+            if (startAp > ApComboBox1.getItemCount()) {
+                startAp = 1;
+            }
+            ApComboBox1.setSelectedIndex(startAp - 1);
+            if (endAp > ApComboBox2.getItemCount()) {
+                endAp = ApComboBox2.getItemCount();
+            }
+            ApComboBox2.setSelectedIndex(endAp - 1);
         }
     }
-    
+
     /**
      * Fill all fields with the data of the selected traffic flow.
      */
-    private void SelectExternalTrafficFlow(int index){
+    private void SelectExternalTrafficFlow(int index) {
         int startAp, endAp;
-        
-        ExternalTraffic extTraffic =  m_model.externalTrafficFlow.get(index);
+
+        ExternalTraffic extTraffic = m_model.externalTrafficFlow.get(index);
         NameTextField.setText(extTraffic.name);
         ProtocolTextField.setText(extTraffic.protocol);
-        StartingPortTextField.setText(extTraffic.startRangePort+"");
-        EndingPortTextField.setText(extTraffic.endRangePort+"");
+        StartingPortTextField.setText(extTraffic.startRangePort + "");
+        EndingPortTextField.setText(extTraffic.endRangePort + "");
         FromIpTextField.setText(extTraffic.fromIp);
         ToIpTextField.setText(extTraffic.toIp);
         startAp = extTraffic.fromAp;
         endAp = extTraffic.toAp;
-        if(ApComboBox1.getItemCount() > 0){
-            if(startAp > ApComboBox1.getItemCount()) startAp = 0;
+        if (ApComboBox1.getItemCount() > 0) {
+            if (startAp > ApComboBox1.getItemCount()) {
+                startAp = 0;
+            }
             ApComboBox1.setSelectedIndex(startAp);
-            if(endAp > ApComboBox2.getItemCount()) endAp =  ApComboBox2.getItemCount();
+            if (endAp > ApComboBox2.getItemCount()) {
+                endAp = ApComboBox2.getItemCount();
+            }
             ApComboBox2.setSelectedIndex(endAp);
         }
     }
-    
+
     /**
      * Create a window to show an error message.
      */
-    void ShowErrorMessage(String text, String title){
+    void ShowErrorMessage(String text, String title) {
         JFrame frame = null;
-        if (m_model.debug)
-            System.out.println("Error message :"+text);
+        if (m_model.debug) {
+            System.out.println("Error message :" + text);
+        }
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
-    
+
     /**
      * Return the number of the traffic flow selected.
      */
-    public int ReturnSelectedExternalTrafficFlow(){
+    public int ReturnSelectedExternalTrafficFlow() {
         return ExternalTrafficComboBox.getSelectedIndex();
     }
-    
-    
-    
+
     /*********************************************************************
      *
      *                             LISTENERS
      *
      *********************************************************************/
-    
-    
-    public void addAttachButtonListener(ActionListener al){
+    public void addAttachButtonListener(ActionListener al) {
         AttachButton.addActionListener(al);
     }
-    
-    public void addHelpButtonListener(ActionListener al){
+
+    public void addHelpButtonListener(ActionListener al) {
         HelpButton.addActionListener(al);
     }
-    
-    public void addCloseButtonListener(ActionListener al){
+
+    public void addCloseButtonListener(ActionListener al) {
         CancelButton.addActionListener(al);
     }
-    
-    public void addDeleteButtonListener(ActionListener al){
+
+    public void addDeleteButtonListener(ActionListener al) {
         DeleteButton.addActionListener(al);
     }
-    
-    
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -335,7 +344,7 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         DeviceComboBox2 = new javax.swing.JComboBox();
         jLabel11 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Attach external application");
         setResizable(false);
 
@@ -359,9 +368,9 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         TitlePanelLayout.setHorizontalGroup(
             TitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TitlePanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(TitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(TitlePanelLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(NameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ExternalTrafficComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -369,9 +378,7 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
                         .addComponent(AttachButton, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(DeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(TitlePanelLayout.createSequentialGroup()
-                        .addGap(154, 154, 154)
-                        .addComponent(jLabel8)))
+                    .addComponent(jLabel8))
                 .addContainerGap())
         );
 
@@ -414,29 +421,29 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
         AppPanelLayout.setHorizontalGroup(
             AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AppPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AppPanelLayout.createSequentialGroup()
-                        .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(AppPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(AppPanelLayout.createSequentialGroup()
-                                .addComponent(StartingPortTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ProtocolTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                            .addComponent(StandarAppComboBox, 0, 139, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AppPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AppPanelLayout.createSequentialGroup()
+                                .addComponent(StartingPortTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(EndingPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, AppPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ProtocolTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)))
-                        .addContainerGap())
+                                .addComponent(EndingPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(AppPanelLayout.createSequentialGroup()
-                        .addComponent(StandarAppComboBox, 0, 139, Short.MAX_VALUE)
-                        .addContainerGap())))
-            .addGroup(AppPanelLayout.createSequentialGroup()
-                .addGap(61, 61, 61)
-                .addComponent(jLabel9)
-                .addContainerGap(64, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jLabel9)))
+                .addContainerGap())
         );
         AppPanelLayout.setVerticalGroup(
             AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,10 +453,10 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(StandarAppComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
-                .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(ProtocolTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(ProtocolTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(AppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -548,7 +555,7 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
                         .addGroup(FromPanelLayout.createSequentialGroup()
                             .addComponent(jLabel6)
                             .addGap(30, 30, 30))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         ToPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -589,10 +596,8 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
                     .addGroup(ToPanelLayout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addGap(126, 126, 126))
-                    .addGroup(ToPanelLayout.createSequentialGroup()
-                        .addComponent(DeviceComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addContainerGap(6, Short.MAX_VALUE))
+                    .addComponent(DeviceComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ToPanelLayout.setVerticalGroup(
             ToPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -607,7 +612,7 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
                     .addComponent(ApComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ToIpTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DeviceComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -617,15 +622,18 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(TitlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(FromPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
-                    .addComponent(ToPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ToPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(FromPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                    .addComponent(TitlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AppPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(AppPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {FromPanel, TitlePanel, ToPanel});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -638,64 +646,56 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(TitlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(FromPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(FromPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ToPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ToPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
     private void StandarAppComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_StandarAppComboBoxItemStateChanged
-        if(StandarAppComboBox.getItemCount() > 0)
+        if (StandarAppComboBox.getItemCount() > 0) {
             SelectStandarApplication(StandarAppComboBox.getSelectedIndex());
+        }
     }//GEN-LAST:event_StandarAppComboBoxItemStateChanged
-    
-    
+
     private void ExternalTrafficComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ExternalTrafficComboBoxItemStateChanged
-        if(ExternalTrafficComboBox.getItemCount() > 0)
+        if (ExternalTrafficComboBox.getItemCount() > 0) {
             SelectExternalTrafficFlow(ExternalTrafficComboBox.getSelectedIndex());
+        }
     }//GEN-LAST:event_ExternalTrafficComboBoxItemStateChanged
-    
-    
+
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_CancelButtonActionPerformed
-    
-    
+
     private void ApComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApComboBox2ActionPerformed
         if (ApComboBox2.getItemCount() > 0) {
             m_model.selectionedAP2 = m_model.GetAP(ApComboBox2.getSelectedIndex());
             FillDeviceComboBox2();
         }
     }//GEN-LAST:event_ApComboBox2ActionPerformed
-    
-    
+
     private void DeviceComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeviceComboBox2ActionPerformed
         if (DeviceComboBox2.getItemCount() > 0) {
-            m_model.selectionedIP2 = (String)DeviceComboBox2.getSelectedItem();
+            m_model.selectionedIP2 = (String) DeviceComboBox2.getSelectedItem();
         }
     }//GEN-LAST:event_DeviceComboBox2ActionPerformed
-    
-    
+
     private void DeviceComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeviceComboBox1ActionPerformed
         if (DeviceComboBox1.getItemCount() > 0) {
-            m_model.selectionedIP1 = (String)DeviceComboBox1.getSelectedItem();
+            m_model.selectionedIP1 = (String) DeviceComboBox1.getSelectedItem();
         }
     }//GEN-LAST:event_DeviceComboBox1ActionPerformed
-    
-    
+
     private void ApComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ApComboBox1ActionPerformed
         if (ApComboBox1.getItemCount() > 0) {
             m_model.selectionedAP1 = m_model.GetAP(ApComboBox1.getSelectedIndex());
             FillDeviceComboBox1();
         }
     }//GEN-LAST:event_ApComboBox1ActionPerformed
-        
-       
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox ApComboBox1;
     private javax.swing.JComboBox ApComboBox2;
@@ -730,5 +730,4 @@ public class NewExternalTrafficGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
-    
 }
