@@ -172,7 +172,6 @@ public class TrafficGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setTitle("CASTADIVA - TRAFFIC");
-        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18));
         jLabel1.setText("Traffic Control");
@@ -213,7 +212,7 @@ public class TrafficGUI extends javax.swing.JFrame {
                 .add(TableModificationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(DuplicateButton)
                     .add(DelRowButton))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 23, Short.MAX_VALUE)
                 .add(TableModificationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(ClearButton)
                     .add(OrderButton))
@@ -232,20 +231,25 @@ public class TrafficGUI extends javax.swing.JFrame {
             WindowControlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(WindowControlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(WindowControlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(SaveInTextFileButton)
-                    .add(AcceptButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 130, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(WindowControlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, SaveInTextFileButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, AcceptButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        WindowControlPanelLayout.linkSize(new java.awt.Component[] {AcceptButton, SaveInTextFileButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
         WindowControlPanelLayout.setVerticalGroup(
             WindowControlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(WindowControlPanelLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, WindowControlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(SaveInTextFileButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 23, Short.MAX_VALUE)
                 .add(AcceptButton)
                 .addContainerGap())
         );
+
+        WindowControlPanelLayout.linkSize(new java.awt.Component[] {AcceptButton, SaveInTextFileButton}, org.jdesktop.layout.GroupLayout.VERTICAL);
 
         AveragePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -272,31 +276,30 @@ public class TrafficGUI extends javax.swing.JFrame {
                     .add(jLabel3))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(AveragePanelLayout.createSequentialGroup()
-                        .add(ThroughputAverageTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, UdpAverageTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, ThroughputAverageTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, AveragePanelLayout.createSequentialGroup()
                         .add(jLabel6)
                         .addContainerGap())
-                    .add(AveragePanelLayout.createSequentialGroup()
-                        .add(UdpAverageTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, AveragePanelLayout.createSequentialGroup()
                         .add(jLabel5)
-                        .add(34, 34, 34))))
+                        .add(28, 28, 28))))
         );
         AveragePanelLayout.setVerticalGroup(
             AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, AveragePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(UdpAverageTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(jLabel3))
+                .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
+                    .add(jLabel3)
+                    .add(UdpAverageTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabel5))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 24, Short.MAX_VALUE)
-                .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel6)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 27, Short.MAX_VALUE)
+                .add(AveragePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
+                    .add(jLabel4)
                     .add(ThroughputAverageTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel4))
+                    .add(jLabel6))
                 .addContainerGap())
         );
 
@@ -315,17 +318,17 @@ public class TrafficGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(jLabel2)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(ConsoleTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                .add(ConsoleTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                 .addContainerGap())
         );
         StatusPanelLayout.setVerticalGroup(
             StatusPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(StatusPanelLayout.createSequentialGroup()
-                .add(33, 33, 33)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, StatusPanelLayout.createSequentialGroup()
+                .addContainerGap(40, Short.MAX_VALUE)
                 .add(StatusPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
                     .add(ConsoleTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .add(35, 35, 35))
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -334,7 +337,9 @@ public class TrafficGUI extends javax.swing.JFrame {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(TableScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1220, Short.MAX_VALUE)
+                    .add(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(TableScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1213, Short.MAX_VALUE))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
                         .add(522, 522, 522)
                         .add(jLabel1))
@@ -354,13 +359,13 @@ public class TrafficGUI extends javax.swing.JFrame {
             .add(layout.createSequentialGroup()
                 .add(jLabel1)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(TableScrollPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 303, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(TableScrollPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, AveragePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, WindowControlPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(StatusPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(TableModificationPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(TableModificationPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, WindowControlPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
