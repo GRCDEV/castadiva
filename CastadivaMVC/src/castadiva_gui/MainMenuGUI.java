@@ -3,7 +3,6 @@
  *
  * Created on 12 de agosto de 2006, 12:57
  */
-
 package castadiva_gui;
 
 import castadiva.*;
@@ -15,12 +14,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 /**
  *
  * @author  jorge
  */
 public class MainMenuGUI extends javax.swing.JFrame {
+
     private CastadivaModel m_model;
     private LogoFrame logo;
 
@@ -29,56 +28,54 @@ public class MainMenuGUI extends javax.swing.JFrame {
         m_model = model;
         //Frame cosa = new Viewer("images/grc.jpg");
         initComponents();
-        setLocation((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()/2-(int)(this.getWidth()/2), (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()/2-(int)(this.getHeight()/2));
+        setLocation((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - (int) (this.getWidth() / 2), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - (int) (this.getHeight() / 2));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         CreateLogo();
     }
-    
-    
-    public void CreateLogo(){
+
+    public void CreateLogo() {
         logo = new LogoFrame(LogoPanel);
-        logo.setPreferredSize(new Dimension(LogoPanel.getWidth(),LogoPanel.getHeight()));
-        LogoPanel.add(logo,0);
+        logo.setPreferredSize(new Dimension(LogoPanel.getWidth(), LogoPanel.getHeight()));
+        LogoPanel.add(logo, 0);
     }
-    
-    
-    public void addImportNsListener(ActionListener al){
+
+    public void addImportNsListener(ActionListener al) {
         NSImportMenuItem.addActionListener(al);
     }
-    
-    public void addExportNsListener(ActionListener al){
+
+    public void addExportNsListener(ActionListener al) {
         NSExportMenuItem.addActionListener(al);
     }
-    
-    public void addExportMayaListener(ActionListener al){
+
+    public void addExportMayaListener(ActionListener al) {
         MayaExportMenuItem.addActionListener(al);
     }
-    
-    public void addNewListener(ActionListener al){
+
+    public void addNewListener(ActionListener al) {
         NewMenuItem.addActionListener(al);
     }
-    
-    public void addLoadListener(ActionListener al){
+
+    public void addLoadListener(ActionListener al) {
         LoadMenuItem.addActionListener(al);
     }
-    
-    public void addLoadScenaryListener(ActionListener al){
+
+    public void addLoadScenaryListener(ActionListener al) {
         LoadScenarioMenuItem.addActionListener(al);
     }
-    
-    public void addSaveListener(ActionListener al){
+
+    public void addSaveListener(ActionListener al) {
         SaveMenuItem.addActionListener(al);
     }
-    
-    public void addSimulationMenuOption(ActionListener al){
+
+    public void addSimulationMenuOption(ActionListener al) {
         SimulationMenuItem.addActionListener(al);
     }
-    
-    public void addNewApOption(ActionListener al){
+
+    public void addNewApOption(ActionListener al) {
         AddAPMenuItem.addActionListener(al);
     }
-    
-    public void addModifyApOption(ActionListener al){
+
+    public void addModifyApOption(ActionListener al) {
         ModifyAPMenuItem.addActionListener(al);
     }
 
@@ -89,44 +86,43 @@ public class MainMenuGUI extends javax.swing.JFrame {
     public void addLoadApOption(ActionListener al) {
         LoadAPsMenuItem.addActionListener(al);
     }
-    
-    public void addInstallButtonListener(ActionListener al){
+
+    public void addInstallButtonListener(ActionListener al) {
         InstallApMenuItem.addActionListener(al);
     }
-    
-    public void addAboutBoxListener(ActionListener al){
+
+    public void addAboutBoxListener(ActionListener al) {
         AboutBoxMenuItem.addActionListener(al);
     }
-    
-    public void addComputerConfigurationListener(ActionListener al){
+
+    public void addComputerConfigurationListener(ActionListener al) {
         ComputerMenuItem.addActionListener(al);
     }
-    
-    public void addRandomSimulationListener(ActionListener al){
+
+    public void addRandomSimulationListener(ActionListener al) {
         RandomSimulationMenuItem.addActionListener(al);
     }
-    
-    
-    public void addExternalDeviceListener(ActionListener al){
+
+    public void addExternalDeviceListener(ActionListener al) {
         AttachExternalTrafficMenuItem.addActionListener(al);
     }
-    
-    public void addHelpWindowListener(ActionListener al){
+
+    public void addHelpWindowListener(ActionListener al) {
         HelpWindowMenuItem.addActionListener(al);
     }
-    
+
     public void addProtocolsListener(ActionListener a1) {
         ProtocolMenuItem.addActionListener(a1);
     }
-    
-    public void addExecutionPlannerListener(ActionListener al){
+
+    public void addExecutionPlannerListener(ActionListener al) {
         ExecutionPlannerMenuItem.addActionListener(al);
     }
 
-    public void addMobilityDesignerListener(ActionListener al){
+    public void addMobilityDesignerListener(ActionListener al) {
         MobilityDesignerMenuItem.addActionListener(al);
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -136,6 +132,9 @@ public class MainMenuGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         LogoPanel = new javax.swing.JPanel();
+        TextPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         MainMenuBar = new javax.swing.JMenuBar();
         ApplicationMenu = new javax.swing.JMenu();
         NewMenuItem = new javax.swing.JMenuItem();
@@ -172,6 +171,33 @@ public class MainMenuGUI extends javax.swing.JFrame {
         setResizable(false);
 
         LogoPanel.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
+        jLabel1.setText("Castadiva");
+
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel2.setText("Wireless Network Emulator");
+
+        org.jdesktop.layout.GroupLayout TextPanelLayout = new org.jdesktop.layout.GroupLayout(TextPanel);
+        TextPanel.setLayout(TextPanelLayout);
+        TextPanelLayout.setHorizontalGroup(
+            TextPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(TextPanelLayout.createSequentialGroup()
+                .add(49, 49, 49)
+                .add(TextPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.CENTER)
+                    .add(jLabel1)
+                    .add(jLabel2))
+                .addContainerGap(53, Short.MAX_VALUE))
+        );
+        TextPanelLayout.setVerticalGroup(
+            TextPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, TextPanelLayout.createSequentialGroup()
+                .addContainerGap(38, Short.MAX_VALUE)
+                .add(jLabel1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jLabel2)
+                .add(28, 28, 28))
+        );
 
         ApplicationMenu.setText("Application");
 
@@ -295,22 +321,26 @@ public class MainMenuGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(LogoPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, TextPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, LogoPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .add(LogoPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .add(TextPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(LogoPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 71, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void ExitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitMenuItemActionPerformed
         System.out.println("");
         System.out.println("End.");
@@ -325,15 +355,11 @@ private void ProtocolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//
 private void LoadScenarioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoadScenarioMenuItemActionPerformed
     // TODO add your handling code here:
 }//GEN-LAST:event_LoadScenarioMenuItemActionPerformed
-    
 
     //CityMob
-
-    public void addImportNsCitymob(ActionListener al){
+    public void addImportNsCitymob(ActionListener al) {
         ImportCitymob.addActionListener(al);
     }
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem AboutBoxMenuItem;
     private javax.swing.JMenuItem AddAPMenuItem;
@@ -366,26 +392,30 @@ private void LoadScenarioMenuItemActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JMenuItem SaveMenuItem;
     private javax.swing.JMenu SimulationMenu;
     private javax.swing.JMenuItem SimulationMenuItem;
+    private javax.swing.JPanel TextPanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
-    
-    
-    class LogoFrame extends JPanel{
+
+    class LogoFrame extends JPanel {
+
         Image logo;
         JPanel parent;
-        Integer zoom = 6;
-        
-        public LogoFrame(JPanel container){
+        Integer zoom = 2;
+
+        public LogoFrame(JPanel container) {
             Toolkit toolkit = Toolkit.getDefaultToolkit();
-            logo = toolkit.getImage("images/grc.gif");
+            logo = toolkit.getImage("images/LogoGRC.png");
             parent = container;
         }
-        
+
         @Override
         public void paint(Graphics screen) {
             int iWidth = logo.getWidth(this);
             int iHeight = logo.getHeight(this);
-            int xPos = parent.getWidth() - logo.getWidth(this)/zoom;
-            int yPos = parent.getHeight() - logo.getHeight(this)/zoom;
+            //int xPos = parent.getWidth() - logo.getWidth(this) / zoom;
+            int xPos = parent.getWidth()/2 - (logo.getWidth(this)/2) / zoom;
+            int yPos = parent.getHeight() - logo.getHeight(this) / zoom;
             screen.drawImage(logo, xPos, yPos,
                     iWidth / zoom, iHeight / zoom, this);
         }
