@@ -352,25 +352,25 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="RandomTrafficScrollPanel" alignment="1" pref="905" max="32767" attributes="0"/>
                       <Component id="TableTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ConsoleTextField" pref="341" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="OrderButton" min="-2" pref="125" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="DuplicateButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="DeleteRowButton" min="-2" pref="121" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="DeleteAllButton" min="-2" pref="121" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="ConsoleTextField" pref="305" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="OrderButton" pref="125" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="DuplicateButton" pref="125" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="DeleteRowButton" pref="125" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="DeleteAllButton" pref="125" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -382,13 +382,13 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="RandomTrafficScrollPanel" pref="271" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="DeleteAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="DeleteRowButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="DuplicateButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="OrderButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ConsoleTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="jLabel17" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ConsoleTextField" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="OrderButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="DuplicateButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="DeleteRowButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="DeleteAllButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
