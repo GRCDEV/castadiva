@@ -15,6 +15,9 @@ VERSION (25/10/2007)
 0.92 Correct some bugs.
 0.93 Compatibility with external traffic.
 0.94 Adapting to JE 1.6 specifications. Correct some bugs with the stopwatch.
+0.95 Plugins for mobility and routing protocols
+0.96 QoS
+0.97 Execution Planner
 
 
 AUTHOR
