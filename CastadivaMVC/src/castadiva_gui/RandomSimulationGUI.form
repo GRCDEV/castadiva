@@ -31,28 +31,30 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="Frame" max="32767" attributes="1"/>
-                  <Component id="ScenarioPanel" alignment="0" min="0" pref="169" max="32767" attributes="1"/>
-                  <Component id="SourcePanel" alignment="0" max="32767" attributes="1"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="Frame" pref="169" max="32767" attributes="1"/>
+                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="ScenarioPanel" min="0" pref="169" max="32767" attributes="1"/>
+                      <Component id="SourcePanel" alignment="0" max="32767" attributes="1"/>
+                  </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="TrafficPanel" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="ChoosePanel" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="ProtocolPanel" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="StoreDataPanel" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="OutputPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ButtonPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="ButtonPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -64,19 +66,19 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="TrafficPanel" max="32767" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="ButtonPanel" min="-2" max="-2" attributes="1"/>
-                          <Component id="OutputPanel" min="0" max="32767" attributes="1"/>
-                          <Component id="StoreDataPanel" max="32767" attributes="1"/>
-                          <Component id="ProtocolPanel" max="32767" attributes="1"/>
-                          <Component id="ChoosePanel" alignment="1" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="ChoosePanel" max="32767" attributes="1"/>
+                          <Component id="ProtocolPanel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="StoreDataPanel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="ButtonPanel" alignment="0" max="32767" attributes="1"/>
+                          <Component id="OutputPanel" alignment="0" max="32767" attributes="1"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="Frame" min="-2" pref="109" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="Frame" min="-2" pref="109" max="-2" attributes="2"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="SourcePanel" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="ScenarioPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -99,7 +101,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
@@ -115,14 +117,14 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="SaveFolderTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="SearchDirectoryButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="43" max="32767" attributes="0"/>
+                  <EmptySpace pref="20" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -238,7 +240,7 @@
                           <Component id="RunsSpinner" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="7" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="PauseTimeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -352,7 +354,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="RandomTrafficScrollPanel" alignment="1" pref="896" max="32767" attributes="0"/>
+                      <Component id="RandomTrafficScrollPanel" alignment="1" pref="905" max="32767" attributes="0"/>
                       <Component id="TableTitleLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
@@ -378,7 +380,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="TableTitleLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="RandomTrafficScrollPanel" pref="265" max="32767" attributes="0"/>
+                  <Component id="RandomTrafficScrollPanel" pref="271" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="DeleteAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -524,7 +526,7 @@
                       <Component id="CurrentTimeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="23" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -618,7 +620,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="GenerateButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="7" max="32767" attributes="0"/>
+                  <EmptySpace pref="10" max="32767" attributes="0"/>
                   <Component id="CloseButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -671,7 +673,7 @@
                   <Component id="CastadivaRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="NSRadioButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="30" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -743,7 +745,7 @@
                   <Component id="BalancedFlowRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="RandomFlowRadioButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="30" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -805,13 +807,13 @@
                               <Component id="NoneCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="AodvCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="OlsrCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="OlsrCheckBox" max="32767" attributes="1"/>
+                              <Component id="AodvCheckBox" alignment="0" pref="78" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="51" max="32767" attributes="0"/>
+                  <EmptySpace pref="52" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -825,7 +827,7 @@
                       <Component id="NoneCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="AodvCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="OptimumCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="OlsrCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
