@@ -202,6 +202,7 @@ public class CastadivaController {
 
     class ImportNsListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             Integer size;
@@ -223,6 +224,7 @@ public class CastadivaController {
 
     class ExportNsListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = ExplorationWindow("Export scenario",
@@ -240,6 +242,7 @@ public class CastadivaController {
 
     class ExportMayaListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = ExplorationWindow("Export",
@@ -251,6 +254,7 @@ public class CastadivaController {
 
     class NewListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.Reset();
             m_simulationWindow.SetSimulationTime(0);
@@ -262,6 +266,7 @@ public class CastadivaController {
 
     class LoadListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             Integer size;
@@ -285,6 +290,7 @@ public class CastadivaController {
 
     class LoadScenaryListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = ExplorationWindow("Load",
@@ -297,6 +303,7 @@ public class CastadivaController {
 
     class SaveListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = ExplorationWindow("Save",
@@ -312,6 +319,7 @@ public class CastadivaController {
 
     class RandomSimulationMenuOptionListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_view.setVisible(false);
             // Prevents the user from closing the whole program when closing the window
@@ -333,6 +341,7 @@ public class CastadivaController {
 
     class SimulationMenuOptionListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_simulationWindow.FillAPComboBox();
             m_simulationWindow.ActivateButtons(true);
@@ -344,6 +353,7 @@ public class CastadivaController {
 
     class AboutBoxListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_about.UpdateText(m_model.ReadTextFile(m_model.Help_Folder + File.separator + "about.txt"));
             m_about.setVisible(true);
@@ -352,6 +362,7 @@ public class CastadivaController {
 
     class HelpWindowListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.selectedHelp = m_model.MAINMENU_INDEX;
             ShowHelp();
@@ -360,6 +371,7 @@ public class CastadivaController {
 
     class ComputerConfigurationListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_computerGUI.GUIReady();
             m_computerGUI.setVisible(true);
@@ -368,6 +380,7 @@ public class CastadivaController {
 
     class NewApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_newAP.DefaultWindow();
             m_newAP.setVisible(true);
@@ -376,6 +389,7 @@ public class CastadivaController {
 
     class ModifyApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_modifyAP.GUIReady();
             m_modifyAP.setVisible(true);
@@ -384,6 +398,7 @@ public class CastadivaController {
 
     class LoadApsListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser load = new JFileChooser();
             int selection = load.showOpenDialog(load);
@@ -398,6 +413,7 @@ public class CastadivaController {
 
     class SaveApsListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser save = new JFileChooser();
             int selection = save.showSaveDialog(save);
@@ -412,6 +428,7 @@ public class CastadivaController {
 
     class AttachExternalDeviceListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_attachTraffic.UpdateWindow();
             m_attachTraffic.setVisible(true);
@@ -420,6 +437,7 @@ public class CastadivaController {
 
     class ImportCitymobListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             Integer size;
@@ -463,6 +481,7 @@ public class CastadivaController {
 
     class SaveRandomSimulation implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = ExplorationWindow("Save",
@@ -486,6 +505,7 @@ public class CastadivaController {
 
     class GenerateRandomSimulation implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             GetRandomData();
             m_randomSimulation.StartSimulation();
@@ -509,6 +529,7 @@ public class CastadivaController {
 
     class RandomSimulationCloseButtonListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_view.setVisible(true);
             m_randomSimulation.setVisible(false);
@@ -517,6 +538,7 @@ public class CastadivaController {
 
     class RandomXBoundListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.SetBoundX(m_randomSimulation.ReturnXSize());
             m_randomSimulation.ModifyBlackBoard();
@@ -525,6 +547,7 @@ public class CastadivaController {
 
     class RandomYBoundListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.SetBoundY(m_randomSimulation.ReturnYSize());
             m_randomSimulation.ModifyBlackBoard();
@@ -533,6 +556,7 @@ public class CastadivaController {
 
     class RandomSimulationTimeListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             int st = m_randomSimulation.ReturnSimulationTime();
             m_model.SetSimulationTime(st);
@@ -542,6 +566,7 @@ public class CastadivaController {
 
     class RandomTrafficDeleteElement implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             Vector newVector = new Vector();
             int row = m_randomSimulation.GetSelectedRow();
@@ -561,6 +586,7 @@ public class CastadivaController {
 
     class RandomTrafficClear implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.UpdateRandomTraffic(new Vector());
             m_randomSimulation.GenerateTable();
@@ -569,6 +595,7 @@ public class CastadivaController {
 
     class DuplicateRandomTrafficRow implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.DuplicateRandomTrafficRow(m_model.accessPoints.GetRandomTraffic(),
                     m_randomSimulation.GetSelectedRow());
@@ -578,6 +605,7 @@ public class CastadivaController {
 
     class OrderRandomTraffic implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.OrderRandomTrafficVector(m_model.accessPoints.GetRandomTraffic());
             m_randomSimulation.UpdateTable();
@@ -599,6 +627,7 @@ public class CastadivaController {
 
     class InstallCloseButton implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_installAP.setVisible(false);
         }
@@ -606,6 +635,7 @@ public class CastadivaController {
 
     class InstallApButton implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.InstallAp(m_installAP.WhatEthDevice(),
                     m_installAP.WhatWifiDevice(),
@@ -636,6 +666,7 @@ public class CastadivaController {
 
     class NewPingListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             new PingGUI(m_newAP.GiveMeTheIp()).setVisible(true);
         }
@@ -643,6 +674,7 @@ public class CastadivaController {
 
     class CreateApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.AddAP(m_newAP.GiveMeTheIp(), m_newAP.GiveMeTheWifiIp(),
                     m_newAP.GiveMeTheWifiMac(), m_newAP.GiveMeTheSshUser(),
@@ -657,6 +689,7 @@ public class CastadivaController {
 
     class InstallApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_installAP.FillComponents(m_newAP.GiveMeTheIp(),
                     m_newAP.GiveMeTheWifiIp(), m_newAP.GiveMeTheWorkingDirectory(),
@@ -668,6 +701,7 @@ public class CastadivaController {
 
     class HelpNewApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.selectedHelp = m_model.ADD_NODE_INDEX;
             ShowHelp();
@@ -690,6 +724,7 @@ public class CastadivaController {
 
     class ModifyPingListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             new PingGUI(m_modifyAP.GiveMeTheIp()).setVisible(true);
         }
@@ -697,6 +732,7 @@ public class CastadivaController {
 
     class ChangeApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (m_modifyAP.IsWindowEditable()) {
                 m_model.SetAP(m_modifyAP.GiveMeTheSelectedIndex(), m_modifyAP.GiveMeTheIp(),
@@ -714,6 +750,7 @@ public class CastadivaController {
 
     class DeleteApListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.RemoveAP(m_modifyAP.GiveMeTheSelectedIndex());
             m_modifyAP.GUIReady();
@@ -734,6 +771,7 @@ public class CastadivaController {
 
     class ModifyComputerListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.SetComputerInterface(m_computerGUI.ReturnSelectedInterface());
             m_model.SetComputerWorkingDirectory(m_computerGUI.ReturnTheWorkingDirectory());
@@ -760,6 +798,7 @@ public class CastadivaController {
 
     class TrafficDeleteElement implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             Vector newVector = new Vector();
             int row = m_trafficGUI.GetSelectedRow();
@@ -779,6 +818,7 @@ public class CastadivaController {
 
     class DuplicateTrafficRow implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.DuplicateTrafficRow(m_model.accessPoints.GetTraffic(), m_trafficGUI.GetSelectedRow());
             m_trafficGUI.UpdateTable();
@@ -787,6 +827,7 @@ public class CastadivaController {
 
     class OrderTraffic implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.OrderTrafficVector(m_model.accessPoints.GetTraffic());
             m_trafficGUI.UpdateTable();
@@ -795,6 +836,7 @@ public class CastadivaController {
 
     class SaveTrafficInTextFile implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             String file;
             if (!(file = ExplorationWindow("Save text file",
@@ -806,6 +848,7 @@ public class CastadivaController {
 
     class TrafficAccept implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             int row;
             if ((row = m_model.TrafficIdenticalSourceDestination()) > 0) {
@@ -822,6 +865,7 @@ public class CastadivaController {
 
     class TrafficClear implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.UpdateTraffic(new Vector());
             m_trafficGUI.GenerateTable(m_model.accessPoints.GetTraffic());
@@ -845,6 +889,7 @@ public class CastadivaController {
 
     class AcceptAttach implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_attachTraffic.AttachTraffic();
             m_attachTraffic.ClearInputText();
@@ -853,6 +898,7 @@ public class CastadivaController {
 
     class HelpAttach implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.selectedHelp = m_model.ATTACH_INDEX;
             ShowHelp();
@@ -861,6 +907,7 @@ public class CastadivaController {
 
     class CloseAttach implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_attachTraffic.setVisible(false);
         }
@@ -868,6 +915,7 @@ public class CastadivaController {
 
     class DeleteAttach implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.DeleteExternalTrafficInstruction(m_attachTraffic.ReturnSelectedExternalTrafficFlow());
             m_attachTraffic.UpdateAfterDelete();
@@ -901,6 +949,7 @@ public class CastadivaController {
      */
     class AfterHelp implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.selectedHelp++;
             if (m_model.selectedHelp > m_model.helpFiles.length - 1) {
@@ -915,6 +964,7 @@ public class CastadivaController {
      */
     class BeforeHelp implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             m_model.selectedHelp--;
             if (m_model.selectedHelp < 0) {
@@ -929,6 +979,7 @@ public class CastadivaController {
      */
     class LanguageHelp implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
 
             switch (m_helpWindow.GetLanguageIndex()) {
@@ -975,6 +1026,7 @@ public class CastadivaController {
         String[] binFileName;
         String[] configurationFilename;
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             // Getting information from the GUI 
             binaryFilePath = m_protocol.getBinaryFilePath();
@@ -1188,6 +1240,7 @@ public class CastadivaController {
      */
     class generatePluginListener implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             // First, we need to create a few directories that will be usefull for plugin's compilation
             File pluginFolder = new File(CastadivaModel.PLUGIN_WORKFOLDER+"/castadiva/Plugins");
@@ -1469,6 +1522,7 @@ public class CastadivaController {
     
     public class ScenarioFilenameFilter implements FilenameFilter{
 
+        @Override
         public boolean accept(File dir, String name) {
             return name.equals("Scenario");
         }
@@ -1482,6 +1536,7 @@ public class CastadivaController {
             start = begin;
         }
 
+        @Override
         public boolean accept(File dir, String name) {
             return name.startsWith(start);
         }
