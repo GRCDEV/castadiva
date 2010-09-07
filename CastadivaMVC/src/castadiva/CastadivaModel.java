@@ -66,7 +66,7 @@ import lib.IPluginCastadiva;
  */
 public class CastadivaModel {
 
-    public final String VERSION = "0.97";
+    public final String VERSION = "0.98";
     public Computer computer;
     public APs accessPoints = new APs();
     //Node connection
