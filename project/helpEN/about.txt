@@ -3,32 +3,35 @@ CASTADIVA
 
 Castadiva is an investigation software developed in the Polytechnic University of Valencia (Spain). 
 
-VERSION (25/10/2007)
+VERSION (07/09/2010)
 -----------------
 
-0.8 Static simulation.
-0.81 Added instalation of Aps.
-0.82 Added routing protocols.
-0.83 Random Scenaries.
-0.9 Mobility.
-0.91 Upgrading performance.
-0.92 Correct some bugs.
-0.93 Compatibility with external traffic.
-0.94 Adapting to JE 1.6 specifications. Correct some bugs with the stopwatch.
-0.95 Plugins for mobility and routing protocols
-0.96 QoS
-0.97 Execution Planner
+0.8	Static simulation.
+0.81	Added instalation of Aps.
+0.82	Added routing protocols.
+0.83	Random Scenaries.
+0.90	Mobility.
+0.91	Upgrading performance.
+0.92	Correct some bugs.
+0.93	Compatibility with external traffic.
+0.94	Adapting to JE 1.6 specifications. Correct some bugs with the stopwatch.
+0.95	Plugins for mobility and routing protocols
+0.96	QoS
+0.97	Execution Planner
+0.98	Evaluation of Delays in UDP
 
 
-AUTHOR
+AUTHORS
 -----------------
+Main Software Developer:
+Jorge Hortelano Otero (softwaremagico@gmail.com)
+
+Colaborators:
+Alvaro Torres Cortés (atcortes@batousay.com)
+Wannes Vossen.
 
 Universidad Politecnica de Valencia.
 Departamento de Informatica de Sistemas y Computadores.
 Camino de Vera, s/n
 46022 Valencia
 SPAIN
-
-Software Developer:
-Jorge Hortelano Otero.
-softwaremagico@gmail.com
