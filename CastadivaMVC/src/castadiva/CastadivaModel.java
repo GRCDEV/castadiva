@@ -1138,6 +1138,7 @@ public class CastadivaModel {
         //String deletingUdpFile = folder + file.separator + FINISH_UDP_INSTRUCTIONS_FILE;
 
         startingInstructions.addAll(KillAllOldInstructions());
+        startingInstructions.addAll(SynchronizeNodes(node));
         if(accessPoints.Get(node).WhatProcessor().equals("X86")) {
             startingInstructions.addAll(SynchronizeTime());
         }
@@ -1168,6 +1169,18 @@ public class CastadivaModel {
         return killInstructions;
     }
 
+    public List<String> SynchronizeNodes(Integer node) {
+        List<String> syncInstructions = new ArrayList<String>();
+        AP ap = accessPoints.Get(node);
+        if(node == 0) {
+            syncInstructions.add(ap.WhatWorkingDirectory() + File.separator + "bin" + File.separator +"TcpSync"+ap.WhatProcessor()+" -m " + (accessPoints.Size() -1));
+        }else{
+            AP ap2 = accessPoints.Get(0);
+            syncInstructions.add(ap.WhatWorkingDirectory() + File.separator + "bin" + File.separator +"TcpSync"+ap.WhatProcessor()+" -c " + ap2.WhatEthIP());
+        }
+
+        return syncInstructions;
+    }
     /**
      * 
      * @return List of instructions to sinchronize time
