@@ -1139,6 +1139,7 @@ public class CastadivaModel {
 
         startingInstructions.addAll(KillAllOldInstructions());
         startingInstructions.addAll(SynchronizeNodes(node));
+        //NTP Clock synchronization
         if(accessPoints.Get(node).WhatProcessor().equals("X86")) {
             startingInstructions.addAll(SynchronizeTime());
         }
