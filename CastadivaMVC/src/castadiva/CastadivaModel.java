@@ -11,7 +11,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
-//import com.sun.jndi.cosnaming.IiopUrl.Address;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -73,7 +72,6 @@ public class CastadivaModel {
     float visibilityMatrix[][];
     Integer gatewayMatrix[][];
     //Default folders variables
-
     private final String STATISTICS_UDP_DESTINATION_FILE = "CastadivaUdpDestino";
     private final String STATISTICS_TCP_DESTINATION_FILE = "CastadivaTcpDestino";
     private final String INSTRUCTIONS_SERVER_FILE = "serverForNode.sh";
@@ -99,7 +97,6 @@ public class CastadivaModel {
     public static final String PLUGIN_JAR_FOLDER = "src/castadiva/Plugins"; // The compiled plugins are then stored in the following folder
     public static final String PLUGIN_INCLUDE_FOLDER = "src/lib"; // To compile, the abstract IPluginCastadiva.java is needed. It must be located in the following directory
     public static final String MOBILITY_PLUGIN_JAR_FOLDER = "src/castadiva/MobilityPlugins/"; // The compiled mobility plugins are stored in that folder
-
     //Simulation variables
     public final int TRAFFIC_SERVER_TIME_WAIT = 2;
     public final int TTCP_SERVER_MAX_WAIT = 10;
@@ -137,7 +134,7 @@ public class CastadivaModel {
     private List<SSH> SSHThread = new ArrayList<SSH>();
     private List<SSH> SSHClientThread = new ArrayList<SSH>();
     private List<SSH> SSHServerThread = new ArrayList<SSH>();
-    public SshHost installNode;
+    SshHost installNode;
     private int totalTime = 10;
     private Integer boardSize = 1000;
     private int numberNodes;
@@ -216,7 +213,6 @@ public class CastadivaModel {
         "addNode.txt", "attachTraffic.txt", "scenario.txt",
         "about.txt", "mainMenu.txt"
     };
-
     //If true, show output in console.
     public final boolean debug = false;
     public IPluginCastadiva[] routing_protocols = new IPluginCastadiva[]{};
@@ -225,21 +221,23 @@ public class CastadivaModel {
     //Ruta por defecto del planificador de ejecucioens
     public String pathScenario = "/Castadiva/Scenarios/";
     public boolean executionPlannerSimulating = false;
-    public String pathTarget = "";;
+    public String pathTarget = "";
+
+    ;
     public PluginDetector detector;
     public Boolean RESET_APS = true;
     private String computerWorkingDirectory;
 
     /** Creates a new instance of CastadivaModel */
     public CastadivaModel() {
-            randomGenerator = new Random();
-            boardSize = (int) Math.max(WhatBoundX(), WhatBoundY());
-            tableModel = new TrafficTableModel(accessPoints.GetTraffic());
-            randomTrafficModel = new RandomTrafficTableModel(accessPoints.GetRandomTraffic());
-            computer = new Computer();
-            computerWorkingDirectory = computer.WhatWorkingDirectory();
-            SetStopwatch(0);
-        
+        randomGenerator = new Random();
+        boardSize = (int) Math.max(WhatBoundX(), WhatBoundY());
+        tableModel = new TrafficTableModel(accessPoints.GetTraffic());
+        randomTrafficModel = new RandomTrafficTableModel(accessPoints.GetRandomTraffic());
+        computer = new Computer();
+        computerWorkingDirectory = computer.WhatWorkingDirectory();
+        SetStopwatch(0);
+
     }
 
     /****************************************************************************
@@ -267,6 +265,7 @@ public class CastadivaModel {
         computerWorkingDirectory = dir;
         computer.ChangeWorkingDirectory(dir);
     }
+
     /**
      * Change the directory where all data are saved.
      * @see Computer
@@ -499,7 +498,7 @@ public class CastadivaModel {
         AP tmp_AP = new AP(address, wifiAddress, wifiMac, user, pwd, id, x,
                 y, z, range, directory, processor, channel, mode, wfDevice, gw);
         accessPoints.Set(number, tmp_AP);
-        }
+    }
 
     /**
      * Add an AP to the Simulation. This AP now can be used and placed into the simulation
@@ -563,9 +562,9 @@ public class CastadivaModel {
      * can save, load, import from ns.
      */
     public String GetDefaultExplorationFolder() {
-      if(STARTING_FOLDER.equals("/")) {
-        return System.getenv("HOME");
-      }
+        if (STARTING_FOLDER.equals("/")) {
+            return System.getenv("HOME");
+        }
         return STARTING_FOLDER;
     }
 
@@ -622,8 +621,8 @@ public class CastadivaModel {
      * Obtain the total time used to prepare the APs
      */
     public Integer GetApTimeWaiting() {
-        return GetProtocolLoadingTimeWaiting() +
-                TRAFFIC_SERVER_TIME_WAIT + VISIBILITY_TIME_WAIT;
+        return GetProtocolLoadingTimeWaiting()
+                + TRAFFIC_SERVER_TIME_WAIT + VISIBILITY_TIME_WAIT;
     }
 
     /**
@@ -638,8 +637,8 @@ public class CastadivaModel {
      * Control if the traffic is finished to show the results.
      */
     public boolean IsStatisticsEnded() {
-        if (stopwatch > GetRealSimulationTime() &&
-                statisticsControl.IsEndOfStatistics()) {
+        if (stopwatch > GetRealSimulationTime()
+                && statisticsControl.IsEndOfStatistics()) {
             return true;
         }
         return false;
@@ -724,8 +723,8 @@ public class CastadivaModel {
      * @param node2 The second node.
      */
     private float CalculateNodeDistance(AP node1, AP node2) {
-        return (float) Math.sqrt(Math.pow((node1.x - node2.x), 2) +
-                Math.pow((node1.y - node2.y), 2) + Math.pow((node1.z - node2.z), 2));
+        return (float) Math.sqrt(Math.pow((node1.x - node2.x), 2)
+                + Math.pow((node1.y - node2.y), 2) + Math.pow((node1.z - node2.z), 2));
     }
 
     /**
@@ -847,24 +846,24 @@ public class CastadivaModel {
             for (int j = 0; j < accessPoints.Size(); j++) {
                 AP nodo = accessPoints.Get(j);
                 if (visibilityMatrix[i][j] < 0) {
-                    nodeInstructions = nodeInstructions + LocateIptables(i) +
-                            " -I INPUT -m mac --mac-source " + nodo.WhatWifiMac() +
-                            " -j DROP\n" +
-                            LocateIptables(i) +
-                            " -I FORWARD -m mac --mac-source " + nodo.WhatWifiMac() +
-                            " -j DROP\n";
-                    delNodeInstructions = delNodeInstructions + LocateIptables(i) +
-                            " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac() +
-                            " -j DROP\n" +
-                            LocateIptables(i) +
-                            " -D FORWARD -m mac --mac-source " + nodo.WhatWifiMac() +
-                            " -j DROP\n";
+                    nodeInstructions = nodeInstructions + LocateIptables(i)
+                            + " -I INPUT -m mac --mac-source " + nodo.WhatWifiMac()
+                            + " -j DROP\n"
+                            + LocateIptables(i)
+                            + " -I FORWARD -m mac --mac-source " + nodo.WhatWifiMac()
+                            + " -j DROP\n";
+                    delNodeInstructions = delNodeInstructions + LocateIptables(i)
+                            + " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac()
+                            + " -j DROP\n"
+                            + LocateIptables(i)
+                            + " -D FORWARD -m mac --mac-source " + nodo.WhatWifiMac()
+                            + " -j DROP\n";
                 }
             }
             //Add both instructions path.
             if (deleteInstructions) {
-                nodeInstructions = nodeInstructions + "sleep " +
-                        (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
+                nodeInstructions = nodeInstructions + "sleep "
+                        + (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
             }
             //Enqueue the new created instructions.
             addInstruction.add(i, nodeInstructions);
@@ -908,12 +907,12 @@ public class CastadivaModel {
         List<List<String>> nodeInstructions = new ArrayList<List<String>>();
         SshNode ssh;
         SSHInstructionThread = new ArrayList<SSH>();
-        
+
         List<String> aux = new ArrayList<String>();
         aux.add(instruction);
 
         //Kill the SSH session (sometimes, not end)
-        for(int i =0; i < accessPoints.Size(); i++){
+        for (int i = 0; i < accessPoints.Size(); i++) {
             nodeInstructions.add(i, aux);
         }
 
@@ -926,7 +925,7 @@ public class CastadivaModel {
             }
             SSHInstructionThread = null;
         } catch (NullPointerException npe) {
-            System.out.println("SSH session already closed :"+npe);
+            System.out.println("SSH session already closed :" + npe);
         }
     }
 
@@ -935,12 +934,12 @@ public class CastadivaModel {
      * and stops any current simulation
      * @author Wannes
      */
-    public void rebootAPs(){
-            InstructionForAll("reboot", false);
-            // Stop the simulation in Castadiva
-            NodeDisconnect();
-            SetStopwatch(0);
-            EndStopwatch();
+    public void rebootAPs() {
+        InstructionForAll("reboot", false);
+        // Stop the simulation in Castadiva
+        NodeDisconnect();
+        SetStopwatch(0);
+        EndStopwatch();
     }
 
     /**
@@ -960,21 +959,21 @@ public class CastadivaModel {
             //Generate a thread to control the end of the traffic deppending of the kind of traffic.
             if (trafficLine.getTCPUDP().equals("UDP")) {
                 ObtainStatisticsThread StatisticsUDP = new ObtainStatisticsThread(
-                        computer.WhatWorkingDirectory() + File.separatorChar +
-                        STATISTICS_UDP_DESTINATION_FILE + (i + 1), 20, accessPoints.GetTraffic(),
+                        computer.WhatWorkingDirectory() + File.separatorChar
+                        + STATISTICS_UDP_DESTINATION_FILE + (i + 1), 20, accessPoints.GetTraffic(),
                         i, statisticsControl);
                 VectorStatisticThread.add(i, StatisticsUDP);
                 StatisticsUDP.start();
             } else {
                 ObtainStatisticsThread StatisticsTCP = new ObtainStatisticsThread(
-                        computer.WhatWorkingDirectory() + File.separatorChar +
-                        STATISTICS_TCP_DESTINATION_FILE + (i + 1), 20, accessPoints.GetTraffic(),
+                        computer.WhatWorkingDirectory() + File.separatorChar
+                        + STATISTICS_TCP_DESTINATION_FILE + (i + 1), 20, accessPoints.GetTraffic(),
                         i, statisticsControl);
                 VectorStatisticThread.add(i, StatisticsTCP);
                 StatisticsTCP.start();
-                }
             }
         }
+    }
 
     /**
      * This function stop the simulation when all the traffic data has been calculate.
@@ -1090,14 +1089,14 @@ public class CastadivaModel {
         for (int i = 0; i < accessPoints.Size(); i++) {
             List<String> nodeStartingInstruction = new ArrayList<String>();
             AP node = accessPoints.Get(i);
-            if(node.WhatProcessor().equals("MIPS")) {
-                data = DEFAULT_SHELL_LAUNCHER_MIPS + " " + node.WhatWorkingDirectory() + File.separator +
-                        DEFAULT_INSTRUCTIONS_FOLDER + (i + 1) +
-                        File.separator + DEFAULT_STARTING_INSTRUCTION;
-            }else{
-                data = DEFAULT_SHELL_LAUNCHER_X86 + " " + node.WhatWorkingDirectory() + File.separator +
-                        DEFAULT_INSTRUCTIONS_FOLDER + (i + 1) +
-                        File.separator + DEFAULT_STARTING_INSTRUCTION;
+            if (node.WhatProcessor().equals("MIPS")) {
+                data = DEFAULT_SHELL_LAUNCHER_MIPS + " " + node.WhatWorkingDirectory() + File.separator
+                        + DEFAULT_INSTRUCTIONS_FOLDER + (i + 1)
+                        + File.separator + DEFAULT_STARTING_INSTRUCTION;
+            } else {
+                data = DEFAULT_SHELL_LAUNCHER_X86 + " " + node.WhatWorkingDirectory() + File.separator
+                        + DEFAULT_INSTRUCTIONS_FOLDER + (i + 1)
+                        + File.separator + DEFAULT_STARTING_INSTRUCTION;
             }
             nodeStartingInstruction.add(data);
             startingInstructions.add(nodeStartingInstruction);
@@ -1121,8 +1120,8 @@ public class CastadivaModel {
      * @param node The number of the node.
      */
     public void StoreAllInstructionsForOneNode(Integer node) {
-        String folder = computer.WhatWorkingDirectory() + File.separator +
-                DEFAULT_INSTRUCTIONS_FOLDER + (node + 1);
+        String folder = computer.WhatWorkingDirectory() + File.separator
+                + DEFAULT_INSTRUCTIONS_FOLDER + (node + 1);
         List<String> startingInstructions = new ArrayList<String>();
 
         GenerateFolder(folder);
@@ -1154,8 +1153,8 @@ public class CastadivaModel {
         StoreInFileInstructionForOneNode(clientInstructions, node, clientFile);
         StoreInFileInstructionForOneNode(externalTrafficInstructions, node, externalTrafficFile);
         StoreInFileInstructionForOneNode(redirectInstructions, node, redirectFile);
-        StoreInFileInstructionForOneNode(categoryInstructions, node,  categoryFile);
-    //StoreInFileInstructionForOneNode(killUdpClientInstructions, node, deletingUdpFile);
+        StoreInFileInstructionForOneNode(categoryInstructions, node, categoryFile);
+        //StoreInFileInstructionForOneNode(killUdpClientInstructions, node, deletingUdpFile);
     }
 
     /**
@@ -1165,7 +1164,7 @@ public class CastadivaModel {
         List<String> killInstructions = new ArrayList<String>();
         // Killing the sleep instructions will force every function to be processed imediatly
         // Only client and Server will remain as they have an internal timeout.
-        
+
         killInstructions.add("/usr/bin/killall sleep 2>/dev/null;");
         return killInstructions;
     }
@@ -1183,7 +1182,7 @@ public class CastadivaModel {
         return syncInstructions;
     }
     /**
-     * 
+     *
      * @return List of instructions to sinchronize time
      */
     public List<String> SynchronizeTime() {
@@ -1202,16 +1201,16 @@ public class CastadivaModel {
         String encryption = " key restricted [1] 0012-3498-76";
         String wifi;
         if (RTS) {
-            wifi = LocateIwconfig(node) + ap.WhatWifiDevice() +
-                    " essid " + WIFI_SSID + " channel " +
-                    ap.WhatChannel() + " mode " + ap.WhatMode() + " rts 0 " +
-                    encryption;
+            wifi = LocateIwconfig(node) + ap.WhatWifiDevice()
+                    + " essid " + WIFI_SSID + " channel "
+                    + ap.WhatChannel() + " mode " + ap.WhatMode() + " rts 0 "
+                    + encryption;
         } else {
-            wifi = LocateIwconfig(node) + ap.WhatWifiDevice() +
-                    " essid " + WIFI_SSID + " channel " +
-                    ap.WhatChannel() + " mode " + ap.WhatMode() +
-                    " rts 2347" +
-                    encryption;
+            wifi = LocateIwconfig(node) + ap.WhatWifiDevice()
+                    + " essid " + WIFI_SSID + " channel "
+                    + ap.WhatChannel() + " mode " + ap.WhatMode()
+                    + " rts 2347"
+                    + encryption;
         }
         return wifi;
     }
@@ -1224,9 +1223,9 @@ public class CastadivaModel {
         List<String> AllFilesInstructions = new ArrayList<String>();
         AP ap = accessPoints.Get(node);
         File file = null;
-        String DEFAULT_SHELL_LAUNCHER = (ap.WhatProcessor().equals("MIPS"))?DEFAULT_SHELL_LAUNCHER_MIPS:DEFAULT_SHELL_LAUNCHER_X86;
-        AllFilesInstructions.add("cd " + ap.WhatWorkingDirectory() + File.separator +
-                DEFAULT_INSTRUCTIONS_FOLDER + (node + 1));
+        String DEFAULT_SHELL_LAUNCHER = (ap.WhatProcessor().equals("MIPS")) ? DEFAULT_SHELL_LAUNCHER_MIPS : DEFAULT_SHELL_LAUNCHER_X86;
+        AllFilesInstructions.add("cd " + ap.WhatWorkingDirectory() + File.separator
+                + DEFAULT_INSTRUCTIONS_FOLDER + (node + 1));
         AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + INSTRUCTIONS_CATEGORY_FILE + " &");
         AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + INSTRUCTIONS_REDIRECT_FILE + " &");
         AllFilesInstructions.add(DEFAULT_SHELL_LAUNCHER + " ./" + DEFAULT_EXTERNAL_TRAFFIC_INSTRUCTION + " & ");
@@ -1338,8 +1337,8 @@ public class CastadivaModel {
                     sshThreadList.add(i, ssh);
                     ssh.start();
                 } catch (Exception ce) {
-                    if (debug){
-                        System.out.println("An error occured while initializing the ssh connection with AP"+i+" :"+ce);
+                    if (debug) {
+                        System.out.println("An error occured while initializing the ssh connection with AP" + i + " :" + ce);
                     }
                 }
             }
@@ -1364,7 +1363,6 @@ public class CastadivaModel {
         }
 
     }
-
 
     /****************************************************************************
      *
@@ -1482,19 +1480,19 @@ public class CastadivaModel {
 
         String aux;
 
-        if(record.getDacme()) {
+        if (record.getDacme()) {
             aux = "1";
-        }else{
+        } else {
             aux = "0";
         }
-        sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator +
-                "UdpFlowClient" + sourceNode.WhatProcessor() + " " +
-                destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
-                record.getSize() + " " + record.getPacketsSeconds() + " " +
-                record.getDelay() + " " + record.getIntAccessCategory() + " " +
-                (record.getStop() - record.getStart()) + " " +
-                aux + " > " + sourceNode.WhatWorkingDirectory() + File.separator
+        sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator
+                + "bin" + File.separator
+                + "UdpFlowClient" + sourceNode.WhatProcessor() + " "
+                + destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " "
+                + record.getSize() + " " + record.getPacketsSeconds() + " "
+                + record.getDelay() + " " + record.getIntAccessCategory() + " "
+                + (record.getStop() - record.getStart()) + " "
+                + aux + " > " + sourceNode.WhatWorkingDirectory() + File.separator
                 + "SalidaUdp" + (TRAFFIC_PORT + number) + " ";
         return sourceInstruction;
     }
@@ -1515,12 +1513,12 @@ public class CastadivaModel {
         sourceNode = accessPoints.Get(startNode);
         destinationNode = accessPoints.Get(endNode);
 
-        sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator +
-                "TcpFlowClient" + sourceNode.WhatProcessor() + " " +
-                destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " " +
-                record.getTransferSize() + " " + (record.getStop() - record.getStart()) + 
-                " > " + sourceNode.WhatWorkingDirectory() + File.separator
+        sourceInstruction = sourceNode.WhatWorkingDirectory() + File.separator
+                + "bin" + File.separator
+                + "TcpFlowClient" + sourceNode.WhatProcessor() + " "
+                + destinationNode.WhatWifiIP() + " " + (TRAFFIC_PORT + number) + " "
+                + record.getTransferSize() + " " + (record.getStop() - record.getStart())
+                + " > " + sourceNode.WhatWorkingDirectory() + File.separator
                 + "SalidaTcp" + (TRAFFIC_PORT + number) + " ";
         return sourceInstruction;
     }
@@ -1528,63 +1526,63 @@ public class CastadivaModel {
     private String GenerateCategoryInstruction(TrafficRecord record, int number, String type) {
         String instruction = "";
 
-      //  if(record.getIntAccessCategory() != 1) {
-            Integer sourceNode = accessPoints.SearchAP(record.getSource());
-            instruction = LocateIptables(sourceNode) + " -t mangle -" + type + " OUTPUT -p udp --dport " +
-                    (TRAFFIC_PORT + number) + " -j DSCP --set-dscp-class " + record.getCSAccessCategory();
-       // }
+        //  if(record.getIntAccessCategory() != 1) {
+        Integer sourceNode = accessPoints.SearchAP(record.getSource());
+        instruction = LocateIptables(sourceNode) + " -t mangle -" + type + " OUTPUT -p udp --dport "
+                + (TRAFFIC_PORT + number) + " -j DSCP --set-dscp-class " + record.getCSAccessCategory();
+        // }
 
         return instruction;
     }
 
     private void GenerateCategoryInstructions() {
-      /* COMMENTED AS UDP Generator supports native QoS but left
-       * here intentionally.
-       *
+        /* COMMENTED AS UDP Generator supports native QoS but left
+         * here intentionally.
+         *
         TrafficRecord record = null;
         String categoryInstruction;
 
         categoryInstructions = new ArrayList<List<String>>();
 
         for (int i = 0; i < accessPoints.Size(); i++) {
-            AddInstructionToNode(categoryInstructions, "#Category File", i);
+        AddInstructionToNode(categoryInstructions, "#Category File", i);
         }
 
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
-            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
+        record = (TrafficRecord) accessPoints.GetTraffic().get(i);
 
-            if(record.getTCPUDP().equals("UDP") && !record.getDacme()) {
-                int sourceNode  = accessPoints.SearchAP(record.getSource());
-                categoryInstruction = GenerateCategoryInstruction(record, i, "A");
-                AddInstructionToNodeRedirect(categoryInstructions, categoryInstruction, sourceNode);
-            }
+        if(record.getTCPUDP().equals("UDP") && !record.getDacme()) {
+        int sourceNode  = accessPoints.SearchAP(record.getSource());
+        categoryInstruction = GenerateCategoryInstruction(record, i, "A");
+        AddInstructionToNodeRedirect(categoryInstructions, categoryInstruction, sourceNode);
         }
-        
+        }
+
         for (int i = 0; i < accessPoints.Size(); i++) {
-                categoryInstruction =  "sleep " + GetSimulationTime();
-                AddInstructionToNodeRedirect(categoryInstructions, categoryInstruction, i);
+        categoryInstruction =  "sleep " + GetSimulationTime();
+        AddInstructionToNodeRedirect(categoryInstructions, categoryInstruction, i);
         }
 
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
-            record = (TrafficRecord) accessPoints.GetTraffic().get(i);
+        record = (TrafficRecord) accessPoints.GetTraffic().get(i);
 
-            if(record.getTCPUDP().equals("UDP") && !record.getDacme()) {
-                int sourceNode  = accessPoints.SearchAP(record.getSource());
-                categoryInstruction = GenerateCategoryInstruction(record, i, "D");
-                AddInstructionToNodeRedirect(categoryInstructions, categoryInstruction, sourceNode);
-            }
-       }*/
+        if(record.getTCPUDP().equals("UDP") && !record.getDacme()) {
+        int sourceNode  = accessPoints.SearchAP(record.getSource());
+        categoryInstruction = GenerateCategoryInstruction(record, i, "D");
+        AddInstructionToNodeRedirect(categoryInstructions, categoryInstruction, sourceNode);
+        }
+        }*/
     }
 
     private String GenerateRedirectInstructionSource(TrafficRecord record, int number, String type) {
         String instruction = "";
-        if(record.getRedirect()) {
+        if (record.getRedirect()) {
             //TODO Modify APs to select control network (Ex. eth0, eth1...)
             //TODO Does only works whith one "ethX"
-            String sourceNode =  accessPoints.Get(accessPoints.SearchAP(record.getAddress())).WhatEthIP();
-            instruction = LocateIptables(number) + " -t nat -"+ type + " POSTROUTING -p udp --dport " +
-                    (TRAFFIC_PORT + number) + " -j SNAT --to-source " + 
-                    "$(/sbin/ifconfig $(/sbin/ifconfig | grep eth | awk '{print $1}') | grep inet: | awk '{print $2}'| cut -d\":\" -f2) ";
+            String sourceNode = accessPoints.Get(accessPoints.SearchAP(record.getAddress())).WhatEthIP();
+            instruction = LocateIptables(number) + " -t nat -" + type + " POSTROUTING -p udp --dport "
+                    + (TRAFFIC_PORT + number) + " -j SNAT --to-source "
+                    + "$(/sbin/ifconfig $(/sbin/ifconfig | grep eth | awk '{print $1}') | grep inet: | awk '{print $2}'| cut -d\":\" -f2) ";
         }
 
         return instruction;
@@ -1592,11 +1590,11 @@ public class CastadivaModel {
 
     private String GenerateRedirectInstruction(TrafficRecord record, int number, String type) {
         String instruction = "";
-        if(record.getRedirect()) {
-            Integer destNode =  accessPoints.SearchAP(record.getAddress());
-            String sourceNode =  accessPoints.Get(accessPoints.SearchAP(record.getSource())).WhatEthIP();
-            instruction = LocateIptables(destNode) + " -t nat -"+ type + " PREROUTING -p udp --dport " +
-                    (TRAFFIC_PORT + number) + " -j DNAT --to-destination " + sourceNode;
+        if (record.getRedirect()) {
+            Integer destNode = accessPoints.SearchAP(record.getAddress());
+            String sourceNode = accessPoints.Get(accessPoints.SearchAP(record.getSource())).WhatEthIP();
+            instruction = LocateIptables(destNode) + " -t nat -" + type + " PREROUTING -p udp --dport "
+                    + (TRAFFIC_PORT + number) + " -j DNAT --to-destination " + sourceNode;
         }
 
         return instruction;
@@ -1608,7 +1606,7 @@ public class CastadivaModel {
         Vector<Boolean> redirect = new Vector<Boolean>();
 
         redirectInstructions = new ArrayList<List<String>>();
-        
+
         for (int i = 0; i < accessPoints.Size(); i++) {
             redirect.add(false);
             AddInstructionToNode(redirectInstructions, "#Redirect File", i);
@@ -1617,7 +1615,7 @@ public class CastadivaModel {
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             record = (TrafficRecord) accessPoints.GetTraffic().get(i);
 
-            if(record.getRedirect() && record.getTCPUDP().equals("UDP")) {
+            if (record.getRedirect() && record.getTCPUDP().equals("UDP")) {
                 Integer destNode = accessPoints.SearchAP(record.getAddress());
                 redirect.set(destNode, true);
                 redirectInstruction = GenerateRedirectInstruction(record, i, "A");
@@ -1627,27 +1625,27 @@ public class CastadivaModel {
             }
         }
 
-     /*TODO Delete this code
-      for (int i = 0; i < accessPoints.Size(); i++) {
-            if(redirect.elementAt(i)) {
-                redirectInstruction =  LocateIptables(i) + " -t nat -A POSTROUTING -p udp -j SNAT --to-source " +
-                        accessPoints.Get(i).WhatEthIP();
-                AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
-            }
+        /*TODO Delete this code
+        for (int i = 0; i < accessPoints.Size(); i++) {
+        if(redirect.elementAt(i)) {
+        redirectInstruction =  LocateIptables(i) + " -t nat -A POSTROUTING -p udp -j SNAT --to-source " +
+        accessPoints.Get(i).WhatEthIP();
+        AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
+        }
         }*/
 
         for (int i = 0; i < accessPoints.Size(); i++) {
             redirect.set(i, false);
             redirectInstruction = "echo \"1\" > /proc/sys/net/ipv4/ip_forward";
             AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
-            redirectInstruction =  "sleep " + GetSimulationTime();
+            redirectInstruction = "sleep " + GetSimulationTime();
             AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
         }
 
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             record = (TrafficRecord) accessPoints.GetTraffic().get(i);
 
-            if(record.getRedirect() && record.getTCPUDP().equals("UDP")) {
+            if (record.getRedirect() && record.getTCPUDP().equals("UDP")) {
                 Integer destNode = accessPoints.SearchAP(record.getAddress());
                 redirect.set(destNode, true);
                 redirectInstruction = GenerateRedirectInstruction(record, i, "D");
@@ -1659,15 +1657,16 @@ public class CastadivaModel {
 
         /*TODO Delete this code
         for (int i = 0; i < accessPoints.Size(); i++) {
-            if(redirect.elementAt(i)) {
-                redirectInstruction =  LocateIptables(i) + " -t nat -D POSTROUTING -p udp -j SNAT --to-source " +
-                        accessPoints.Get(i).WhatEthIP();
-                AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
-            }
+        if(redirect.elementAt(i)) {
+        redirectInstruction =  LocateIptables(i) + " -t nat -D POSTROUTING -p udp -j SNAT --to-source " +
+        accessPoints.Get(i).WhatEthIP();
+        AddInstructionToNodeRedirect(redirectInstructions, redirectInstruction, i);
         }
-*/
+        }
+         */
 
     }
+
     /**
      * Preparte the TTCP tool to behaviour like a client sending packets.
      * The traffic UDP is generated with the ttcp tool. This tool need one server
@@ -1745,17 +1744,17 @@ public class CastadivaModel {
     private String GenerateServerTrafficUDPInstruction(AP router, int number, int seconds) {
         String addressInstruction;
         int times = WRITE_TIME_IN_FILE;
-        if(router.WhatProcessor().equals("MIPS")) {
+        if (router.WhatProcessor().equals("MIPS")) {
             times = 0;
         }
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
-        addressInstruction = router.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator +
-                "UdpFlowServer" + router.WhatProcessor() + " " +
-                (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " +
-                (seconds) + " " + times + " > " +
-                router.WhatWorkingDirectory() + File.separator +
-                STATISTICS_UDP_DESTINATION_FILE + (number + 1);
+        addressInstruction = router.WhatWorkingDirectory() + File.separator
+                + "bin" + File.separator
+                + "UdpFlowServer" + router.WhatProcessor() + " "
+                + (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " "
+                + (seconds) + " " + times + " > "
+                + router.WhatWorkingDirectory() + File.separator
+                + STATISTICS_UDP_DESTINATION_FILE + (number + 1);
         return addressInstruction;
     }
 
@@ -1768,11 +1767,11 @@ public class CastadivaModel {
     private String GeneranteServerTrafficTCPInstruction(AP router, int number) {
         String addressInstruction;
         int segundosEsperaServidor = GetRealSimulationTime() + TRAFFIC_SERVER_TIME_WAIT;
-        addressInstruction = router.WhatWorkingDirectory() + File.separator +
-                "bin" + File.separator +
-                "TcpFlowServer" + router.WhatProcessor() + " " +
-                (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " + WRITE_TIME_IN_FILE + " > " + router.WhatWorkingDirectory() +
-                File.separator + STATISTICS_TCP_DESTINATION_FILE + (number + 1);
+        addressInstruction = router.WhatWorkingDirectory() + File.separator
+                + "bin" + File.separator
+                + "TcpFlowServer" + router.WhatProcessor() + " "
+                + (TRAFFIC_PORT + number) + " " + segundosEsperaServidor + " " + WRITE_TIME_IN_FILE + " > " + router.WhatWorkingDirectory()
+                + File.separator + STATISTICS_TCP_DESTINATION_FILE + (number + 1);
         return addressInstruction;
     }
 
@@ -1782,11 +1781,11 @@ public class CastadivaModel {
      */
     private String GenerateInstructionForReplay(Integer node) {
         String instructionReplay;
-        instructionReplay = "NET_DEVICE=`NET=\\`ifconfig | grep " + accessPoints.Get(node).WhatWifiIP() +
-                " -n | cut -d\":\" -f1 | head  -1\\` && " + "let NET=$NET-1 && ifconfig |  " +
-                "head -$NET | tail -1 | cut -d\" \" -f1`" + " && /usr/sbin/tcpdump -w " +
-                accessPoints.Get(node).WhatWorkingDirectory() + "tcpdump" + node +
-                ".dump -i $NET_DEVICE & ";
+        instructionReplay = "NET_DEVICE=`NET=\\`ifconfig | grep " + accessPoints.Get(node).WhatWifiIP()
+                + " -n | cut -d\":\" -f1 | head  -1\\` && " + "let NET=$NET-1 && ifconfig |  "
+                + "head -$NET | tail -1 | cut -d\" \" -f1`" + " && /usr/sbin/tcpdump -w "
+                + accessPoints.Get(node).WhatWorkingDirectory() + "tcpdump" + node
+                + ".dump -i $NET_DEVICE & ";
         return instructionReplay;
     }
 
@@ -1823,12 +1822,12 @@ public class CastadivaModel {
 
             //Dependind if the traffic is TCP or UDP
             if (record.getTCPUDP().equals("UDP")) {
-                if(record.getRedirect()) {
+                if (record.getRedirect()) {
                     nodo = accessPoints.SearchAP(record.getSource());
                     router = accessPoints.Get(nodo);
                 }
                 addressInstruction = addressInstruction + GenerateServerTrafficUDPInstruction(router, i,
-                            record.getStop() - record.getStart());
+                        record.getStop() - record.getStart());
             } else {
                 // Is defined the traffic like TCP.
                 addressInstruction = addressInstruction + GeneranteServerTrafficTCPInstruction(router, i);
@@ -1914,8 +1913,7 @@ public class CastadivaModel {
                     recordAux.getMaxPackets(), recordAux.getLastSpeed(),
                     recordAux.getPacketsReceived(), recordAux.getAccessCategory(),
                     recordAux.getDacme(), recordAux.getDelay(),
-                    recordAux.getRedirect(), recordAux.getMeanDelay()
-                    ));
+                    recordAux.getRedirect(), recordAux.getMeanDelay()));
         }
     }
 
@@ -1923,14 +1921,14 @@ public class CastadivaModel {
      * Cancel all traffic sended to the APs.
      */
     private String StopTraffic() {
-        String instruction = "/usr/bin/killall TcpFlowServerMIPS 1>&2; " +
-                "/usr/bin/killall UdpFlowServerMIPS 1>&2; " +
-                "/usr/bin/killall UdpFlowClientMIPS 1>&2; " +
-                "/usr/bin/killall TcpFlowClientMIPS 1>&2; " +
-                "/usr/bin/killall TcpFlowServerX86 1>&2; " +
-                "/usr/bin/killall UdpFlowServerX86 1>&2; " +
-                "/usr/bin/killall UdpFlowClientX86 1>&2; " +
-                "/usr/bin/killall TcpFlowClientX86 1>&2; ";
+        String instruction = "/usr/bin/killall TcpFlowServerMIPS 1>&2; "
+                + "/usr/bin/killall UdpFlowServerMIPS 1>&2; "
+                + "/usr/bin/killall UdpFlowClientMIPS 1>&2; "
+                + "/usr/bin/killall TcpFlowClientMIPS 1>&2; "
+                + "/usr/bin/killall TcpFlowServerX86 1>&2; "
+                + "/usr/bin/killall UdpFlowServerX86 1>&2; "
+                + "/usr/bin/killall UdpFlowClientX86 1>&2; "
+                + "/usr/bin/killall TcpFlowClientX86 1>&2; ";
         return instruction;
     }
 
@@ -1985,28 +1983,28 @@ public class CastadivaModel {
         String line = null;
         List<String> trafficPlainText = new ArrayList<String>();
 
-        trafficPlainText.add("Line\tStrt\tStop\tSrce\tAddr\tTraff\t" +
-                "Transf.\tSize\tPkt/sec\tPackt\t" +
-                "Thrghpt\tReceived\tMean Delay\tAC\tDACME\tDelay\tRedirect");
-        trafficPlainText.add("----------------------------------------" +
-                "-----------------------------------------------------" +
-                "-----------------------------------------------------");
+        trafficPlainText.add("Line\tStrt\tStop\tSrce\tAddr\tTraff\t"
+                + "Transf.\tSize\tPkt/sec\tPackt\t"
+                + "Thrghpt\tReceived\tMean Delay\tAC\tDACME\tDelay\tRedirect");
+        trafficPlainText.add("----------------------------------------"
+                + "-----------------------------------------------------"
+                + "-----------------------------------------------------");
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             line = "";
             if (record.getTCPUDP().equals("UDP")) {
-                trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop() +
-                        "\t" + record.getSource() + "\t" + record.getAddress() + "\t" +
-                        record.getTCPUDP() + "\t \t" + record.getSize() + "\t" + record.getPacketsSeconds() + "\t" + record.getMaxPackets() + "\t" +
-                        +record.getLastSpeed() + "\t" + record.getPacketsPerCentReceived()
+                trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop()
+                        + "\t" + record.getSource() + "\t" + record.getAddress() + "\t"
+                        + record.getTCPUDP() + "\t \t" + record.getSize() + "\t" + record.getPacketsSeconds() + "\t" + record.getMaxPackets() + "\t"
+                        + +record.getLastSpeed() + "\t" + record.getPacketsPerCentReceived()
                         + "\t" + record.getMeanDelay()
                         + "\t" + record.getAccessCategory() + "\t" + record.getDacme()
-                        + "\t" + record.getDelay() + "\t" +record.getRedirect());
+                        + "\t" + record.getDelay() + "\t" + record.getRedirect());
             } else {
-                trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop() +
-                        "\t" + record.getSource() + "\t" + record.getAddress() +
-                        "\t" + record.getTCPUDP() + "\t" + record.getTransferSize() + "\t \t \t" +
-                        "\t" + record.getLastSpeed());
+                trafficPlainText.add((i + 1) + "\t" + record.getStart() + "\t" + record.getStop()
+                        + "\t" + record.getSource() + "\t" + record.getAddress()
+                        + "\t" + record.getTCPUDP() + "\t" + record.getTransferSize() + "\t \t \t"
+                        + "\t" + record.getLastSpeed());
             }
         }
         trafficPlainText.add("\n\nTotal UDP packets received: " + udpAverage);
@@ -2017,27 +2015,24 @@ public class CastadivaModel {
     /**
      * The following can be used to generate gnuplot freindly text files.
      */
-    private List customTraficToTextExport()
-    {
+    private List customTraficToTextExport() {
         TrafficRecord record = null;
         String line = null;
         List<String> trafficPlainText = new ArrayList<String>();
         if (record.getTCPUDP().equals("UDP")) {
-             trafficPlainText.add("# packets/sec throughput %received");
-        }
-        else
-        {
-             trafficPlainText.add("# transfer_size throughput");
+            trafficPlainText.add("# packets/sec throughput %received");
+        } else {
+            trafficPlainText.add("# transfer_size throughput");
         }
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             record = (TrafficRecord) accessPoints.GetTraffic().get(i);
             line = "";
             if (record.getTCPUDP().equals("UDP")) {
                 // We are going to display UDP packets/sec, throughput and received packets
-                trafficPlainText.add(record.getPacketsSeconds()+" "+record.getLastSpeed()+" "+record.getPacketsPerCentReceived());
+                trafficPlainText.add(record.getPacketsSeconds() + " " + record.getLastSpeed() + " " + record.getPacketsPerCentReceived());
             } else {
                 // We are going to display TCP transfer size and throughput
-                trafficPlainText.add(record.getTransferSize()+" "+record.getLastSpeed());
+                trafficPlainText.add(record.getTransferSize() + " " + record.getLastSpeed());
             }
         }
         return trafficPlainText;
@@ -2119,7 +2114,6 @@ public class CastadivaModel {
         return "";
     }
 
-    
     /****************************************************************************
      *
      *                              EXTERNAL TRAFFIC
@@ -2182,40 +2176,40 @@ public class CastadivaModel {
 
             /* Laptop 192.168.1.32 (in AP1) to laptop 192.168.1.30 (in AP5) */
             if (node == externalTraffic.fromAp) {
-                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.1.32 
+                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.1.32
                 --dport 5000:5099 -j DNAT --to-destination 192.168.2.5 & */
-                String instruction1 = LocateIptables(externalTraffic.fromAp) +
-                        " -t nat -A PREROUTING -p " + externalTraffic.protocol +
-                        " -s " + externalTraffic.fromIp + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j DNAT --to-destination " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " && ";
+                String instruction1 = LocateIptables(externalTraffic.fromAp)
+                        + " -t nat -A PREROUTING -p " + externalTraffic.protocol
+                        + " -s " + externalTraffic.fromIp + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j DNAT --to-destination " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction1);
 
-                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.1.32 
+                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.1.32
                 --dport 5000:5099 -j SNAT --to 192.168.2.1 */
-                String instruction2 = LocateIptables(externalTraffic.fromAp) +
-                        " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                        " -s " + externalTraffic.fromIp + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j SNAT --to " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " && ";
+                String instruction2 = LocateIptables(externalTraffic.fromAp)
+                        + " -t nat -A POSTROUTING -p " + externalTraffic.protocol
+                        + " -s " + externalTraffic.fromIp + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j SNAT --to " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction2);
 
-                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.2.5 
+                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.2.5
                 --dport 5000:5099 -j DNAT --to-destination 192.168.1.32 && */
-                String instruction3 = LocateIptables(externalTraffic.fromAp) +
-                        " -t nat -A PREROUTING -p " + externalTraffic.protocol +
-                        " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j DNAT --to-destination " + externalTraffic.fromIp + " && ";
+                String instruction3 = LocateIptables(externalTraffic.fromAp)
+                        + " -t nat -A PREROUTING -p " + externalTraffic.protocol
+                        + " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j DNAT --to-destination " + externalTraffic.fromIp + " && ";
                 externalTrafficInstructionsForNode.add(instruction3);
 
-                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.2.5 
+                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.2.5
                 --dport 5000:5099 -j SNAT --to 192.168.1.30 */
-                String instruction4 = LocateIptables(externalTraffic.fromAp) +
-                        " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                        " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j SNAT --to " + externalTraffic.toIp + " && ";
+                String instruction4 = LocateIptables(externalTraffic.fromAp)
+                        + " -t nat -A POSTROUTING -p " + externalTraffic.protocol
+                        + " -s " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j SNAT --to " + externalTraffic.toIp + " && ";
                 externalTrafficInstructionsForNode.add(instruction4);
 
                 if (debug) {
@@ -2224,40 +2218,40 @@ public class CastadivaModel {
             }
 
             if (node == externalTraffic.toAp) {
-                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.1.30 
+                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.1.30
                 --dport 5000:5099 -j DNAT --to-destination 192.168.2.1 & */
-                String instruction1 = LocateIptables(externalTraffic.toAp) +
-                        " -t nat -A PREROUTING -p " + externalTraffic.protocol +
-                        " -s " + externalTraffic.toIp + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j DNAT --to-destination " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " && ";
+                String instruction1 = LocateIptables(externalTraffic.toAp)
+                        + " -t nat -A PREROUTING -p " + externalTraffic.protocol
+                        + " -s " + externalTraffic.toIp + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j DNAT --to-destination " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction1);
 
-                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.1.30 
+                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.1.30
                 --dport 5000:5099 -j SNAT --to 192.168.2.5 & */
-                String instruction2 = LocateIptables(externalTraffic.toAp) +
-                        " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                        " -s " + externalTraffic.toIp + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j SNAT --to " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " && ";
+                String instruction2 = LocateIptables(externalTraffic.toAp)
+                        + " -t nat -A POSTROUTING -p " + externalTraffic.protocol
+                        + " -s " + externalTraffic.toIp + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j SNAT --to " + accessPoints.Get(externalTraffic.toAp).WhatWifiIP() + " && ";
                 externalTrafficInstructionsForNode.add(instruction2);
 
-                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.2.1 
+                /* /usr/sbin/iptables -t nat -A PREROUTING -p udp -s 192.168.2.1
                 --dport 5000:5099 -j DNAT --to-destination 192.168.1.30 & && */
-                String instruction3 = LocateIptables(externalTraffic.toAp) +
-                        " -t nat -A PREROUTING -p " + externalTraffic.protocol +
-                        " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j DNAT --to-destination " + externalTraffic.toIp + " && ";
+                String instruction3 = LocateIptables(externalTraffic.toAp)
+                        + " -t nat -A PREROUTING -p " + externalTraffic.protocol
+                        + " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j DNAT --to-destination " + externalTraffic.toIp + " && ";
                 externalTrafficInstructionsForNode.add(instruction3);
 
-                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.2.1 
+                /* /usr/sbin/iptables -t nat -A POSTROUTING -p udp -s 192.168.2.1
                 --dport 5000:5099 -j SNAT --to 192.168.1.32 */
-                String instruction4 = LocateIptables(externalTraffic.toAp) +
-                        " -t nat -A POSTROUTING -p " + externalTraffic.protocol +
-                        " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport " +
-                        externalTraffic.startRangePort + ":" + externalTraffic.endRangePort +
-                        " -j SNAT --to " + externalTraffic.fromIp + " && ";
+                String instruction4 = LocateIptables(externalTraffic.toAp)
+                        + " -t nat -A POSTROUTING -p " + externalTraffic.protocol
+                        + " -s " + accessPoints.Get(externalTraffic.fromAp).WhatWifiIP() + " --dport "
+                        + externalTraffic.startRangePort + ":" + externalTraffic.endRangePort
+                        + " -j SNAT --to " + externalTraffic.fromIp + " && ";
                 externalTrafficInstructionsForNode.add(instruction4);
 
                 if (debug) {
@@ -2285,9 +2279,9 @@ public class CastadivaModel {
                 String deleteoneNodeInstruction = oneNodeInstruction.replace("-A", "-D");
                 deleteoneNodeInstructionsList.add(deleteoneNodeInstruction);
             }
-            //Waiting the time of the simulation.             
-            oneNodeInstructionsList.add("\nsleep " + GetRealSimulationTime() +
-                    "\n");
+            //Waiting the time of the simulation.
+            oneNodeInstructionsList.add("\nsleep " + GetRealSimulationTime()
+                    + "\n");
             oneNodeInstructionsList.addAll(deleteoneNodeInstructionsList);
             totalAllNodeInstructionsList.add(oneNodeInstructionsList);
         }
@@ -2337,23 +2331,23 @@ public class CastadivaModel {
      */
     private String CleanRoutingRules(AP node) {
         String script =
-                "#Clean all Castadiva route entries.\n" +
-                "i=$((`route -n| wc -l`+1));\n" +
-                "while [ \"$i\" -gt \"3\" ] \n" +
-                "do \n" +
-                "i=$(($i-1));\n" +
-                "net=`route -n | head -$i | tail -n 1 | awk '{print $1}'`\n" +
-                "gw=`route -n | head -$i | tail -n 1 | awk '{print $2}'`\n" +
-                "mask=`route -n | head -$i | tail -n 1 | awk '{print $3}'`\n" +
-                "device=`route -n | head -$i | tail -n 1 | awk '{print $8}'`\n" +
-                "if [ \"$device\" = \"" + node.WhatWifiDevice() + "\" ];then\n" +
-                "route del -net $net netmask $mask\n" +
-                "fi\n" +
-                "done\n\n" +
-                "#Add default entries.\n" +
-                "route add -net " + ObtainNetTypeC(accessPoints.Get(1).WhatWifiIP()) +
-                " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + ";\n" +
-                " route add default gw " + node.WhatGW() + ";\n";
+                "#Clean all Castadiva route entries.\n"
+                + "i=$((`route -n| wc -l`+1));\n"
+                + "while [ \"$i\" -gt \"3\" ] \n"
+                + "do \n"
+                + "i=$(($i-1));\n"
+                + "net=`route -n | head -$i | tail -n 1 | awk '{print $1}'`\n"
+                + "gw=`route -n | head -$i | tail -n 1 | awk '{print $2}'`\n"
+                + "mask=`route -n | head -$i | tail -n 1 | awk '{print $3}'`\n"
+                + "device=`route -n | head -$i | tail -n 1 | awk '{print $8}'`\n"
+                + "if [ \"$device\" = \"" + node.WhatWifiDevice() + "\" ];then\n"
+                + "route del -net $net netmask $mask\n"
+                + "fi\n"
+                + "done\n\n"
+                + "#Add default entries.\n"
+                + "route add -net " + ObtainNetTypeC(accessPoints.Get(1).WhatWifiIP())
+                + " netmask 255.255.255.0 dev " + node.WhatWifiDevice() + ";\n"
+                + " route add default gw " + node.WhatGW() + ";\n";
         return script;
     }
 
@@ -2427,56 +2421,55 @@ public class CastadivaModel {
                     // local nfs folder with the correct filename
                     try {
                         // Locate and open the jar file
-                        JarFile jar = new JarFile(CastadivaModel.PLUGIN_JAR_FOLDER+"/"+a.getClass().getSimpleName()+".jar");
+                        JarFile jar = new JarFile(CastadivaModel.PLUGIN_JAR_FOLDER + "/" + a.getClass().getSimpleName() + ".jar");
                         ZipEntry entry = jar.getEntry(a.getConf());
 
                         // Get the configuration file's BufferedReader
                         BufferedReader confFileReader = new BufferedReader(new InputStreamReader(jar.getInputStream(entry)));
                         // Get the destination file's buffered writer
-                        BufferedWriter confFileWriter = new BufferedWriter(new FileWriter(computer.WhatWorkingDirectory()+"/"+a.getConf()));
+                        BufferedWriter confFileWriter = new BufferedWriter(new FileWriter(computer.WhatWorkingDirectory() + "/" + a.getConf()));
 
                         // Transfer the content of the first one into the second one
                         String confFileLine;
-                        while((confFileLine = confFileReader.readLine()) != null){
-                              confFileWriter.write(confFileLine+"\n");
+                        while ((confFileLine = confFileReader.readLine()) != null) {
+                            confFileWriter.write(confFileLine + "\n");
                         }
                         // Close the two files
                         confFileWriter.close();
                         confFileReader.close();
                     } catch (Exception e) {
-                        System.out.println("Unable to copy the configuration file from "+CastadivaModel.PLUGIN_JAR_FOLDER + a.getClass().getSimpleName() + ".conf to " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf  : "+e);
+                        System.out.println("Unable to copy the configuration file from " + CastadivaModel.PLUGIN_JAR_FOLDER + a.getClass().getSimpleName() + ".conf to " + computer.WhatWorkingDirectory() + "/" + a.getClass().getSimpleName() + ".conf  : " + e);
                     }
 
                     // On every router, the previously copied configuration file
                     // is now copied from the nfs folder to its final location
                     for (int i = 0; i < accessPoints.Size(); i++) {
-                        
+
                         protocolInstructions = "";
                         // The configuration path is copied through NFS to the remote location
-                        protocolInstructions ="cp "+accessPoints.Get(i).WhatWorkingDirectory()+"/"+a.getConf()+" "+a.getPathConf()+"\n";
-                        
+                        protocolInstructions = "cp " + accessPoints.Get(i).WhatWorkingDirectory() + "/" + a.getConf() + " " + a.getPathConf() + "\n";
+
                         // The routing instructions can now be set.
                         // After a sleep time, the script automatically reverses
                         // its changes.
-                        protocolInstructions+=
-                                "#Start routing protocol.\n" +
-                                a.getBin() +" "+a.getFlags()+"\n\n"+
-                                "#Wait for the end of simulation.\n" +
-                                "sleep " + GetRealSimulationTime() + "\n\n" +
-                                "#Kill the protocol\n" +
-                                a.getKillInstruction()+ "\n\n" +
-                                "#Clean protocol configuration file\n"+
-                                "rm "+a.getPathConf()+"\n";
+                        protocolInstructions +=
+                                "#Start routing protocol.\n"
+                                + a.getBin() + " " + a.getFlags() + "\n\n"
+                                + "#Wait for the end of simulation.\n"
+                                + "sleep " + GetRealSimulationTime() + "\n\n"
+                                + "#Kill the protocol\n"
+                                + a.getKillInstruction() + "\n\n"
+                                + "#Clean protocol configuration file\n"
+                                + "rm " + a.getPathConf() + "\n";
 
                         SetInstructionToNode(routingInstruction, protocolInstructions, i);
-                     }
+                    }
                 }
             }
         } else {
             System.out.println("No plugin found");
         }
     }
-    
 
     /**
      * Generate all specific instructions for activating the AODV protocol.
@@ -2486,8 +2479,8 @@ public class CastadivaModel {
         String protocolInstruction = "";
 
         for (int i = 0; i < accessPoints.Size(); i++) {
-            protocolInstruction = accessPoints.Get(i).WhatWorkingDirectory() +
-                    File.separator + "aodvd.sh " + accessPoints.Get(i).WhatProcessor() + " " + accessPoints.Get(i).WhatWorkingDirectory() + " \n";
+            protocolInstruction = accessPoints.Get(i).WhatWorkingDirectory()
+                    + File.separator + "aodvd.sh " + accessPoints.Get(i).WhatProcessor() + " " + accessPoints.Get(i).WhatWorkingDirectory() + " \n";
             protocolInstruction = protocolInstruction + "; sleep " + GetRealSimulationTime() + ";\n" + "/sur/bin/kill -9 `pidof aodv` 2>/dev/null";
             SetInstructionToNode(routingInstruction, protocolInstruction, i);
         }
@@ -2506,13 +2499,13 @@ public class CastadivaModel {
             delList = new ArrayList<String>();
             for (int j = 0; j < accessPoints.Size(); j++) {
                 //I.E. route add -host 192.168.1.2 gw 192.168.1.1 eth1
-                if(i!=j && gatewayMatrix[i][j] != -1) {
-                protocolInstruction = "route add -host " +
-                        accessPoints.Get(j).WhatWifiIP() + " gw " +
-                        accessPoints.Get(gatewayMatrix[i][j]).WhatWifiIP() + " " +
-                        accessPoints.Get(i).WhatWifiDevice();
-                SetInstructionToNode(routingInstruction, protocolInstruction, i);
-                delList.add(protocolInstruction);
+                if (i != j && gatewayMatrix[i][j] != -1) {
+                    protocolInstruction = "route add -host "
+                            + accessPoints.Get(j).WhatWifiIP() + " gw "
+                            + accessPoints.Get(gatewayMatrix[i][j]).WhatWifiIP() + " "
+                            + accessPoints.Get(i).WhatWifiDevice();
+                    SetInstructionToNode(routingInstruction, protocolInstruction, i);
+                    delList.add(protocolInstruction);
                 }
             }
             SetInstructionToNode(routingInstruction, "sleep " + GetSimulationTime(), i);
@@ -2552,23 +2545,23 @@ public class CastadivaModel {
                         deleteInstruction = "";
                         //If there is a new gateway.
                         if (gatewayMatrix[i][j] != 0) {
-                            protocolInstruction = "route add -host " +
-                                    accessPoints.Get(j).WhatWifiIP() + " gw " +
-                                    accessPoints.Get(gatewayMatrix[i][j]).WhatWifiIP() + " " +
-                                    accessPoints.Get(i).WhatWifiDevice() + "\n";
+                            protocolInstruction = "route add -host "
+                                    + accessPoints.Get(j).WhatWifiIP() + " gw "
+                                    + accessPoints.Get(gatewayMatrix[i][j]).WhatWifiIP() + " "
+                                    + accessPoints.Get(i).WhatWifiDevice() + "\n";
                         }
                         //If is necessary, delete the old one.
                         if (oldGatewayMatrix[i][j] != 0) {
-                            deleteInstruction = "route del -host " +
-                                    accessPoints.Get(j).WhatWifiIP() + " gw " +
-                                    accessPoints.Get(oldGatewayMatrix[i][j]).WhatWifiIP() + " " +
-                                    accessPoints.Get(i).WhatWifiDevice() + "\n";
+                            deleteInstruction = "route del -host "
+                                    + accessPoints.Get(j).WhatWifiIP() + " gw "
+                                    + accessPoints.Get(oldGatewayMatrix[i][j]).WhatWifiIP() + " "
+                                    + accessPoints.Get(i).WhatWifiDevice() + "\n";
                         }
                         if (sleepTime[i] != 0) {
                             totalInstruction = "sleep " + sleepTime[i] + "\n";
                         }
-                        totalInstruction = totalInstruction + deleteInstruction +
-                                protocolInstruction;
+                        totalInstruction = totalInstruction + deleteInstruction
+                                + protocolInstruction;
                         //If an instruction is added, reset the waiting time.
                         if (oldGatewayMatrix[i][j] != 0 || gatewayMatrix[i][j] != 0) {
                             elapsedTime[i] += sleepTime[i];
@@ -2669,7 +2662,7 @@ public class CastadivaModel {
         Integer prevNode;
         Integer nextNode;
 
-        if(debug) {
+        if (debug) {
             System.out.println("\nGateway for Node " + accessPoints.Get(node).WhatAP() + "\n");
         }
         for (int i = 0; i < accessPoints.Size(); i++) {
@@ -2677,49 +2670,49 @@ public class CastadivaModel {
             nextNode = tree[i];
 
             /* OLD_CODE Think does not work properly
-             if (tree[i] == node) {
-                gateways[i] = i;
+            if (tree[i] == node) {
+            gateways[i] = i;
             } else {
-                //Searching the next hop in the routing.
-                while (nextNode != node) {
-                    if (tree[prevNode] == 0) {
-                        break;
-                    }
-                    prevNode = tree[prevNode];
-                    nextNode = tree[prevNode];
-                }
-                gateways[i] = prevNode;
+            //Searching the next hop in the routing.
+            while (nextNode != node) {
+            if (tree[prevNode] == 0) {
+            break;
+            }
+            prevNode = tree[prevNode];
+            nextNode = tree[prevNode];
+            }
+            gateways[i] = prevNode;
             }*/
 
             //BEGIN NEW CODE
-            while(nextNode != node) {
-                if(tree[prevNode] == -1) {
+            while (nextNode != node) {
+                if (tree[prevNode] == -1) {
                     break;
                 }
                 prevNode = nextNode;
                 nextNode = tree[prevNode];
             }
-            if(debug) {
-                System.out.println("Through " + accessPoints.Get(prevNode).WhatAP()  + " Views " + accessPoints.Get(i).WhatAP());
+            if (debug) {
+                System.out.println("Through " + accessPoints.Get(prevNode).WhatAP() + " Views " + accessPoints.Get(i).WhatAP());
             }
             gateways[i] = prevNode;
             //END NEW CODE
-            
+
         }
-        if(debug) {
-        System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
-        printIntegerVector(gateways);
+        if (debug) {
+            System.out.println("Gateways " + accessPoints.Get(node).WhatAP());
+            printIntegerVector(gateways);
         }
         return gateways;
     }
 
-
     public void printIntegerVector(Object v[]) {
-        for(int i = 0; i < v.length; i++) {
+        for (int i = 0; i < v.length; i++) {
             System.out.print(v[i].toString() + " ");
         }
         System.out.println();
     }
+
     /**
      * Create a tree of a graph with a determinated root.
      */
@@ -2735,7 +2728,7 @@ public class CastadivaModel {
             visited[i] = 0;
         }
 
-        if(debug) {
+        if (debug) {
             System.out.println("Tree for Node " + accessPoints.Get(node).WhatAP() + "\n");
         }
         visited[node] = 1;
@@ -2750,25 +2743,25 @@ public class CastadivaModel {
                 //This node reach other node.
                 if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
                 {
-                    if(debug) {
-                        System.out.println("Through " + accessPoints.Get(nodeUsed).WhatAP()  + " Views " + accessPoints.Get(i).WhatAP());
+                    if (debug) {
+                        System.out.println("Through " + accessPoints.Get(nodeUsed).WhatAP() + " Views " + accessPoints.Get(i).WhatAP());
                     }
-                        //Add to the list.
-                        next.add(i);
-                        visited[i] = 1;
-                        tree[i] = nodeUsed;
+                    //Add to the list.
+                    next.add(i);
+                    visited[i] = 1;
+                    tree[i] = nodeUsed;
                 }
             }
         }
-        if(debug) {
+        if (debug) {
             printIntegerVector(tree);
         }
         /*System.out.println("Visibility Matrix");
         for(int i = 0; i < visibilityMatrix.length; i++){
-            for(int j = 0; j < visibilityMatrix[i].length; j++){
-                System.out.print(visibilityMatrix[i][j] + " ");
-            }
-            System.out.println();
+        for(int j = 0; j < visibilityMatrix[i].length; j++){
+        System.out.print(visibilityMatrix[i][j] + " ");
+        }
+        System.out.println();
         }*/
         return tree;
     }
@@ -2799,10 +2792,10 @@ public class CastadivaModel {
                 //This node reach other node.
                 if (visited[i] == 0 && visibilityMatrix[nodeUsed][i] > 0) //It is not reached yet
                 {
-                        //Add to the list.
-                        next.add(i);
-                        visited[i] = 1;
-                        tree[i] = nodeUsed;
+                    //Add to the list.
+                    next.add(i);
+                    visited[i] = 1;
+                    tree[i] = nodeUsed;
                 }
             }
         }
@@ -2820,9 +2813,9 @@ public class CastadivaModel {
      * @param node2 The second node.
      */
     private float CalculateCheckPointDistance(NodeCheckPoint node1, NodeCheckPoint node2) {
-        return (float) Math.sqrt(Math.pow((node1.xCoordinate - node2.xCoordinate), 2) +
-                Math.pow((node1.yCoordinate - node2.yCoordinate), 2) +
-                Math.pow((node1.zCoordinate - node2.zCoordinate), 2));
+        return (float) Math.sqrt(Math.pow((node1.xCoordinate - node2.xCoordinate), 2)
+                + Math.pow((node1.yCoordinate - node2.yCoordinate), 2)
+                + Math.pow((node1.zCoordinate - node2.zCoordinate), 2));
     }
 
     /**
@@ -2890,24 +2883,24 @@ public class CastadivaModel {
                     if (!((oldVisibilityMatrix[i][j] >= 0 && visibilityMatrix[i][j] >= 0) || (oldVisibilityMatrix[i][j] < 0 && visibilityMatrix[i][j] < 0))) {
                         //If one node gets out of range.
                         if (visibilityMatrix[i][j] < 0) {
-                            nodeInstructions = nodeInstructions + "sleep " + sleep[i] +
-                                    "\n" + LocateIptables(i) +
-                                    " -I INPUT -m mac --mac-source " + nodo2.WhatWifiMac() +
-                                    " -j DROP\n" +
-                                    LocateIptables(i) +
-                                    " -I FORWARD -m mac --mac-source " + nodo2.WhatWifiMac() +
-                                    " -j DROP\n";
+                            nodeInstructions = nodeInstructions + "sleep " + sleep[i]
+                                    + "\n" + LocateIptables(i)
+                                    + " -I INPUT -m mac --mac-source " + nodo2.WhatWifiMac()
+                                    + " -j DROP\n"
+                                    + LocateIptables(i)
+                                    + " -I FORWARD -m mac --mac-source " + nodo2.WhatWifiMac()
+                                    + " -j DROP\n";
                             deleteIptable[i][j] = true;
                         }
                         //If one node gets in range.
                         if (visibilityMatrix[i][j] > 0) {
-                            nodeInstructions = nodeInstructions + "sleep " + sleep[i] +
-                                    "\n" + LocateIptables(i) +
-                                    " -D INPUT -m mac --mac-source " + nodo2.WhatWifiMac() +
-                                    " -j DROP\n" +
-                                    LocateIptables(i) +
-                                    " -D FORWARD -m mac --mac-source " + nodo2.WhatWifiMac() +
-                                    " -j DROP\n";
+                            nodeInstructions = nodeInstructions + "sleep " + sleep[i]
+                                    + "\n" + LocateIptables(i)
+                                    + " -D INPUT -m mac --mac-source " + nodo2.WhatWifiMac()
+                                    + " -j DROP\n"
+                                    + LocateIptables(i)
+                                    + " -D FORWARD -m mac --mac-source " + nodo2.WhatWifiMac()
+                                    + " -j DROP\n";
                             deleteIptable[i][j] = false;
                         }
                         if (visibilityMatrix[i][j] != 0) {
@@ -2931,17 +2924,17 @@ public class CastadivaModel {
             for (int l = 0; l < accessPoints.Size(); l++) {
                 if (deleteIptable[z][l]) {
                     AP nodo = accessPoints.Get(l);
-                    delNodeInstructions = delNodeInstructions + LocateIptables(z) +
-                            " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac() +
-                            " -j DROP\n" +
-                            LocateIptables(z) +
-                            " -D FORWARD -m mac --mac-source " + nodo.WhatWifiMac() +
-                            " -j DROP\n";
+                    delNodeInstructions = delNodeInstructions + LocateIptables(z)
+                            + " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac()
+                            + " -j DROP\n"
+                            + LocateIptables(z)
+                            + " -D FORWARD -m mac --mac-source " + nodo.WhatWifiMac()
+                            + " -j DROP\n";
                 }
             }
-            allInstructions = allInstructions + "\n#Delete remaining visibility " +
-                    "instructions at the end of the simulation.\nsleep " +
-                    (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
+            allInstructions = allInstructions + "\n#Delete remaining visibility "
+                    + "instructions at the end of the simulation.\nsleep "
+                    + (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
             String aux = (String) addInstruction.get(z);
             aux = aux + "\n" + allInstructions;
             addInstruction.set(z, aux);
@@ -2992,7 +2985,6 @@ public class CastadivaModel {
         }
     }
 
-      
     /**
      * When mobility is used, the following function is called. First, it will
      * try to find out which mobility model was choses. If it was not RANDOM WAY
@@ -3008,12 +3000,10 @@ public class CastadivaModel {
             nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
             allAddresses = new MobilityVectors(this, accessPoints, minSpeed, maxSpeed, pause);
             allAddresses.ObtainNodePositionsForEntireSimulation(accessPoints);
-        }
-        // Check if CITIMOB was asked
+        } // Check if CITIMOB was asked
         else if (mobilityModel.equals("CITYMOB")) {
             //With citymob, nodePositions is is already set
-        }
-        // If the two previous options failed, it looks for a plugin
+        } // If the two previous options failed, it looks for a plugin
         else {
             // Recuperation of the mobility plugins
             mob_plugins = detector.getMobilityPlugins();
@@ -3023,9 +3013,8 @@ public class CastadivaModel {
                     // Initialization of the nodePositions variable
                     nodePositions = new NodeCheckPoint[accessPoints.Size()][GetSimulationTime() + 1];
                     allAddresses = new MobilityVectors(this, accessPoints, minSpeed, maxSpeed, pause);
-                    if(debug)
-                    {
-                        System.out.println("Mobility plugin "+plugin.getClass().getSimpleName()+" is being used");
+                    if (debug) {
+                        System.out.println("Mobility plugin " + plugin.getClass().getSimpleName() + " is being used");
                     }
                     // The following calls the user specified function
                     plugin.ObtainNodePositionsForEntireSimulation(nodePositions, accessPoints, minSpeed, maxSpeed, pause, totalTime, x, y);
@@ -3035,9 +3024,7 @@ public class CastadivaModel {
         }
     }
 
-    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Extends NodeMovent to use more simulation time.
      */
@@ -3106,14 +3093,14 @@ public class CastadivaModel {
                 node.y = point.yCoordinate;
                 node.z = point.zCoordinate;
             } catch (NullPointerException e) {
-                System.out.println("ERROR : Position is not defined for node "+i+" at simulation time "+second);
+                System.out.println("ERROR : Position is not defined for node " + i + " at simulation time " + second);
             }
-            if(this.debug){
+            if (this.debug) {
                 // In debug mode, position of each node (Or one node) is printed out along with the corresponding simulation time
                 // This was introduced by Wannes in order to check the position processing. It can be removed at any time.
-                if(true)// Put i = x to only display one node
+                if (true)// Put i = x to only display one node
                 {
-                    System.out.format("Mobility : At second %d node %d should be at position : (%.1f, %.1f, %.1f)%n",second,i, node.x, node.y, node.z);
+                    System.out.format("Mobility : At second %d node %d should be at position : (%.1f, %.1f, %.1f)%n", second, i, node.x, node.y, node.z);
                 }
             }
         }
@@ -3141,8 +3128,8 @@ public class CastadivaModel {
 
         for (int i = 0; i < accessPoints.Size(); i++) {
             nodo = accessPoints.Get(i);
-            if (randomSimulating &&
-                    i >= minNodes + iteration * granularity) {
+            if (randomSimulating
+                    && i >= minNodes + iteration * granularity) {
                 //Send far of the network the nodes not used
                 //into the simulation.
                 nodo.x = -1000000;
@@ -3177,17 +3164,17 @@ public class CastadivaModel {
         String directory;
 
         scenary = (minNodes + granularity * iteration) + "nodes_" + loop + "loop" + "-" + routingProtocol;
-        directory = "Nodes:" + minNodes + "-" + maxNodes + "in" +
-                +x + "x" + y;
+        directory = "Nodes:" + minNodes + "-" + maxNodes + "in"
+                + +x + "x" + y;
         File newDirectory = new java.io.File(path + File.separator + directory);
         newDirectory.mkdir();
         if (fileRandomScenaryFormat.equals("NS-2")) {
-            ExportNsScenario(path + File.separator + directory +
-                    File.separator + scenary + ".ns", maxNodes);
-            ExportNsTraffic(path + File.separator + directory +
-                    File.separator + scenary + "_Traffic.ns");
-            PrintTraffic(path + File.separator + directory +
-                    File.separator + scenary + "_Traffic.txt");
+            ExportNsScenario(path + File.separator + directory
+                    + File.separator + scenary + ".ns", maxNodes);
+            ExportNsTraffic(path + File.separator + directory
+                    + File.separator + scenary + "_Traffic.ns");
+            PrintTraffic(path + File.separator + directory
+                    + File.separator + scenary + "_Traffic.txt");
         }
         if (fileRandomScenaryFormat.equals("Castadiva")) {
             SaveCastadivaAps(path + File.separator + directory, scenary + ".dat");
@@ -3259,10 +3246,9 @@ public class CastadivaModel {
                 address, randomRecord.getSize(), randomRecord.getStart(),
                 randomRecord.getStop(), randomRecord.getTransferSize(),
                 randomRecord.getPacketsSeconds(), randomRecord.getMaxPackets(),
-                Float.parseFloat("0"), (Integer) 0, (String)"AC_BE",
+                Float.parseFloat("0"), (Integer) 0, (String) "AC_BE",
                 Boolean.parseBoolean("false"), Integer.parseInt("0"),
-                Boolean.parseBoolean("false"), Float.parseFloat("0.0")
-                );
+                Boolean.parseBoolean("false"), Float.parseFloat("0.0"));
         return record;
     }
 
@@ -3348,7 +3334,7 @@ public class CastadivaModel {
                 address, randomRecord.getSize(), randomRecord.getStart(),
                 randomRecord.getStop(), randomRecord.getTransferSize(),
                 randomRecord.getPacketsSeconds(), randomRecord.getMaxPackets(),
-                Float.parseFloat("0"), (Integer) 0, (String)"AC_BE",
+                Float.parseFloat("0"), (Integer) 0, (String) "AC_BE",
                 Boolean.parseBoolean("false"), Integer.parseInt("0"),
                 Boolean.parseBoolean("false"), Float.parseFloat("0.0"));
         return record;
@@ -3421,7 +3407,6 @@ public class CastadivaModel {
             StartFileSimulation();
         }
     }
-  
 
     /**
      * This function tells if CASTADIVA must to do a next
@@ -3460,7 +3445,7 @@ public class CastadivaModel {
             }
         }
     }
-        
+
     /****************************************************************************
      *
      *                              NODE INSTALATION
@@ -3472,7 +3457,7 @@ public class CastadivaModel {
     private List WhatPackets() {
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_PACKET_LIST);
 
-        if(!file.exists()){
+        if (!file.exists()) {
             System.err.println("Error opening file " + file.getAbsolutePath());
         }
 
@@ -3511,30 +3496,30 @@ public class CastadivaModel {
     private String GenerateNetScriptText(String ethDevice, String wifiDevice, String switchDevice,
             String bridgeDevice, String newEthIp, String newWifiIp, String gateway) {
         String script = null;
-        script = "#!/bin/"+DEFAULT_SHELL_LAUNCHER_MIPS + " \n\n" +
-                "IPT=/usr/sbin/iptables\n" +
-                "SWITCH_IP=\\\"" + newEthIp + "\\\"\n" +
-                "SWITCH_NET=\\\"" + ObtainNetTypeC(newEthIp) + "/24\\\"\n" +
-                "WIFI_IP=\\\"" + newWifiIp + "\\\"\n" +
-                "WIFI_NET=\\\"" + ObtainNetTypeC(newWifiIp) + "/24\\\"\n" +
-                "ETH_DEV=" + ethDevice + "\n" +
-                "SWITCH_DEV=" + switchDevice + "\n" +
-                "WIFI_DEV=" + wifiDevice + "\n" +
-                "BRIDGE=" + bridgeDevice + "\n" +
-                "GW=\\\"" + gateway + "\\\"\n\n" +
-                "insmod /lib/modules/2.4.30/ipt_mac.o\n\n" +
-                "ifconfig \\$BRIDGE down\n" +
-                "brctl delif \\$BRIDGE \\$SWITCH_DEV\n" +
-                "brctl delif \\$BRIDGE \\$WIFI_DEV\n" +
-                "brctl delbr \\$BRIDGE\n\n" +
-                "ifconfig \\$SWITCH_DEV  \\$SWITCH_IP netmask 255.255.255.0\n" +
-                "ifconfig \\$ETH_DEV \\$SWITCH_IP netmask 255.255.255.0\n" +
-                "ifconfig \\$WIFI_DEV  \\$WIFI_IP netmask 255.255.255.0\n" +
-                "\\$IPT -t nat -F\n" +
-                "\\$IPT -P FORWARD ACCEPT\n" +
-                "echo \\\"1\\\" > /proc/sys/net/ipv4/ip_forward\n" +
-                "echo \\\"1\\\" > /proc/sys/net/ipv4/conf/all/rp_filter\n\n" +
-                "route add default gw \\$GW dev \\$SWITCH_DEV\n";
+        script = "#!/bin/" + DEFAULT_SHELL_LAUNCHER_MIPS + " \n\n"
+                + "IPT=/usr/sbin/iptables\n"
+                + "SWITCH_IP=\\\"" + newEthIp + "\\\"\n"
+                + "SWITCH_NET=\\\"" + ObtainNetTypeC(newEthIp) + "/24\\\"\n"
+                + "WIFI_IP=\\\"" + newWifiIp + "\\\"\n"
+                + "WIFI_NET=\\\"" + ObtainNetTypeC(newWifiIp) + "/24\\\"\n"
+                + "ETH_DEV=" + ethDevice + "\n"
+                + "SWITCH_DEV=" + switchDevice + "\n"
+                + "WIFI_DEV=" + wifiDevice + "\n"
+                + "BRIDGE=" + bridgeDevice + "\n"
+                + "GW=\\\"" + gateway + "\\\"\n\n"
+                + "insmod /lib/modules/2.4.30/ipt_mac.o\n\n"
+                + "ifconfig \\$BRIDGE down\n"
+                + "brctl delif \\$BRIDGE \\$SWITCH_DEV\n"
+                + "brctl delif \\$BRIDGE \\$WIFI_DEV\n"
+                + "brctl delbr \\$BRIDGE\n\n"
+                + "ifconfig \\$SWITCH_DEV  \\$SWITCH_IP netmask 255.255.255.0\n"
+                + "ifconfig \\$ETH_DEV \\$SWITCH_IP netmask 255.255.255.0\n"
+                + "ifconfig \\$WIFI_DEV  \\$WIFI_IP netmask 255.255.255.0\n"
+                + "\\$IPT -t nat -F\n"
+                + "\\$IPT -P FORWARD ACCEPT\n"
+                + "echo \\\"1\\\" > /proc/sys/net/ipv4/ip_forward\n"
+                + "echo \\\"1\\\" > /proc/sys/net/ipv4/conf/all/rp_filter\n\n"
+                + "route add default gw \\$GW dev \\$SWITCH_DEV\n";
         return script;
     }
 
@@ -3553,10 +3538,10 @@ public class CastadivaModel {
      * Change the nvram openwrt variables for consistence purpose.
      */
     private String SetNvramVariables(String script, String eth, String vlan) {
-        return "echo \"" +
-                "/usr/sbin/nvram set lan_ifname=" + eth + "\n" +
-                "/usr/sbin/nvram set vlan_iface=" + vlan + "\n" +
-                "\" >> " + script;
+        return "echo \""
+                + "/usr/sbin/nvram set lan_ifname=" + eth + "\n"
+                + "/usr/sbin/nvram set vlan_iface=" + vlan + "\n"
+                + "\" >> " + script;
     }
 
     /**
@@ -3604,8 +3589,8 @@ public class CastadivaModel {
      * @return The instruction.
      */
     String LoadNfsFolder(String script, String nfsComputerFolder, String nfsApFolder) {
-        return "echo \"sleep " + randomGenerator.nextInt(30) + " && mount -t nfs \\$GW:" + nfsComputerFolder + " " + nfsApFolder + " -o nolock,wsize=8192,rsize=8192,timeo=14 \n\" " +
-                " >> " + script;
+        return "echo \"sleep " + randomGenerator.nextInt(30) + " && mount -t nfs \\$GW:" + nfsComputerFolder + " " + nfsApFolder + " -o nolock,wsize=8192,rsize=8192,timeo=14 \n\" "
+                + " >> " + script;
     }
 
     /**
@@ -3623,7 +3608,7 @@ public class CastadivaModel {
         installNode = new SshHost(ip, user, pwd, instructions,
                 false, numInst, "/tmp");
         installNode.start();
-        }
+    }
 
     /**
      * Generate all the instructions to prepare an AP to run with CASTADIVA. The ap
@@ -3668,9 +3653,9 @@ public class CastadivaModel {
         creatingNfsFolder = LoadNfsFolder(scriptsApFolder + File.separator + scriptName,
                 nfsComputerFolder, nfsApFolder);
         autoBoot = GenerateAutoBootInstruction(scriptsApFolder + File.separator + scriptName);
-        chmodScript = "chown nobody " + scriptsApFolder + File.separator + scriptName +
-                " && chmod u+x " + scriptsApFolder + File.separator + scriptName +
-                " && chown nobody " + nfsApFolder + " && chmod 777 " + nfsApFolder;
+        chmodScript = "chown nobody " + scriptsApFolder + File.separator + scriptName
+                + " && chmod u+x " + scriptsApFolder + File.separator + scriptName
+                + " && chown nobody " + nfsApFolder + " && chmod 777 " + nfsApFolder;
 
         createFolders = folderScriptInstallation + " " + folderNfs;
         instructionList.add(packetInstallation);
@@ -3703,9 +3688,9 @@ public class CastadivaModel {
         AP node = null;
         for (int i = 0; i < accessPoints.Size(); i++) {
             node = accessPoints.Get(i);
-            MayaList.add(node.WhatWifiIP() + " " + node.x + " " + node.y + " " +
-                    node.z + " " + node.range + " " + node.WhatUser() + " " +
-                    node.WhatPwd());
+            MayaList.add(node.WhatWifiIP() + " " + node.x + " " + node.y + " "
+                    + node.z + " " + node.range + " " + node.WhatUser() + " "
+                    + node.WhatPwd());
         }
     }
 
@@ -3782,9 +3767,9 @@ public class CastadivaModel {
      */
     private float CalculateNodeCheckPointDistance(NodeCheckPoint node1,
             NodeCheckPoint node2) {
-        return (float) Math.sqrt(Math.pow((node1.xCoordinate - node2.xCoordinate), 2) +
-                Math.pow((node1.yCoordinate - node2.yCoordinate), 2) +
-                Math.pow((node1.zCoordinate - node2.zCoordinate), 2));
+        return (float) Math.sqrt(Math.pow((node1.xCoordinate - node2.xCoordinate), 2)
+                + Math.pow((node1.yCoordinate - node2.yCoordinate), 2)
+                + Math.pow((node1.zCoordinate - node2.zCoordinate), 2));
     }
 
     /**
@@ -3828,9 +3813,9 @@ public class CastadivaModel {
             yIncrement = point2.yCoordinate - point1.yCoordinate;
             zIncrement = point2.zCoordinate - point1.zCoordinate;
 
-            if (Math.abs(xIncrement - prevXIncrement) > errorIncrement ||
-                    Math.abs(yIncrement - prevYIncrement) > errorIncrement ||
-                    Math.abs(zIncrement - prevZIncrement) > errorIncrement) {
+            if (Math.abs(xIncrement - prevXIncrement) > errorIncrement
+                    || Math.abs(yIncrement - prevYIncrement) > errorIncrement
+                    || Math.abs(zIncrement - prevZIncrement) > errorIncrement) {
 
                 speed = CalculateNodeCheckPointDistance(point1, point2);
                 NodeImportedData movement = new NodeImportedData(node,
@@ -3871,11 +3856,11 @@ public class CastadivaModel {
         if (debug) {
             for (int i = 0; i < allMovements.length; i++) {
                 for (int j = 0; j < allMovements[i].size(); j++) {
-                    System.out.println("t:" + allMovements[i].get(j).second +
-                            " node: " + allMovements[i].get(j).nodeNumber +
-                            " x:" + allMovements[i].get(j).xCoordinate +
-                            " y:" + allMovements[i].get(j).yCoordinate +
-                            " s: " + allMovements[i].get(j).speed);
+                    System.out.println("t:" + allMovements[i].get(j).second
+                            + " node: " + allMovements[i].get(j).nodeNumber
+                            + " x:" + allMovements[i].get(j).xCoordinate
+                            + " y:" + allMovements[i].get(j).yCoordinate
+                            + " s: " + allMovements[i].get(j).speed);
                 }
             }
         }
@@ -3934,8 +3919,8 @@ public class CastadivaModel {
     private List<String> CreateNSHead(Integer nodes) {
         List<String> NSList = new ArrayList<String>();
         NSList.add("#");
-        NSList.add("# nodes: " + nodes + ", pause: " + pause + ", max speed: " +
-                maxSpeed + ", max x = " + x + ", max y: " + y);
+        NSList.add("# nodes: " + nodes + ", pause: " + pause + ", max speed: "
+                + maxSpeed + ", max x = " + x + ", max y: " + y);
         NSList.add("#");
         return NSList;
     }
@@ -3970,21 +3955,21 @@ public class CastadivaModel {
         resultList.add(head);
         for (int i = 0; i < accessPoints.GetTrafficSize(); i++) {
             TrafficRecord record = (TrafficRecord) accessPoints.GetTraffic().get(i);
-            float stop = record.getStart() + (record.getMaxPackets() /
-                    record.getPacketsSeconds());
+            float stop = record.getStart() + (record.getMaxPackets()
+                    / record.getPacketsSeconds());
             float ratio = 1 / Float.parseFloat(record.getPacketsSeconds() + "");
-            line = "set udp_(" + i + ") [new Agent/UDP]\n" +
-                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getSource()) + ") $udp_(" + i + ")\n" +
-                    "set null_(" + i + ") [new Agent/Null]\n" +
-                    "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getAddress()) + ") $null_(" + i + ")\n" +
-                    "set cbr_(" + i + ") [new Application/Traffic/CBR]\n" +
-                    "$cbr_(" + i + ") set packetSize_ " + record.getSize() + "\n" +
-                    "$cbr_(" + i + ") set interval_ " + ratio + "\n" +
-                    "$cbr_(" + i + ") set random_ 0\n" +
-                    "$cbr_(" + i + ") attach-agent $udp_(" + i + ")\n" +
-                    "$ns_ connect $udp_(" + i + ") $null_(" + i + ")\n" +
-                    "$ns_ at " + (float) record.getStart() + " \"$cbr_(" + i + ") start\"\n" +
-                    "$ns_ at " + stop + " \"$cbr_(" + i + ") stop\"\n";
+            line = "set udp_(" + i + ") [new Agent/UDP]\n"
+                    + "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getSource()) + ") $udp_(" + i + ")\n"
+                    + "set null_(" + i + ") [new Agent/Null]\n"
+                    + "$ns_ attach-agent $node_(" + accessPoints.SearchAP(record.getAddress()) + ") $null_(" + i + ")\n"
+                    + "set cbr_(" + i + ") [new Application/Traffic/CBR]\n"
+                    + "$cbr_(" + i + ") set packetSize_ " + record.getSize() + "\n"
+                    + "$cbr_(" + i + ") set interval_ " + ratio + "\n"
+                    + "$cbr_(" + i + ") set random_ 0\n"
+                    + "$cbr_(" + i + ") attach-agent $udp_(" + i + ")\n"
+                    + "$ns_ connect $udp_(" + i + ") $null_(" + i + ")\n"
+                    + "$ns_ at " + (float) record.getStart() + " \"$cbr_(" + i + ") start\"\n"
+                    + "$ns_ at " + stop + " \"$cbr_(" + i + ") stop\"\n";
             resultList.add(line);
         }
         return resultList;
@@ -4008,7 +3993,7 @@ public class CastadivaModel {
             if (ReadNSHead(nsText)) {
                 nsText = DeleteNsBodyComments(3, nsText);
                 lastReadedLine = ReadNsNode(3, nsText);
-                 // lastReadedLine = ReadNsNode(14, nsText); PRuEBA PARA CITYMOB
+                // lastReadedLine = ReadNsNode(14, nsText); PRuEBA PARA CITYMOB
                 if (maxSpeed > 0) {
                     ReadNsMobility(lastReadedLine, nsText);
                     //DeduceNsSimulationTime();
@@ -4054,7 +4039,6 @@ public class CastadivaModel {
      * @param nsText Is a String containing all the data readed of a NS file.
      * @see ImportNs
      */
-    
     private boolean ReadNSHead(String nsText[]) throws ArrayIndexOutOfBoundsException {
         String[] intro = null;
 
@@ -4102,10 +4086,10 @@ public class CastadivaModel {
     public String[] ObtainStoredApData(Integer node) {
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_APS_FILE);
 
-        if(!file.exists()){
+        if (!file.exists()) {
             System.err.println("Error opening file " + file.getAbsolutePath());
         }
-        
+
         return ObtainStoredApData(node, file);
     }
 
@@ -4120,40 +4104,39 @@ public class CastadivaModel {
         Integer nparams = 16;
         accessPoints = new APs();
 
-        for(int l = 0; l < lines.size() - help_lines; l++) {
-            line = (String) lines.get(l+help_lines);
+        for (int l = 0; l < lines.size() - help_lines; l++) {
+            line = (String) lines.get(l + help_lines);
             ap = line.split(" ");
-            if(ap.length == nparams) {
-                System.out.println("Ap is :"+line);
-               AP node = new AP(ap[0], ap[1], ap[2], ap[3], ap[4], ap[5],
+            if (ap.length == nparams) {
+                System.out.println("Ap is :" + line);
+                AP node = new AP(ap[0], ap[1], ap[2], ap[3], ap[4], ap[5],
                         Float.parseFloat(ap[6]), Float.parseFloat(ap[7]),
                         Float.parseFloat(ap[8]), Float.parseFloat(ap[9]),
                         ap[10], ap[11], Integer.parseInt(ap[12]),
                         ap[13], ap[14], ap[15]);
-         //   public AP(String address, String wifiAddress, String wifiMac, String user, String pwd, String id,
-         //   float x, float y, float z, float range, String directory, String processor, Integer channel,
-         //   String mode, String wfDevice, String tmp_gw) {
+                //   public AP(String address, String wifiAddress, String wifiMac, String user, String pwd, String id,
+                //   float x, float y, float z, float range, String directory, String processor, Integer channel,
+                //   String mode, String wfDevice, String tmp_gw) {
 
                 accessPoints.Add(node);
             }
         }
     }
 
+    public void WriteAPToFile(BufferedWriter out, AP ap) throws IOException {
 
-    public void WriteAPToFile(BufferedWriter out, AP ap) throws IOException  {
+        out.write(ap.WhatEthIP() + " " + ap.WhatWifiIP() + " " + ap.WhatWifiMac() + " ");
+        out.write(ap.WhatUser() + " " + ap.WhatPwd() + " " + ap.WhatAP() + " ");
+        out.write(new Float(ap.WhatX()).toString() + " " + new Float(ap.WhatY()).toString() + " " + new Float(ap.WhatZ()).toString() + " ");
+        out.write(new Float(ap.range).toString() + " " + ap.WhatWorkingDirectory() + " " + ap.WhatProcessor() + " ");
+        out.write(Integer.toString(ap.WhatChannel()) + " " + ap.WhatMode() + " " + ap.WhatWifiDevice() + " ");
+        out.write(ap.WhatGW() + "\n");
 
-        out.write(ap.WhatEthIP() +" "+ ap.WhatWifiIP() + " " + ap.WhatWifiMac() + " ");
-        out.write(ap.WhatUser() +" "+ ap.WhatPwd() + " " + ap.WhatAP() + " ");
-        out.write(new Float(ap.WhatX()).toString() +" "+new Float(ap.WhatY()).toString() + " " + new Float(ap.WhatZ()).toString() + " ");
-        out.write(new Float(ap.range).toString() +" "+ ap.WhatWorkingDirectory() + " " + ap.WhatProcessor() + " ");
-        out.write(Integer.toString(ap.WhatChannel()) +" "+ ap.WhatMode() + " " + ap.WhatWifiDevice() + " ");
-        out.write(ap.WhatGW()+"\n");
- 
 
-        
+
     }
 
-     /**
+    /**
      * Obtain data for a node from a file or set a default one.
      */
     public void SaveApsToFile(File file) {
@@ -4161,12 +4144,12 @@ public class CastadivaModel {
             //Integer help_lines = 1;
             //Integer nparams = 16;
             FileWriter fw = new FileWriter(file.getCanonicalPath());
-            
-            BufferedWriter out = new BufferedWriter(fw);
-            out.write( "#String address, String wifiAddress, String wifiMac, String user, String pwd, String id, float x, float y, float z, float range, String directory, String processor, Integer channel, String mode, String wfDevice, String tmp_gw\n");
-            
 
-            for(int i = 0; i < accessPoints.Size(); i++) {
+            BufferedWriter out = new BufferedWriter(fw);
+            out.write("#String address, String wifiAddress, String wifiMac, String user, String pwd, String id, float x, float y, float z, float range, String directory, String processor, Integer channel, String mode, String wfDevice, String tmp_gw\n");
+
+
+            for (int i = 0; i < accessPoints.Size(); i++) {
                 WriteAPToFile(out, accessPoints.Get(i));
             }
 
@@ -4262,8 +4245,8 @@ public class CastadivaModel {
             // $ns_ at 27.373013805488327 "$node_(1) setdest 800.0 400.0 68.42146302464042"
             words = nsText[i].split(" ");
             // If we have a correct line
-            if (words[0].endsWith("$ns_") && words[1].endsWith("at") &&
-                    words[4].endsWith("setdest") && !words[0].startsWith("#")) {
+            if (words[0].endsWith("$ns_") && words[1].endsWith("at")
+                    && words[4].endsWith("setdest") && !words[0].startsWith("#")) {
 
                 second = Float.parseFloat(words[2]);
                 xDestCoordinate = Float.parseFloat(words[5]);
@@ -4284,7 +4267,7 @@ public class CastadivaModel {
                 node = new Integer(node_id);
 
                 allAddresses.ChangeMobilityVector(xDestCoordinate, yDestCoordinate, speed, node);
-                
+
                 // We add the collected information to nsData. It now contains the movement instructions as in the CityMob file.
                 nsData.AddNodeInformation(node, xDestCoordinate, yDestCoordinate, speed, second);
                 if (GetSimulationTime() < Float.parseFloat(words[2])) {
@@ -4396,15 +4379,14 @@ public class CastadivaModel {
             AP ap = accessPoints.Get(node);
 
             // Set nodes position a it's initial position for the whole simulation
-            for(int j=0;j <= GetSimulationTime(); j++ )
-            {
+            for (int j = 0; j <= GetSimulationTime(); j++) {
                 StoreNewNodePosition(ap.x, ap.y, node, j);
             }
         }
 
         // Now that each node is safely placed, we need to introduces movement instructions for each node
         for (int node = 0; node < accessPoints.Size(); node++) {
-            
+
             // Recovery of the mobility instructions for the node
             nodeMovements = nsData.GetNodeInformation(node);
 
@@ -4414,8 +4396,7 @@ public class CastadivaModel {
             float yPos;
 
             // For each instruction we have for the current node
-            for (int i = 0; i < nodeMovements.size(); i++)
-            {
+            for (int i = 0; i < nodeMovements.size(); i++) {
                 // Recovery of the specific mobility instruction
                 NodeImportedData movementInstruction = nodeMovements.get(i);
 
@@ -4429,7 +4410,7 @@ public class CastadivaModel {
                 float deltaY = movementInstruction.yCoordinate - yPos;
 
                 // Delta is the distance of the move
-                float delta = (float) Math.sqrt(Math.pow(deltaX, 2)+Math.pow(deltaY, 2));
+                float delta = (float) Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
                 int aproximateTimeMoving = 0;
                 float exactTimeMoving = 0;
@@ -4439,49 +4420,47 @@ public class CastadivaModel {
                 float oneSecYIncrease = 0;
 
                 // This is necessary to avoid division by 0. Speed = 0 is used in citymob as a STOP instruction.
-                if(movementInstruction.speed > 0)
-                {
-                    exactTimeMoving = delta/movementInstruction.speed;
+                if (movementInstruction.speed > 0) {
+                    exactTimeMoving = delta / movementInstruction.speed;
                     aproximateTimeMoving = (int) Math.round(exactTimeMoving);
 
                     // We can now know how a node move
-                    oneSecXIncrease = deltaX/exactTimeMoving;
-                    oneSecYIncrease = deltaY/exactTimeMoving;
+                    oneSecXIncrease = deltaX / exactTimeMoving;
+                    oneSecYIncrease = deltaY / exactTimeMoving;
                 }
 
 
                 // As we calculated the time of the movement, we now write the new positions in the matrix
                 // if the movement instruction is given at time t, the node will have moved at time t+1
-                for(int second=movementInstruction.second+1; second<= movementInstruction.second + aproximateTimeMoving && second < GetSimulationTime(); second++)
-                {
+                for (int second = movementInstruction.second + 1; second <= movementInstruction.second + aproximateTimeMoving && second < GetSimulationTime(); second++) {
                     // If we are making our last move, we apply a correction.
                     // That correction allows to obtain better results,
                     // it avoid aproximation errors to sum after each mobility instruction
-                    if(second == movementInstruction.second+aproximateTimeMoving){
-                        xPos=movementInstruction.xCoordinate;
-                        yPos=movementInstruction.yCoordinate;
-                    }else{
-                        xPos+=oneSecXIncrease;
-                        yPos+=oneSecYIncrease;
+                    if (second == movementInstruction.second + aproximateTimeMoving) {
+                        xPos = movementInstruction.xCoordinate;
+                        yPos = movementInstruction.yCoordinate;
+                    } else {
+                        xPos += oneSecXIncrease;
+                        yPos += oneSecYIncrease;
                     }
-                    StoreNewNodePosition( xPos,  yPos, node, second);
+                    StoreNewNodePosition(xPos, yPos, node, second);
                 }
 
                 // The position of the node after it's move must be updated in the matrix
                 // Next movement instructions might erase this, or not
-                for(int second = movementInstruction.second+aproximateTimeMoving+1;second<=GetSimulationTime();second++){
+                for (int second = movementInstruction.second + aproximateTimeMoving + 1; second <= GetSimulationTime(); second++) {
                     StoreNewNodePosition(xPos, yPos, node, second);
                 }
             }
         }
     }
-    
+
     /****************************************************************************
      *
      *                          IMPORT CITYMOB SCENARIO
      *
      ****************************************************************************/
-    
+
     /* Imports a CityMob mobility scenario from a file into castadiva*/
     boolean ImportNsCITYMOB(String file) {
         String rawText;
@@ -4508,11 +4487,11 @@ public class CastadivaModel {
                 lastReadedLine = ReadNsNodeCITYMOB(14, nsText);
 
                 // If maxSpeed is = 0, there is no need to import any more mobility information
-               if (maxSpeed > 0) {
-                   // Analysis of the cityMob information 
-                   ReadNsMobility(lastReadedLine, nsText);
-                   // Conversion of the cityMob information into a mobility matrix in Castadiva
-                   TranslateNsDataToMobilityMatrix();
+                if (maxSpeed > 0) {
+                    // Analysis of the cityMob information
+                    ReadNsMobility(lastReadedLine, nsText);
+                    // Conversion of the cityMob information into a mobility matrix in Castadiva
+                    TranslateNsDataToMobilityMatrix();
                 }
             } else {
                 // If we were unable to read the header...
@@ -4560,7 +4539,7 @@ public class CastadivaModel {
         Integer help_lines = 1;
         File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_APS_FILE);
 
-        if(!file.exists()){
+        if (!file.exists()) {
             System.err.println("Error opening file " + file.getAbsolutePath());
         }
 
@@ -4580,6 +4559,7 @@ public class CastadivaModel {
             return descomposed_line;
         }
     }
+
     /**
      * The following function allows to read every node's position from the cityMob
      * file and to create the nodes in castadiva according to the information stored
@@ -4591,7 +4571,7 @@ public class CastadivaModel {
     private int ReadNsNodeCITYMOB(int startingLine, String nsText[]) {
         int i, id;
         float positionX, positionY, positionZ;
-        
+
         int apnum = 0; //Access point counter
 
         accessPoints = new APs();
@@ -4659,8 +4639,8 @@ public class CastadivaModel {
      */
     private boolean SaveCastadivaComputer(String folder, String file) {
         try {
-            new SerialComputerStream(folder + File.separator +
-                    file).save(computer);
+            new SerialComputerStream(folder + File.separator
+                    + file).save(computer);
         } catch (IOException ex) {
             ex.printStackTrace();
             return false;
@@ -4675,8 +4655,8 @@ public class CastadivaModel {
      */
     private boolean SaveCastadivaAps(String folder, String file) {
         try {
-            new SerialAPStream(folder + File.separator +
-                    file).save(accessPoints);
+            new SerialAPStream(folder + File.separator
+                    + file).save(accessPoints);
         } catch (IOException ex) {
             ex.printStackTrace();
             return false;
@@ -4694,8 +4674,8 @@ public class CastadivaModel {
         StoreData info = new StoreData(minSpeed, maxSpeed, pause, x, y, RTS, GetSimulationTime(),
                 allAddresses, nodePositions, mobilityModel, routingProtocol);
         try {
-            new SerialScenarioDataStream(folder + File.separator +
-                    file).save(info);
+            new SerialScenarioDataStream(folder + File.separator
+                    + file).save(info);
         } catch (IOException ex) {
             ex.printStackTrace();
             return false;
@@ -4711,8 +4691,8 @@ public class CastadivaModel {
      */
     private boolean SaveExternalTraffic(String folder, String file) {
         try {
-            new SerialExternalTrafficDataStream(folder + File.separator +
-                    file).save(externalTrafficFlow);
+            new SerialExternalTrafficDataStream(folder + File.separator
+                    + file).save(externalTrafficFlow);
         } catch (IOException ex) {
             ex.printStackTrace();
             return false;
@@ -4729,7 +4709,7 @@ public class CastadivaModel {
     void LoadCastadiva(String folder) {
         //Stop all previous simulations.
         File f = new File(folder);
-        if(!f.getName().equals("Scenario")) {
+        if (!f.getName().equals("Scenario")) {
             folder = folder + File.separator + "Scenario";
         }
         Reset();
@@ -4766,12 +4746,12 @@ public class CastadivaModel {
             ex.printStackTrace();
         } catch (IOException ex) {
             if (debug) {
-                System.out.println("File Format not valid or problem loading the AP " +
-                        "configuration.");
+                System.out.println("File Format not valid or problem loading the AP "
+                        + "configuration.");
             }
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "File Format not valid or problem " +
-                    "loading the AP configuration.", "Load Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "File Format not valid or problem "
+                    + "loading the AP configuration.", "Load Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -4792,12 +4772,12 @@ public class CastadivaModel {
         } catch (IOException ex) {
             //ex.printStackTrace();
             if (debug) {
-                System.out.println("File format not valid or problem loading the " +
-                        "computer configuration.");
+                System.out.println("File format not valid or problem loading the "
+                        + "computer configuration.");
             }
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "File format not valid or " +
-                    "problem loading the computer configuration.", "Load Error",
+            JOptionPane.showMessageDialog(frame, "File format not valid or "
+                    + "problem loading the computer configuration.", "Load Error",
                     JOptionPane.ERROR_MESSAGE);
         }
 
@@ -4824,12 +4804,12 @@ public class CastadivaModel {
         } catch (IOException ex) {
             //ex.printStackTrace();
             if (debug) {
-                System.out.println("File format not valid or problem loading the " +
-                        "scenario configuration.");
+                System.out.println("File format not valid or problem loading the "
+                        + "scenario configuration.");
             }
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "File format not valid or " +
-                    "problem loading the scenario configuration.", "Load Error",
+            JOptionPane.showMessageDialog(frame, "File format not valid or "
+                    + "problem loading the scenario configuration.", "Load Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -4844,8 +4824,8 @@ public class CastadivaModel {
         List l;
 
         try {
-            l = new SerialScenarioDataStream(folder + File.separator +
-                    FILE_EXTERNAL_TRAFFIC).load();
+            l = new SerialScenarioDataStream(folder + File.separator
+                    + FILE_EXTERNAL_TRAFFIC).load();
             externalTrafficFlow = (List<ExternalTraffic>) l.get(0);
             if (debug) {
                 System.out.println("Reading data...");
@@ -4855,12 +4835,12 @@ public class CastadivaModel {
         } catch (IOException ex) {
             //ex.printStackTrace();
             if (debug) {
-                System.out.println("File format not valid or problem loading the " +
-                        "external traffic flow.");
+                System.out.println("File format not valid or problem loading the "
+                        + "external traffic flow.");
             }
             JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "File format not valid or " +
-                    "problem loading the external traffic flow.", "Load Error",
+            JOptionPane.showMessageDialog(frame, "File format not valid or "
+                    + "problem loading the external traffic flow.", "Load Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -4948,7 +4928,7 @@ public class CastadivaModel {
             System.out.println("--------------");
             nodo = (List) showedInstructions.get(i);
             for (int j = 0; j < nodo.size(); j++) {
-                System.out.println("Node :"+nodo.get(j));
+                System.out.println("Node :" + nodo.get(j));
             }
         }
         System.out.println("****************************");
@@ -5016,10 +4996,10 @@ public class CastadivaModel {
         String tmp[];
         tmp = ip.split("\\.");
         try {
-            if (Integer.parseInt(tmp[0]) < 256 && Integer.parseInt(tmp[1]) < 256 &&
-                    Integer.parseInt(tmp[2]) < 256 && Integer.parseInt(tmp[3]) < 256 &&
-                    Integer.parseInt(tmp[0]) >= 0 && Integer.parseInt(tmp[1]) >= 0 &&
-                    Integer.parseInt(tmp[2]) >= 0 && Integer.parseInt(tmp[3]) >= 0) {
+            if (Integer.parseInt(tmp[0]) < 256 && Integer.parseInt(tmp[1]) < 256
+                    && Integer.parseInt(tmp[2]) < 256 && Integer.parseInt(tmp[3]) < 256
+                    && Integer.parseInt(tmp[0]) >= 0 && Integer.parseInt(tmp[1]) >= 0
+                    && Integer.parseInt(tmp[2]) >= 0 && Integer.parseInt(tmp[3]) >= 0) {
                 return true;
             }
         } catch (NumberFormatException nfe) {
@@ -5068,9 +5048,9 @@ public class CastadivaModel {
                 ex.printStackTrace();
             }
         } catch (FileNotFoundException ex) {
-            String text = "Impossible to generate file:\n\t" + file +
-                    ". \nIs the working directory created properly?\n" +
-                    "Check into \"Configuration -> Configurate the Computer\"";
+            String text = "Impossible to generate file:\n\t" + file
+                    + ". \nIs the working directory created properly?\n"
+                    + "Check into \"Configuration -> Configurate the Computer\"";
             String title = "No such file or directory";
             ShowSaveErrorMessage(text, title);
         }
@@ -5090,7 +5070,7 @@ public class CastadivaModel {
             text = new String(bt);
             inputData.close();
         } catch (IOException ex) {
-             System.out.println("Error while reading the text "+text+" in the file "+file+" :"+ex);
+            System.out.println("Error while reading the text " + text + " in the file " + file + " :" + ex);
         }
         return text;
     }
@@ -5227,17 +5207,17 @@ public class CastadivaModel {
             File[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
                 if (files[i].isDirectory()) {
-                    if (!(files[i].toString().contains("notDelete") ||
-                            files[i].toString().contains("bin"))) {
+                    if (!(files[i].toString().contains("notDelete")
+                            || files[i].toString().contains("bin"))) {
                         DeletePath(files[i]);
                     }
                 } else {
                     //Don't delete files with string "Flow". This files are
                     //used to generate the traffic TCP
-                    if (!(files[i].toString().contains("Flow") ||
-                            files[i].toString().contains("aodv") ||
-                            files[i].toString().contains("olsrd") ||
-                            files[i].toString().contains(".dump"))) {
+                    if (!(files[i].toString().contains("Flow")
+                            || files[i].toString().contains("aodv")
+                            || files[i].toString().contains("olsrd")
+                            || files[i].toString().contains(".dump"))) {
                         files[i].delete();
                     }
                 }
@@ -5350,11 +5330,10 @@ public class CastadivaModel {
     void ShowSaveErrorMessage(String text, String title) {
         JFrame frame = null;
         if (debug) {
-            System.out.println("Error message :"+text);
+            System.out.println("Error message :" + text);
         }
         JOptionPane.showMessageDialog(frame, text, title, JOptionPane.ERROR_MESSAGE);
     }
-
 
     /****************************************************************************
      *
@@ -5440,15 +5419,15 @@ public class CastadivaModel {
                     try {
                         Thread.sleep(10);
                     } catch (Exception ee) {
-                        if(debug){
-                            System.out.println("Error while puttin thread to sleep :"+ee);
+                        if (debug) {
+                            System.out.println("Error while puttin thread to sleep :" + ee);
                         }
                     }
                 }
-            //Disconnect();
+                //Disconnect();
             } catch (Exception e) {
                 if (debug) {
-                    System.out.println("Error while running command :"+e);
+                    System.out.println("Error while running command :" + e);
                 }
             }
         }
@@ -5458,14 +5437,14 @@ public class CastadivaModel {
                 channel.disconnect();
             } catch (NullPointerException npe) {
                 if (debug) {
-                    System.out.println("Channel already disconnected:"+npe);
+                    System.out.println("Channel already disconnected:" + npe);
                 }
             }
             try {
                 session.disconnect();
             } catch (NullPointerException npe) {
                 if (debug) {
-                    System.out.println("Session already disconnected:"+npe);
+                    System.out.println("Session already disconnected:" + npe);
                 }
             }
         }
@@ -5507,6 +5486,7 @@ public class CastadivaModel {
             sourceDirectory = directoryAddress;
         }
 
+        @Override
         public boolean Connect() {
             boolean ok = true;
             try {
@@ -5518,9 +5498,8 @@ public class CastadivaModel {
                 session.setUserInfo(ui);
                 session.connect();
             } catch (JSchException e) {
-                if(debug)
-                {
-                    System.out.println("Error while connecting :"+e);
+                if (debug) {
+                    System.out.println("Error while connecting :" + e);
                 }
                 String text = e.getMessage() + " in AP " + node.WhatAP();
                 String title = "Conexion status";
@@ -5538,26 +5517,32 @@ public class CastadivaModel {
                 node = accessPoint;
             }
 
+            @Override
             public String getPassword() {
                 return node.WhatPwd();
             }
 
+            @Override
             public boolean promptYesNo(String str) {
                 return true;
             }
 
+            @Override
             public String getPassphrase() {
                 return null;
             }
 
+            @Override
             public boolean promptPassphrase(String message) {
                 return true;
             }
 
+            @Override
             public boolean promptPassword(String message) {
                 return true;
             }
 
+            @Override
             public void showMessage(String message) {
             }
         }
@@ -5600,6 +5585,7 @@ public class CastadivaModel {
             sourceDirectory = directoryAddress;
         }
 
+        @Override
         public boolean Connect() {
             boolean ok = true;
             try {
@@ -5613,8 +5599,8 @@ public class CastadivaModel {
                     System.out.println(e.getMessage() + " in connection to " + sshIp);
                 }
                 JFrame frame = new JFrame();
-                JOptionPane.showMessageDialog(frame, e.getMessage() + " in " +
-                        sshIp, "Connection status", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e.getMessage() + " in "
+                        + sshIp, "Connection status", JOptionPane.ERROR_MESSAGE);
                 ok = false;
             }
             return ok;
@@ -5628,26 +5614,32 @@ public class CastadivaModel {
                 this.password = password;
             }
 
+            @Override
             public String getPassword() {
                 return password;
             }
 
+            @Override
             public boolean promptYesNo(String str) {
                 return true;
             }
 
+            @Override
             public String getPassphrase() {
                 return null;
             }
 
+            @Override
             public boolean promptPassphrase(String message) {
                 return true;
             }
 
+            @Override
             public boolean promptPassword(String message) {
                 return true;
             }
 
+            @Override
             public void showMessage(String message) {
             }
         }
@@ -5688,7 +5680,7 @@ public class CastadivaModel {
 
         public void dump() throws IOException, ClassNotFoundException {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILENAME));
-            System.out.println("Dump :"+is.readObject());
+            System.out.println("Dump :" + is.readObject());
             is.close();
         }
     }
@@ -5779,6 +5771,7 @@ public class CastadivaModel {
      */
     private class CastadivaMainTimerTask extends TimerTask {
 
+        @Override
         public void run() {
             stopwatch++;
 
@@ -5892,13 +5885,13 @@ public class CastadivaModel {
                 traffic.setPacketsReceived(Integer.parseInt("0"));
             }
 
-            try{
+            try {
                 delay = Float.parseFloat(text.substring(text.indexOf("Delay: ") + 7, text.indexOf(" ms")));
                 traffic.setMeanDelay(delay);
-            } catch(StringIndexOutOfBoundsException sob){
+            } catch (StringIndexOutOfBoundsException sob) {
                 System.err.println("Traffic not detected.");
                 traffic.setMeanDelay(Float.parseFloat("0"));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 traffic.setMeanDelay(Float.parseFloat("0"));
             }
@@ -5974,10 +5967,6 @@ public class CastadivaModel {
         }
     }
 
-
-
-
-
     /**
      * Store the characteristics of one node imported from NS in a determined second.
      */
@@ -6032,11 +6021,9 @@ public class CastadivaModel {
             return PositionOfEachNode.length;
         }
     }
-
     /****************************************************************************
      *
      *                       NS IMPORT/EXPORT PARA CITYMOB
      *
      ****************************************************************************/
-
 }
