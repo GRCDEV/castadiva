@@ -106,8 +106,8 @@ public class CastadivaModel {
     private final int TRAFFIC_PORT = 23000;
     private final int DEFAULT_X_BOUND = 1500;
     private final int DEFAULT_Y_BOUND = 1500;
-    private final String WIFI_SSID = "Wannes";
-    private final String DEFAULT_GW = "192.168.1.2";
+    private final String WIFI_SSID = "Castadiva";
+    private final String DEFAULT_GW = "192.168.1.1";
     private boolean statisticsShowed = true;
     private int stopwatch;
     private Timer timer;
@@ -153,7 +153,7 @@ public class CastadivaModel {
     private boolean simulating = false;
     //NS export/import
     private final String DEFAULT_USER = "root";
-    private final String DEFAULT_PWD = ".GRC0510";
+    private final String DEFAULT_PWD = "Passwd";
     private final String DEFAULT_IP_NET = "192.168.1.";
     private final String DEFAULT_WIFI_IP_NET = "192.168.2.";
     private final String DEFAULT_WIFI_MAC = "00:00:00:00:00:00";
@@ -168,6 +168,7 @@ public class CastadivaModel {
     private final String DEFAULT_PROCESSOR = "MIPS";
     public final String DEFAULT_PROCESSOR_FILE = "processors.txt";
     public final String DEFAULT_APS_FILE = "aps.txt";
+    public final String DEFAULT_CONFIG_FILE = "config.txt";
     public final String DEFAULT_NFS_DIRECTORY = "/castadiva/nfs";
     Random randomGenerator;
     private NodePositionsFromNsMobility nsData;
@@ -272,6 +273,9 @@ public class CastadivaModel {
      */
     public void SetComputerWorkingDirectory(String directory) {
         computer.ChangeWorkingDirectory(directory);
+        List<String> datalist = new ArrayList<String>();
+        datalist.add(computer.WhatWorkingDirectory());
+        SaveInFile(datalist, DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_CONFIG_FILE);
     }
 
     /**
@@ -1139,7 +1143,7 @@ public class CastadivaModel {
         startingInstructions.addAll(KillAllOldInstructions());
         startingInstructions.addAll(SynchronizeNodes(node));
         //NTP Clock synchronization
-        if(accessPoints.Get(node).WhatProcessor().equals("X86")) {
+        if (accessPoints.Get(node).WhatProcessor().equals("X86")) {
             startingInstructions.addAll(SynchronizeTime());
         }
         //startingInstructions.add("ifconfig wl0 down");
@@ -1172,15 +1176,16 @@ public class CastadivaModel {
     public List<String> SynchronizeNodes(Integer node) {
         List<String> syncInstructions = new ArrayList<String>();
         AP ap = accessPoints.Get(node);
-        if(node == 0) {
-            syncInstructions.add(ap.WhatWorkingDirectory() + File.separator + "bin" + File.separator +"TcpSync"+ap.WhatProcessor()+" -m " + (accessPoints.Size() -1));
-        }else{
+        if (node == 0) {
+            syncInstructions.add(ap.WhatWorkingDirectory() + File.separator + "bin" + File.separator + "TcpSync" + ap.WhatProcessor() + " -m " + (accessPoints.Size() - 1));
+        } else {
             AP ap2 = accessPoints.Get(0);
-            syncInstructions.add(ap.WhatWorkingDirectory() + File.separator + "bin" + File.separator +"TcpSync"+ap.WhatProcessor()+" -c " + ap2.WhatEthIP());
+            syncInstructions.add(ap.WhatWorkingDirectory() + File.separator + "bin" + File.separator + "TcpSync" + ap.WhatProcessor() + " -c " + ap2.WhatEthIP());
         }
 
         return syncInstructions;
     }
+
     /**
      *
      * @return List of instructions to sinchronize time
@@ -4093,6 +4098,19 @@ public class CastadivaModel {
         return ObtainStoredApData(node, file);
     }
 
+    public List<String> ObtainConfigData() {
+        File file = new File(DEFAULT_CONFIG_DIRECTORY + File.separator + DEFAULT_CONFIG_FILE);
+        List<String> lines;
+
+        lines = ReadTextFileInLines(file);
+
+        if (lines.size() == 0) {
+            lines.add(DEFAULT_CONFIG_DIRECTORY);
+        }
+
+        return lines;
+    }
+
     /**
      * Obtain data for a node from a file or set a default one.
      */
@@ -5031,6 +5049,13 @@ public class CastadivaModel {
         byte b[];
         //Se guarda en el fichero
         outputFile = new File(file);
+
+        if(!outputFile.exists()){
+            try{
+            outputFile.createNewFile();
+            }catch(IOException ioe){}
+        }
+
         try {
             FileOutputStream outputChannel = new FileOutputStream(outputFile);
             for (int i = 0; i < dataList.size(); i++) {
