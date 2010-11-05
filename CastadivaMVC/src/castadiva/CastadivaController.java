@@ -1175,7 +1175,10 @@ public class CastadivaController {
                 }
                 try {
                     // It is necessary to execute the jar command from within the correct folder
-                    Process p2  = rt.exec("jar cf ../"+CastadivaModel.PLUGIN_JAR_FOLDER+"/" + jarFileName + ".jar castadiva/Plugins"+"/"+jarFileName+".class lib META-INF "+configurationFilename[configurationFilename.length-1],null,workingFolder);
+                    System.out.println(workingFolder.getAbsolutePath());
+                    String jarDir = new File(CastadivaModel.PLUGIN_JAR_FOLDER).getAbsolutePath();
+
+                    Process p2  = rt.exec("jar cf "+jarDir+"/" + jarFileName + ".jar castadiva/Plugins"+"/"+jarFileName+".class lib META-INF "+ configurationFilename[configurationFilename.length-1],null,workingFolder);
                     p2.waitFor();
                 } catch (Exception e1) {
                     System.out.println("Error while converting plugin to jar :"+e1);
@@ -1183,8 +1186,7 @@ public class CastadivaController {
                 JOptionPane.showMessageDialog(new JFrame(), "Plugin sucessfully created");
                 
                 // The temporary folder is cleaned as well as the temporary files
-                File workFolder = new File(CastadivaModel.PLUGIN_WORKFOLDER);
-                deleteDirectory(workFolder);
+                deleteDirectory(workingFolder);
 
                 // The protocol configuration window is closed
                 m_protocol.dispose();

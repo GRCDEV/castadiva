@@ -92,11 +92,11 @@ public class CastadivaModel {
     private String STARTING_FOLDER = "/";
     public String DEFAULT_CONFIG_DIRECTORY = "configuration";
     public final String DEFAULT_APPLICATION_FILE = "applications.txt";
-    public static final String CASTADIVA_SOURCE_FOLDER = "src";
-    public static final String PLUGIN_WORKFOLDER = "pluginTemporaryFiles"; // The following folder is used to compile plugins
-    public static final String PLUGIN_JAR_FOLDER = "src/castadiva/Plugins"; // The compiled plugins are then stored in the following folder
-    public static final String PLUGIN_INCLUDE_FOLDER = "src/lib"; // To compile, the abstract IPluginCastadiva.java is needed. It must be located in the following directory
-    public static final String MOBILITY_PLUGIN_JAR_FOLDER = "src/castadiva/MobilityPlugins/"; // The compiled mobility plugins are stored in that folder
+    public static String CASTADIVA_SOURCE_FOLDER = "src";
+    public static String PLUGIN_WORKFOLDER = CASTADIVA_SOURCE_FOLDER + "/pluginTemporaryFiles"; // The following folder is used to compile plugins
+    public static String PLUGIN_JAR_FOLDER = CASTADIVA_SOURCE_FOLDER + "/castadiva/Plugins"; // The compiled plugins are then stored in the following folder
+    public static String PLUGIN_INCLUDE_FOLDER = CASTADIVA_SOURCE_FOLDER + "/lib"; // To compile, the abstract IPluginCastadiva.java is needed. It must be located in the following directory
+    public static String MOBILITY_PLUGIN_JAR_FOLDER = CASTADIVA_SOURCE_FOLDER + "/castadiva/MobilityPlugins/"; // The compiled mobility plugins are stored in that folder
     //Simulation variables
     public final int TRAFFIC_SERVER_TIME_WAIT = 2;
     public final int TTCP_SERVER_MAX_WAIT = 10;
