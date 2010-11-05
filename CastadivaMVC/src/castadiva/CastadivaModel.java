@@ -267,6 +267,14 @@ public class CastadivaModel {
         computer.ChangeWorkingDirectory(dir);
     }
 
+    public void changeSourceDirectory(String dir) {
+        CASTADIVA_SOURCE_FOLDER = dir;
+        PLUGIN_WORKFOLDER = CASTADIVA_SOURCE_FOLDER + "/pluginTemporaryFiles";
+        PLUGIN_JAR_FOLDER = CASTADIVA_SOURCE_FOLDER + "/castadiva/Plugins";
+        PLUGIN_INCLUDE_FOLDER = CASTADIVA_SOURCE_FOLDER + "/lib";
+        MOBILITY_PLUGIN_JAR_FOLDER = CASTADIVA_SOURCE_FOLDER + "/castadiva/MobilityPlugins/"; 
+    }
+
     /**
      * Change the directory where all data are saved.
      * @see Computer

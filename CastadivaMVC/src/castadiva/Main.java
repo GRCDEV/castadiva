@@ -31,8 +31,8 @@ public class Main {
 
     private static Boolean checkArgs(String[] args, CastadivaModel model) {
         //TODO - Mejorar detección de argumentos
-        String recognizedArgs[] = {"--config-dir", "-cd", "--no-reset", "-nr", "--computer-working-dir", "-cwd"};
-        Integer option[] = {1, 1, 2, 2, 3, 3};
+        String recognizedArgs[] = {"--config-dir", "-cd", "--no-reset", "-nr", "--computer-working-dir", "-cwd", "--source-dir", "-src"};
+        Integer option[] = {1, 1, 2, 2, 3, 3, 4, 4};
 
         Boolean used[] = new Boolean[args.length];
         for (int i = 0; i < used.length; i++) {
@@ -84,6 +84,18 @@ public class Main {
                             error = true;
                         } else {
                             model.setComputerWorkingDirectory(args[i + 1]);
+                            used[i] = true;
+                            used[i + 1] = true;
+                        }
+                        break;
+                    case 4:
+                        System.out.println("Source directory: " + args[i + 1]);
+                        f = new File(args[i + 1]);
+                        if (!f.exists() || !f.isDirectory()) {
+                            System.err.println("---- Working directory not valid ----");
+                            error = true;
+                        } else {
+                            model.changeSourceDirectory(args[i+1]);
                             used[i] = true;
                             used[i + 1] = true;
                         }
