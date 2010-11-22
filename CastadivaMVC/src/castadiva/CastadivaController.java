@@ -1340,7 +1340,9 @@ public class CastadivaController {
                 // placed in the mobility plugin directory
                 else {
                     try {
-                        Process p2 = runTime.exec("jar cf ../"+CastadivaModel.MOBILITY_PLUGIN_JAR_FOLDER+"/"+ name + ".jar " +
+                        String jarDir = new File(CastadivaModel.MOBILITY_PLUGIN_JAR_FOLDER).getAbsolutePath();
+
+                        Process p2 = runTime.exec("jar cf "+jarDir+"/"+ name + ".jar " +
                                 "castadiva lib META-INF",null,new File(CastadivaModel.PLUGIN_WORKFOLDER));
                         p2.waitFor();
 
