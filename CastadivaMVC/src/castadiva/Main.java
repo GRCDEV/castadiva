@@ -113,22 +113,10 @@ public class Main {
 
     /** Creates a new instance of Main */
     public Main() {
-        /*try {
-        // Set cross-platform Java L&F (also called "Metal")
-        UIManager.setLookAndFeel(
-        UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (UnsupportedLookAndFeelException e) {
-        // handle exception
-        } catch (ClassNotFoundException e) {
-        // handle exception
-        } catch (InstantiationException e) {
-        // handle exception
-        } catch (IllegalAccessException e) {
-        // handle exception
-        }*/
     }
 
     private static void loadConfig(CastadivaModel model) {
+        ClassLoader loader = Main.class.getClassLoader();
         model.computer.ChangeWorkingDirectory(model.ObtainConfigData().get(0));
     }
 
