@@ -215,7 +215,7 @@ public class CastadivaModel {
         "about.txt", "mainMenu.txt"
     };
     //If true, show output in console.
-    public final boolean debug = false;
+    public final boolean debug = true;
     public IPluginCastadiva[] routing_protocols = new IPluginCastadiva[]{};
     public IMobilityPluginCastadiva[] mob_plugins = new IMobilityPluginCastadiva[]{};
     public String mobilityModel = "RANDOM WAY POINT";
@@ -746,6 +746,40 @@ public class CastadivaModel {
      */
     public float[][] GenerateMobilityVisibilityMatrix(Integer second) {
         AP node1, node2;
+        float distance = 0;
+        float[][] matrix;
+        NodeCheckPoint checkPointNode1, checkPointNode2;
+
+        matrix = new float[accessPoints.Size()][accessPoints.Size()];
+        for (int i = 0; i < accessPoints.Size(); i++) {
+            for (int j = i; j < accessPoints.Size(); j++) {
+                node1 = accessPoints.Get(i);
+                node2 = accessPoints.Get(j);
+                if (j == i) {                 
+                    distance = 0;
+                } else {
+                    checkPointNode1 = nodePositions[i][second];
+                    checkPointNode2 = nodePositions[j][second];
+                    if(checkPointNode1 != null && checkPointNode2 != null) {
+                        distance = CalculateCheckPointDistance(checkPointNode1, checkPointNode2);
+                    }
+                }
+                if (distance < node1.range) {
+                    matrix[i][j] = distance;
+                } else {
+                    matrix[i][j] = -1;
+                }
+                if (distance < node2.range) {
+                    matrix[j][i] = distance;
+                } else {
+                    matrix[j][i] = -1;
+                }
+            }
+        }
+        return matrix;
+    }
+ /*   public float[][] GenerateMobilityVisibilityMatrix(Integer second) {
+        AP node1, node2;
         float distance, distance1, distance2 = 0;
         float[][] matrix;
         NodeCheckPoint checkPointNode1, checkPointNode2, checkPointNode1b, checkPointNode2b;
@@ -797,7 +831,7 @@ public class CastadivaModel {
         }
         return matrix;
     }
-
+*/
     /**
      * Generate a visibility matrix for static simulations (nodes without movement).
      */
@@ -858,13 +892,17 @@ public class CastadivaModel {
             for (int j = 0; j < accessPoints.Size(); j++) {
                 AP nodo = accessPoints.Get(j);
                 if (visibilityMatrix[i][j] < 0) {
-                    nodeInstructions = nodeInstructions + LocateIptables(i)
+                    nodeInstructions = nodeInstructions
+                            + "#Blocking node : " + nodo.WhatAP() + "\n"
+                            + LocateIptables(i)
                             + " -I INPUT -m mac --mac-source " + nodo.WhatWifiMac()
                             + " -j DROP\n"
                             + LocateIptables(i)
                             + " -I FORWARD -m mac --mac-source " + nodo.WhatWifiMac()
                             + " -j DROP\n";
-                    delNodeInstructions = delNodeInstructions + LocateIptables(i)
+                    delNodeInstructions = delNodeInstructions 
+                            + "#Unblocking node : " + nodo.WhatAP() + "\n"
+                            + LocateIptables(i)
                             + " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac()
                             + " -j DROP\n"
                             + LocateIptables(i)
@@ -2792,6 +2830,9 @@ public class CastadivaModel {
             tree[i] = -1;
             visited[i] = 0;
         }
+        if (debug) {
+            System.out.println("Tree for Node " + accessPoints.Get(node).WhatAP() + " Second: "+ second + "\n");
+        }
 
         visited[node] = 1;
         tree[node] = node;
@@ -2812,6 +2853,11 @@ public class CastadivaModel {
                 }
             }
         }
+
+        if (debug) {
+            printIntegerVector(tree);
+        }
+
         return tree;
     }
 
@@ -2880,8 +2926,8 @@ public class CastadivaModel {
         }
 
         //Create future instructions.
-        for (int k = 0; k < GetSimulationTime(); k++) {
-            if (k > 0) {
+        for (int k = 1; k < GetSimulationTime(); k++) {
+            if (k > 1) {
                 oldVisibilityMatrix = visibilityMatrix.clone();
             }
             visibilityMatrix = GenerateMobilityVisibilityMatrix(k);
@@ -2897,6 +2943,7 @@ public class CastadivaModel {
                         //If one node gets out of range.
                         if (visibilityMatrix[i][j] < 0) {
                             nodeInstructions = nodeInstructions + "sleep " + sleep[i]
+                                    + "\n" + "#Blocking node : " + nodo2.WhatAP()
                                     + "\n" + LocateIptables(i)
                                     + " -I INPUT -m mac --mac-source " + nodo2.WhatWifiMac()
                                     + " -j DROP\n"
@@ -2904,10 +2951,12 @@ public class CastadivaModel {
                                     + " -I FORWARD -m mac --mac-source " + nodo2.WhatWifiMac()
                                     + " -j DROP\n";
                             deleteIptable[i][j] = true;
+                            sleep[i] = 0;
                         }
                         //If one node gets in range.
-                        if (visibilityMatrix[i][j] > 0) {
+                        if (visibilityMatrix[i][j] >= 0) {
                             nodeInstructions = nodeInstructions + "sleep " + sleep[i]
+                                    + "\n" + "#Unblocking node : " + nodo2.WhatAP()
                                     + "\n" + LocateIptables(i)
                                     + " -D INPUT -m mac --mac-source " + nodo2.WhatWifiMac()
                                     + " -j DROP\n"
@@ -2915,12 +2964,13 @@ public class CastadivaModel {
                                     + " -D FORWARD -m mac --mac-source " + nodo2.WhatWifiMac()
                                     + " -j DROP\n";
                             deleteIptable[i][j] = false;
-                        }
-                        if (visibilityMatrix[i][j] != 0) {
                             sleep[i] = 0;
                         }
+                       /* if (visibilityMatrix[i][j] != 0) {
+                            sleep[i] = 0;
+                        }*/
                     }
-                    //Only increment sleep if Castadiva compruebes the last node.
+                    //Only increment sleep if Castadiva achieves the last node.
                     if (j == accessPoints.Size() - 1) {
                         sleep[i]++;
                     }
@@ -2937,7 +2987,9 @@ public class CastadivaModel {
             for (int l = 0; l < accessPoints.Size(); l++) {
                 if (deleteIptable[z][l]) {
                     AP nodo = accessPoints.Get(l);
-                    delNodeInstructions = delNodeInstructions + LocateIptables(z)
+                    delNodeInstructions = delNodeInstructions
+                            + "#Unblocking node : " + nodo.WhatAP() + "\n"
+                            + LocateIptables(z)
                             + " -D INPUT -m mac --mac-source " + nodo.WhatWifiMac()
                             + " -j DROP\n"
                             + LocateIptables(z)
@@ -2947,7 +2999,8 @@ public class CastadivaModel {
             }
             allInstructions = allInstructions + "\n#Delete remaining visibility "
                     + "instructions at the end of the simulation.\nsleep "
-                    + (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
+                   // + (GetRealSimulationTime() + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
+                     + (sleep[z] + VISIBILITY_TIME_WAIT) + "\n" + delNodeInstructions;
             String aux = (String) addInstruction.get(z);
             aux = aux + "\n" + allInstructions;
             addInstruction.set(z, aux);
